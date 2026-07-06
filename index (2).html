@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Виноградов Диёр — Дизайнер интерьера</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --iv: #F5F0E8;
+    --iv2: #EDE5D8;
+    --iv3: #D8CCBA;
+    --bu: #6B1E2E;
+    --bu2: #8C2A3E;
+    --bu3: #4A1220;
+    --rose: #C4788A;
+    --text: #1A0A0E;
+    --muted: #7A5860;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bu3);
+    font-family: 'Jost', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .site {
+    max-width: 960px;
+    margin: 0 auto;
+    background: var(--iv);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 40px;
+    border-bottom: 0.5px solid rgba(107,30,46,0.12);
+    background: var(--iv);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-left { display: flex; gap: 28px; }
+  .nav-link {
+    font-size: 10px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-link:hover, .nav-link.active { color: var(--bu); }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--bu);
+    letter-spacing: 0.06em;
+  }
+  .nav-right { display: flex; gap: 18px; }
+  .nav-social {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-social:hover { color: var(--bu); }
+
+  /* HERO */
+  .hero { position: relative; overflow: hidden; }
+  .hero-photo {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: linear-gradient(160deg, #C4A8B0 0%, #9A7080 50%, #7A5060 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    color: rgba(107,30,46,0.3);
+  }
+  .hero-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-hint { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .hero-name {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 60px 40px 32px;
+    background: linear-gradient(to top, rgba(74,18,32,0.92) 0%, transparent 100%);
+  }
+  .name-ru {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 300;
+    color: var(--iv);
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+  .name-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--rose);
+    letter-spacing: 0.1em;
+    margin-top: 6px;
+  }
+
+  /* INTRO */
+  .intro-band {
+    background: var(--bu);
+    padding: 48px 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  .intro-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 14px;
+    opacity: 0.85;
+  }
+  .intro-sub {
+    font-size: 11px;
+    color: rgba(245,240,232,0.45);
+    margin-bottom: 16px;
+    letter-spacing: 0.05em;
+  }
+  .intro-text {
+    font-size: 13px;
+    line-height: 1.95;
+    color: rgba(245,240,232,0.72);
+    font-weight: 300;
+  }
+  .intro-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 7px; }
+  .tag-pill {
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    padding: 5px 12px;
+    border: 0.5px solid rgba(212,160,168,0.3);
+    border-radius: 2px;
+    color: rgba(245,240,232,0.6);
+    text-transform: uppercase;
+  }
+  .tools-row { display: flex; flex-direction: column; gap: 8px; }
+  .tool-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 12px;
+    color: rgba(245,240,232,0.55);
+  }
+  .tool-item i { font-size: 15px; color: var(--rose); opacity: 0.85; }
+
+  /* STEAM-STYLE HOURS ROW */
+  .steam-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px;
+    background: rgba(0,0,0,0.16);
+    border-radius: 6px;
+  }
+  .steam-icon {
+    height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .steam-icon img { height: 100%; width: auto; display: block; }
+  .steam-info { flex: 1; min-width: 0; }
+  .steam-sub {
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: rgba(245,240,232,0.4);
+    margin-top: 2px;
+  }
+  .steam-hours { text-align: right; flex-shrink: 0; }
+  .steam-hours-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--iv);
+    line-height: 1;
+  }
+  .steam-hours-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(245,240,232,0.4);
+    margin-top: 2px;
+  }
+
+  .stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    padding-top: 20px;
+    border-top: 0.5px solid rgba(212,160,168,0.2);
+  }
+  .stat-n {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 300;
+    color: var(--iv);
+    line-height: 1;
+  }
+  .stat-l {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(245,240,232,0.38);
+    margin-top: 4px;
+  }
+
+  /* WORKS */
+  .works-section { padding: 48px 40px; }
+  .sec-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .sec-num {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--bu);
+    font-weight: 500;
+  }
+  .sec-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--text);
+  }
+  .sec-line {
+    flex: 1;
+    height: 0.5px;
+    background: rgba(107,30,46,0.15);
+    margin-left: 8px;
+    align-self: center;
+  }
+  .works-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    background: rgba(107,30,46,0.08);
+  }
+  .work-item {
+    background: var(--iv2);
+    aspect-ratio: 4/3;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .work-item.large {
+    grid-column: span 2;
+    aspect-ratio: 16/7;
+  }
+  .work-fill {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    color: rgba(107,30,46,0.25);
+  }
+  .work-fill i { font-size: 36px; }
+  .work-fill span { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .work-hover {
+    position: absolute;
+    inset: 0;
+    background: var(--bu3);
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+  }
+  .work-item:hover .work-hover { opacity: 0.95; }
+  .work-h-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--iv);
+    line-height: 1.2;
+  }
+  .work-h-type {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--rose);
+    margin-top: 5px;
+  }
+
+  /* PROJECT */
+  .project-section { background: var(--bu3); padding: 48px 40px 0; }
+  .project-inner {
+    background: var(--iv);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 24px;
+  }
+  .proj-top {
+    background: var(--bu);
+    padding: 24px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .proj-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--rose);
+    opacity: 0.75;
+    margin-bottom: 8px;
+  }
+  .proj-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--iv);
+    line-height: 1.1;
+  }
+  .proj-yr {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 300;
+    color: rgba(212,160,168,0.1);
+    line-height: 1;
+  }
+  .proj-body { display: grid; grid-template-columns: 1.1fr 1fr; }
+  .proj-img {
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #B09098, #8A6878);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    color: rgba(245,240,232,0.3);
+  }
+  .proj-img i { font-size: 36px; }
+  .proj-img span { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .proj-info {
+    padding: 24px;
+    background: var(--iv);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .proj-desc { font-size: 13px; line-height: 1.85; color: var(--muted); }
+  .detail-r {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 0.5px solid rgba(107,30,46,0.1);
+  }
+  .d-k {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--bu);
+    opacity: 0.75;
+  }
+  .d-v { font-size: 12px; color: var(--text); }
+  .proj-imgs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 3px;
+    background: rgba(107,30,46,0.1);
+  }
+  .pi {
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, var(--iv2), var(--iv3));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pi span {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(107,30,46,0.3);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--bu3);
+    padding: 28px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 0.5px solid rgba(212,160,168,0.1);
+    margin-top: 0;
+  }
+  .f-info { display: flex; gap: 24px; flex-wrap: wrap; }
+  .f-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: rgba(245,240,232,0.45);
+    text-decoration: none;
+  }
+  .f-item i { font-size: 15px; color: var(--rose); }
+  .f-item:hover { color: rgba(245,240,232,0.75); }
+  .f-btn {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 11px 26px;
+    border: 0.5px solid rgba(212,160,168,0.35);
+    border-radius: 2px;
+    background: rgba(212,160,168,0.07);
+    color: var(--iv);
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+  }
+  .f-btn:hover { background: rgba(212,160,168,0.18); }
+
+  /* project section bottom spacing */
+  .proj-bottom-space { height: 40px; }
+
+  @media (max-width: 640px) {
+    nav { padding: 14px 20px; }
+    .nav-left { gap: 16px; }
+    .nav-right { display: none; }
+    .name-ru { font-size: 36px; }
+    .intro-band { grid-template-columns: 1fr; padding: 32px 20px; }
+    .works-section { padding: 32px 20px; }
+    .project-section { padding: 32px 20px 0; }
+    .proj-body { grid-template-columns: 1fr; }
+    footer { padding: 20px; flex-direction: column; gap: 16px; align-items: flex-start; }
+    .hero-name { padding: 40px 20px 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="site">
+
+  <nav>
+    <div class="nav-left">
+      <a href="#about" class="nav-link active">Обо мне</a>
+      <a href="#works" class="nav-link">Проекты</a>
+      <a href="#project" class="nav-link">Реализованный</a>
+      <a href="#contact" class="nav-link">Контакт</a>
+    </div>
+    <div class="nav-logo">D·V Studio</div>
+    <div class="nav-right">
+      <a href="#" class="nav-social">Instagram</a>
+      <a href="#" class="nav-social">Behance</a>
+    </div>
+  </nav>
+
+  <section class="hero" id="about">
+    <div class="hero-photo">
+      <i class="ti ti-user" style="font-size:56px"></i>
+      <span class="photo-hint">Ваша фотография</span>
+    </div>
+    <div class="hero-name">
+      <div class="name-ru">Виноградов Диёр</div>
+      <div class="name-en">Diyor Vinogradov</div>
+    </div>
+  </section>
+
+  <div class="intro-band">
+    <div>
+      <div class="intro-label">Introduction</div>
+      <div class="intro-sub">Архитектурный дизайн · 3D-визуализация · Ташкент</div>
+      <br>
+      <p class="intro-text">
+        Меня зовут Виноградов Диёр, я специализируюсь на 3D-визуализации и архитектурном дизайне. В работе я сочетаю техническую точность — уверенное владение 3ds Max и AutoCAD — с глубоким вниманием к эстетике пространства.
+        <br><br>
+        Мой творческий подход базируется на лаконичности и функциональности: датский стиль, модерн и принципы Баухауса — лёгкость и комфорт в каждом проекте. Буду рад воплотить вашу идею с профессиональным вниманием к каждой детали.
+      </p>
+    </div>
+    <div class="intro-right">
+      <div class="tag-list">
+        <span class="tag-pill">Датский стиль</span>
+        <span class="tag-pill">Модерн</span>
+        <span class="tag-pill">Баухаус</span>
+        <span class="tag-pill">Кэжуал</span>
+        <span class="tag-pill">3D-визуализация</span>
+        <span class="tag-pill">Архитектурный дизайн</span>
+      </div>
+      <div class="tools-row">
+        <div class="tool-item"><i class="ti ti-cube"></i> 3ds Max</div>
+        <div class="tool-item"><i class="ti ti-vector"></i> AutoCAD</div>
+      </div>
+      <div class="steam-row">
+        <div class="steam-icon"><img src="assets/3dsmax-logo.png" alt="3ds Max"></div>
+        <div class="steam-info">
+          <div class="steam-sub">Autodesk · 3D-моделирование и визуализация</div>
+        </div>
+        <div class="steam-hours">
+          <div class="steam-hours-num">1 825</div>
+          <div class="steam-hours-label">часов наработки</div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div>
+          <div class="stat-n">15</div>
+          <div class="stat-l">Концепт-проектов</div>
+        </div>
+        <div>
+          <div class="stat-n">1</div>
+          <div class="stat-l">Реализованный</div>
+        </div>
+        <div>
+          <div class="stat-n">2</div>
+          <div class="stat-l">Года опыта</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="works-section" id="works">
+    <div class="sec-header">
+      <span class="sec-num">01</span>
+      <span class="sec-title">Мои работы</span>
+      <div class="sec-line"></div>
+    </div>
+    <div class="works-grid">
+      <div class="work-item large">
+        <div class="work-fill">
+          <i class="ti ti-photo"></i>
+          <span>Главная работа</span>
+        </div>
+        <div class="work-hover">
+          <div class="work-h-title">Апартаменты «Свет и тень»</div>
+          <div class="work-h-type">Жилой · Ташкент · 2024</div>
+        </div>
+      </div>
+      <div class="work-item">
+        <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 2</span></div>
+        <div class="work-hover">
+          <div class="work-h-title">Скандинавский лофт</div>
+          <div class="work-h-type">Жилой · 2023</div>
+        </div>
+      </div>
+      <div class="work-item">
+        <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 3</span></div>
+        <div class="work-hover">
+          <div class="work-h-title">Кофейня Bloom</div>
+          <div class="work-h-type">Коммерческий · 2023</div>
+        </div>
+      </div>
+      <div class="work-item">
+        <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 4</span></div>
+        <div class="work-hover">
+          <div class="work-h-title">Квартира у моря</div>
+          <div class="work-h-type">Жилой · 2022</div>
+        </div>
+      </div>
+      <div class="work-item">
+        <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 5</span></div>
+        <div class="work-hover">
+          <div class="work-h-title">Минималист-студия</div>
+          <div class="work-h-type">Жилой · 2022</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="project-section" id="project">
+    <div class="sec-header">
+      <span class="sec-num" style="color:var(--rose)">02</span>
+      <span class="sec-title" style="color:var(--iv)">Реализованный проект</span>
+      <div class="sec-line" style="background:rgba(212,160,168,0.2)"></div>
+    </div>
+    <div class="project-inner">
+      <div class="proj-top">
+        <div>
+          <div class="proj-label">Флагманский проект</div>
+          <div class="proj-title">Апартаменты<br>«Свет и тень»</div>
+        </div>
+        <div class="proj-yr">24</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-img">
+          <i class="ti ti-camera"></i>
+          <span>Главное фото</span>
+        </div>
+        <div class="proj-info">
+          <p class="proj-desc">Трёхкомнатная квартира в Ташкенте. Задача — объединить восточный орнамент с современным минимализмом. Натуральный камень, латунь и тканые панели ручной работы.</p>
+          <div>
+            <div class="detail-r"><span class="d-k">Площадь</span><span class="d-v">120 м²</span></div>
+            <div class="detail-r"><span class="d-k">Стиль</span><span class="d-v">Современный восток</span></div>
+            <div class="detail-r"><span class="d-k">Срок</span><span class="d-v">6 месяцев</span></div>
+            <div class="detail-r" style="border:none"><span class="d-k">Год</span><span class="d-v">2024</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="proj-imgs">
+        <div class="pi"><span>Гостиная</span></div>
+        <div class="pi"><span>Кухня</span></div>
+        <div class="pi"><span>Спальня</span></div>
+      </div>
+    </div>
+    <div class="proj-bottom-space"></div>
+  </section>
+
+  <footer id="contact">
+    <div class="f-info">
+      <a href="mailto:email@example.com" class="f-item"><i class="ti ti-mail"></i> email@example.com</a>
+      <a href="#" class="f-item"><i class="ti ti-brand-instagram"></i> @diyorvinogradov</a>
+      <a href="tel:+998000000000" class="f-item"><i class="ti ti-phone"></i> +998 XX XXX XX XX</a>
+    </div>
+    <a href="mailto:email@example.com" class="f-btn">Связаться →</a>
+  </footer>
+
+</div>
+</body>
+</html>
