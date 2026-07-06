@@ -177,8 +177,50 @@
     color: rgba(245,240,232,0.55);
   }
   .tool-item i { font-size: 15px; color: var(--rose); opacity: 0.85; }
+
+  /* STEAM-STYLE HOURS ROW */
+  .steam-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px;
+    background: rgba(0,0,0,0.16);
+    border-radius: 6px;
+  }
+  .steam-icon {
+    height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .steam-icon img { height: 100%; width: auto; display: block; }
+  .steam-info { flex: 1; min-width: 0; }
+  .steam-sub {
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: rgba(245,240,232,0.4);
+    margin-top: 2px;
+  }
+  .steam-hours { text-align: right; flex-shrink: 0; }
+  .steam-hours-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--iv);
+    line-height: 1;
+  }
+  .steam-hours-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(245,240,232,0.4);
+    margin-top: 2px;
+  }
+
   .stat-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 28px;
     padding-top: 20px;
     border-top: 0.5px solid rgba(212,160,168,0.2);
@@ -478,6 +520,16 @@
       <div class="tools-row">
         <div class="tool-item"><i class="ti ti-cube"></i> 3ds Max</div>
         <div class="tool-item"><i class="ti ti-vector"></i> AutoCAD</div>
+      </div>
+      <div class="steam-row">
+        <div class="steam-icon"><img src="assets/3dsmax-logo.png" alt="3ds Max"></div>
+        <div class="steam-info">
+          <div class="steam-sub">Autodesk · 3D-моделирование и визуализация</div>
+        </div>
+        <div class="steam-hours">
+          <div class="steam-hours-num">1 825</div>
+          <div class="steam-hours-label">часов наработки</div>
+        </div>
       </div>
       <div class="stat-row">
         <div>
