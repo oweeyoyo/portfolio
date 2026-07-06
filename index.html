@@ -4,474 +4,445 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Виноградов Диёр — Дизайнер интерьера</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --iv: #FFEDC8;
-    --iv2: #EDE5D8;
-    --iv3: #D8CCBA;
-    --bu: #6B1E2E;
-    --bu2: #8C2A3E;
-    --bu3: #4A1220;
-    --rose: #C4788A;
-    --text: #1A0A0E;
-    --muted: #7A5860;
+    --bg: #FBFBFD;
+    --panel: #FFFFFF;
+    --ink: #1D1D1F;
+    --ink-soft: #6E6E73;
+    --line: rgba(0,0,0,0.08);
+    --bordeaux: #6B1E2E;
+    --bordeaux-soft: #8C2A3E;
+    --ivory: #F4E8D8;
+    --ivory-line: #E7D6BC;
   }
 
   html { scroll-behavior: smooth; }
 
   body {
-    background: var(--bu3);
-    font-family: 'Jost', sans-serif;
-    color: var(--text);
-    min-height: 100vh;
+    background: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
   }
 
-  .site {
-    max-width: 960px;
-    margin: 0 auto;
-    background: var(--iv);
-    min-height: 100vh;
-  }
+  .site { max-width: 1080px; margin: 0 auto; }
 
   /* NAV */
   nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 40px;
-    border-bottom: 0.5px solid rgba(107,30,46,0.12);
-    background: var(--iv);
+    padding: 0 24px;
+    height: 52px;
     position: sticky;
     top: 0;
     z-index: 100;
+    background: rgba(251,251,253,0.75);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 0.5px solid var(--line);
   }
-  .nav-left { display: flex; gap: 28px; }
+  .nav-left { display: flex; gap: 34px; }
   .nav-link {
-    font-size: 10px;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    color: var(--muted);
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ink-soft);
     text-decoration: none;
-    transition: color 0.2s;
+    transition: color 0.2s ease;
+    letter-spacing: -0.01em;
   }
-  .nav-link:hover, .nav-link.active { color: var(--bu); }
+  .nav-link:hover, .nav-link.active { color: var(--ink); }
   .nav-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 300;
-    font-style: italic;
-    color: var(--bu);
-    letter-spacing: 0.06em;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ink);
   }
-  .nav-right { display: flex; gap: 18px; }
+  .nav-right { display: flex; gap: 20px; }
   .nav-social {
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
+    font-size: 12px;
+    color: var(--ink-soft);
     text-decoration: none;
-    transition: color 0.2s;
+    transition: color 0.2s ease;
   }
-  .nav-social:hover { color: var(--bu); }
+  .nav-social:hover { color: var(--ink); }
 
   /* HERO */
-  .hero { position: relative; overflow: hidden; }
-  .hero-photo {
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: linear-gradient(160deg, #C4A8B0 0%, #9A7080 50%, #7A5060 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 12px;
-    color: rgba(107,30,46,0.3);
-  }
-  .hero-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .photo-hint { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
-  .hero-name {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    padding: 60px 40px 32px;
-    background: linear-gradient(to top, rgba(74,18,32,0.92) 0%, transparent 100%);
-  }
-  .name-ru {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 56px;
-    font-weight: 300;
-    color: var(--iv);
-    line-height: 1;
-    letter-spacing: 0.01em;
-  }
-  .name-en {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-weight: 300;
-    font-style: italic;
-    color: var(--rose);
-    letter-spacing: 0.1em;
-    margin-top: 6px;
-  }
-
-  /* INTRO */
-  .intro-band {
-    background: var(--bu);
-    padding: 48px 40px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-  }
-  .intro-label {
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--rose);
-    margin-bottom: 14px;
-    opacity: 0.85;
-  }
-  .intro-sub {
-    font-size: 11px;
-    color: rgba(245,240,232,0.45);
-    margin-bottom: 16px;
-    letter-spacing: 0.05em;
-  }
-  .intro-text {
-    font-size: 13px;
-    line-height: 1.95;
-    color: rgba(245,240,232,0.72);
-    font-weight: 300;
-  }
-  .intro-right {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 24px;
-  }
-  .tag-list { display: flex; flex-wrap: wrap; gap: 7px; }
-  .tag-pill {
-    font-size: 10px;
-    letter-spacing: 0.07em;
-    padding: 5px 12px;
-    border: 0.5px solid rgba(212,160,168,0.3);
-    border-radius: 2px;
-    color: rgba(245,240,232,0.6);
-    text-transform: uppercase;
-  }
-  .tools-row { display: flex; flex-direction: column; gap: 8px; }
-  .tool-item {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    font-size: 12px;
-    color: rgba(245,240,232,0.55);
-  }
-  .tool-item i { font-size: 15px; color: var(--rose); opacity: 0.85; }
-
-  /* STEAM-STYLE HOURS ROW */
-  .steam-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 12px;
-    background: rgba(0,0,0,0.16);
-    border-radius: 6px;
-  }
-  .steam-icon {
-    width: 44px;
-    height: 44px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .steam-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
-  .steam-info { flex: 1; min-width: 0; }
-  .steam-name {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--iv);
-  }
-  .steam-sub {
-    font-size: 10px;
-    letter-spacing: 0.05em;
-    color: rgba(245,240,232,0.4);
-    margin-top: 2px;
-  }
-  .steam-hours { text-align: right; flex-shrink: 0; }
-  .steam-hours-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 400;
-    color: var(--iv);
-    line-height: 1;
-  }
-  .steam-hours-label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: rgba(245,240,232,0.4);
-    margin-top: 2px;
-  }
-
-  .stat-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 28px;
-    padding-top: 20px;
-    border-top: 0.5px solid rgba(212,160,168,0.2);
-  }
-  .stat-n {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 38px;
-    font-weight: 300;
-    color: var(--iv);
-    line-height: 1;
-  }
-  .stat-l {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: rgba(245,240,232,0.38);
-    margin-top: 4px;
-  }
-
-  /* WORKS */
-  .works-section { padding: 48px 40px; }
-  .sec-header {
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-    margin-bottom: 24px;
-  }
-  .sec-num {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--bu);
-    font-weight: 500;
-  }
-  .sec-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 32px;
-    font-weight: 300;
-    color: var(--text);
-  }
-  .sec-line {
-    flex: 1;
-    height: 0.5px;
-    background: rgba(107,30,46,0.15);
-    margin-left: 8px;
-    align-self: center;
-  }
-  .works-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3px;
-    background: rgba(107,30,46,0.08);
-  }
-  .work-item {
-    background: var(--iv2);
-    aspect-ratio: 4/3;
+  .hero {
     position: relative;
+    padding: 72px 24px 0;
+    text-align: center;
     overflow: hidden;
-    cursor: pointer;
   }
-  .work-item.large {
-    grid-column: span 2;
-    aspect-ratio: 16/7;
+  .hero-glow {
+    position: absolute;
+    top: -12%;
+    left: 50%;
+    width: 1100px;
+    height: 720px;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, rgba(166,121,138,0.5), rgba(201,166,176,0.28) 55%, transparent 75%);
+    filter: blur(60px);
+    z-index: 0;
+    pointer-events: none;
   }
-  .work-fill {
-    width: 100%; height: 100%;
+  .hero-eyebrow {
+    position: relative;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--bordeaux);
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+  .hero-name {
+    position: relative;
+    font-size: clamp(88px, 16vw, 220px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.94;
+    color: var(--ink);
+  }
+  .hero-name-en {
+    position: relative;
+    font-size: clamp(16px, 2vw, 20px);
+    font-weight: 400;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+    margin-top: 18px;
+  }
+  .hero-photo {
+    position: relative;
+    margin: 44px -24px 0;
+    aspect-ratio: 16/10;
+    background: linear-gradient(160deg, #E9D9DD 0%, #C9A6B0 45%, #A6798A 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     gap: 10px;
-    color: rgba(107,30,46,0.25);
+    color: rgba(107,30,46,0.3);
+    overflow: hidden;
+  }
+  .hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-hint { font-size: 12px; letter-spacing: 0.02em; }
+
+  /* INTRO */
+  .intro-section {
+    padding: 80px 24px;
+    display: grid;
+    grid-template-columns: 0.85fr 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+  .intro-eyebrow {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--bordeaux);
+    margin-bottom: 14px;
+  }
+  .intro-heading {
+    font-size: clamp(28px, 3vw, 36px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+  .intro-text {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+  .intro-text + .intro-text { margin-top: 16px; }
+
+  .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .tag-pill {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 14px;
+    background: var(--ivory);
+    border-radius: 100px;
+    color: var(--bordeaux);
+    letter-spacing: -0.01em;
+  }
+
+  /* SPEC CARD (formerly steam-row) */
+  .spec-card {
+    background: var(--panel);
+    border: 0.5px solid var(--line);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+  }
+  .spec-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 4px;
+  }
+  .spec-row + .spec-row { border-top: 0.5px solid var(--line); }
+  .spec-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: var(--ivory);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bordeaux);
+    font-size: 18px;
+  }
+  .spec-info { flex: 1; min-width: 0; }
+  .spec-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .spec-sub { font-size: 12px; color: var(--ink-soft); margin-top: 1px; }
+  .spec-value { text-align: right; flex-shrink: 0; }
+  .spec-value-num {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  .spec-value-label {
+    font-size: 10px;
+    color: var(--ink-soft);
+    margin-top: 3px;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    background: var(--panel);
+    border: 0.5px solid var(--line);
+    border-radius: 20px;
+    padding: 22px 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .stat-cell { text-align: center; padding: 0 4px; }
+  .stat-n {
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat-l {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  /* WORKS */
+  .works-section { padding: 40px 24px 80px; }
+  .sec-header { margin-bottom: 28px; }
+  .sec-eyebrow {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--bordeaux);
+    margin-bottom: 8px;
+  }
+  .sec-title {
+    font-size: clamp(28px, 3vw, 36px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  /* Stacking scroll cards: cards overlap in the same cell, no dead gap between them */
+  .works-stage-wrap {
+    position: relative;
+    height: calc(100vh + 880px);
+  }
+  .works-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .work-item {
+    grid-area: 1 / 1;
+    background: var(--panel);
+    border: 0.5px solid var(--line);
+    border-radius: 28px;
+    width: 100%;
+    height: min(92vh, 820px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 70px -30px rgba(0,0,0,0.28);
+    will-change: transform, filter;
+  }
+  .work-fill {
+    width: 100%; height: 100%;
+    background: linear-gradient(150deg, #EDE3DA, #D9C6B8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    color: rgba(107,30,46,0.22);
   }
   .work-fill i { font-size: 36px; }
-  .work-fill span { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
-  .work-hover {
+  .work-fill span { font-size: 12px; letter-spacing: 0.02em; }
+  .work-caption {
     position: absolute;
-    inset: 0;
-    background: var(--bu3);
-    opacity: 0;
-    transition: opacity 0.3s;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 20px;
+    left: 0; right: 0; bottom: 0;
+    padding: 28px 32px;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
   }
-  .work-item:hover .work-hover { opacity: 0.95; }
-  .work-h-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-weight: 300;
-    color: var(--iv);
-    line-height: 1.2;
-  }
-  .work-h-type {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--rose);
-    margin-top: 5px;
+  .work-h-title { font-size: 22px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
+  .work-h-type { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 4px; }
+  .work-index {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    background: rgba(0,0,0,0.28);
+    padding: 5px 12px;
+    border-radius: 100px;
+    backdrop-filter: blur(6px);
   }
 
   /* PROJECT */
-  .project-section { background: var(--bu3); padding: 48px 40px 0; }
+  .project-section { padding: 0 24px 80px; }
   .project-inner {
-    background: var(--iv);
-    border-radius: 8px;
+    background: var(--panel);
+    border: 0.5px solid var(--line);
+    border-radius: 28px;
     overflow: hidden;
-    margin-top: 24px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.05);
   }
   .proj-top {
-    background: var(--bu);
-    padding: 24px 28px;
+    background: var(--bordeaux);
+    padding: 40px 36px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
   }
   .proj-label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--rose);
-    opacity: 0.75;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ivory);
+    opacity: 0.85;
     margin-bottom: 8px;
   }
   .proj-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 32px;
-    font-weight: 300;
-    color: var(--iv);
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
     line-height: 1.1;
   }
   .proj-yr {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 64px;
-    font-weight: 300;
-    color: rgba(212,160,168,0.1);
+    font-size: 56px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.14);
     line-height: 1;
   }
   .proj-body { display: grid; grid-template-columns: 1.1fr 1fr; }
   .proj-img {
     aspect-ratio: 1;
-    background: linear-gradient(135deg, #B09098, #8A6878);
+    background: linear-gradient(135deg, #C7A6AE, #9B7482);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     gap: 10px;
-    color: rgba(245,240,232,0.3);
+    color: rgba(255,255,255,0.35);
   }
-  .proj-img i { font-size: 36px; }
-  .proj-img span { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .proj-img i { font-size: 32px; }
+  .proj-img span { font-size: 11px; letter-spacing: 0.02em; }
   .proj-info {
-    padding: 24px;
-    background: var(--iv);
+    padding: 32px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
   }
-  .proj-desc { font-size: 13px; line-height: 1.85; color: var(--muted); }
+  .proj-desc { font-size: 15px; line-height: 1.7; color: var(--ink-soft); }
   .detail-r {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 0.5px solid rgba(107,30,46,0.1);
+    padding: 11px 0;
+    border-bottom: 0.5px solid var(--line);
+    font-size: 13px;
   }
-  .d-k {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--bu);
-    opacity: 0.75;
-  }
-  .d-v { font-size: 12px; color: var(--text); }
+  .detail-r:last-child { border-bottom: none; }
+  .d-k { color: var(--ink-soft); }
+  .d-v { color: var(--ink); font-weight: 500; }
   .proj-imgs {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 3px;
-    background: rgba(107,30,46,0.1);
+    gap: 2px;
+    background: var(--line);
   }
   .pi {
     aspect-ratio: 4/3;
-    background: linear-gradient(135deg, var(--iv2), var(--iv3));
+    background: linear-gradient(135deg, #F1E9E0, #E2D2C4);
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .pi span {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: rgba(107,30,46,0.3);
-  }
+  .pi span { font-size: 11px; color: rgba(107,30,46,0.35); }
 
   /* FOOTER */
   footer {
-    background: var(--bu3);
-    padding: 28px 40px;
+    padding: 40px 24px 56px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 0.5px solid rgba(212,160,168,0.1);
-    margin-top: 0;
+    border-top: 0.5px solid var(--line);
+    flex-wrap: wrap;
+    gap: 20px;
   }
-  .f-info { display: flex; gap: 24px; flex-wrap: wrap; }
+  .f-info { display: flex; gap: 26px; flex-wrap: wrap; }
   .f-item {
     display: flex;
     align-items: center;
-    gap: 7px;
-    font-size: 12px;
-    color: rgba(245,240,232,0.45);
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ink-soft);
     text-decoration: none;
+    transition: color 0.2s ease;
   }
-  .f-item i { font-size: 15px; color: var(--rose); }
-  .f-item:hover { color: rgba(245,240,232,0.75); }
+  .f-item i { font-size: 15px; color: var(--bordeaux); }
+  .f-item:hover { color: var(--ink); }
   .f-btn {
-    font-family: 'Jost', sans-serif;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 11px 26px;
-    border: 0.5px solid rgba(212,160,168,0.35);
-    border-radius: 2px;
-    background: rgba(212,160,168,0.07);
-    color: var(--iv);
+    padding: 11px 22px;
+    border-radius: 100px;
+    background: var(--bordeaux);
+    color: #fff;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s ease, transform 0.2s ease;
     text-decoration: none;
   }
-  .f-btn:hover { background: rgba(212,160,168,0.18); }
+  .f-btn:hover { background: var(--bordeaux-soft); transform: translateY(-1px); }
 
-  /* project section bottom spacing */
-  .proj-bottom-space { height: 40px; }
-
-  @media (max-width: 640px) {
-    nav { padding: 14px 20px; }
-    .nav-left { gap: 16px; }
+  @media (max-width: 720px) {
     .nav-right { display: none; }
-    .name-ru { font-size: 36px; }
-    .intro-band { grid-template-columns: 1fr; padding: 32px 20px; }
-    .works-section { padding: 32px 20px; }
-    .project-section { padding: 32px 20px 0; }
+    .nav-left { gap: 20px; }
+    .intro-section { grid-template-columns: 1fr; gap: 40px; padding: 56px 20px; }
+    .works-section { padding: 24px 20px 56px; }
+    .work-item { height: 70vh; border-radius: 20px; }
+    .work-h-title { font-size: 18px; }
+    .project-section { padding: 0 20px 56px; }
     .proj-body { grid-template-columns: 1fr; }
-    footer { padding: 20px; flex-direction: column; gap: 16px; align-items: flex-start; }
-    .hero-name { padding: 40px 20px 24px; }
+    .proj-top { padding: 28px 24px; flex-direction: column; align-items: flex-start; gap: 12px; }
+    footer { padding: 32px 20px 44px; flex-direction: column; align-items: flex-start; }
+    .hero { padding: 56px 20px 0; }
+    .hero-photo { margin: 32px -20px 0; }
+    .stat-row { grid-template-columns: 1fr; gap: 14px; }
+    .stat-row { text-align: left; }
+    .stat-cell { text-align: left; }
   }
 </style>
 </head>
@@ -493,61 +464,56 @@
   </nav>
 
   <section class="hero" id="about">
+    <div class="hero-glow"></div>
+    <div class="hero-eyebrow">Дизайнер интерьера · Ташкент</div>
+    <div class="hero-name">Виноградов<br>Диёр</div>
+    <div class="hero-name-en">Diyor Vinogradov</div>
     <div class="hero-photo">
-      <i class="ti ti-user" style="font-size:56px"></i>
+      <i class="ti ti-user" style="font-size:48px"></i>
       <span class="photo-hint">Ваша фотография</span>
-    </div>
-    <div class="hero-name">
-      <div class="name-ru">Виноградов Диёр</div>
-      <div class="name-en">Diyor Vinogradov</div>
     </div>
   </section>
 
-  <div class="intro-band">
+  <div class="intro-section">
     <div>
-      <div class="intro-label">Introduction</div>
-      <div class="intro-sub">Архитектурный дизайн · 3D-визуализация · Ташкент</div>
-      <br>
-      <p class="intro-text">
-        Меня зовут Виноградов Диёр, я специализируюсь на 3D-визуализации и архитектурном дизайне. В работе я сочетаю техническую точность — уверенное владение 3ds Max и AutoCAD — с глубоким вниманием к эстетике пространства.
-        <br><br>
-        Мой творческий подход базируется на лаконичности и функциональности: датский стиль, модерн и принципы Баухауса — лёгкость и комфорт в каждом проекте. Буду рад воплотить вашу идею с профессиональным вниманием к каждой детали.
-      </p>
+      <div class="intro-eyebrow">О себе</div>
+      <div class="intro-heading">3D-визуализация и архитектурный дизайн с вниманием к деталям.</div>
+      <p class="intro-text">Меня зовут Виноградов Диёр. В работе я сочетаю техническую точность — уверенное владение 3ds Max и AutoCAD — с глубоким вниманием к эстетике пространства.</p>
+      <p class="intro-text">Мой творческий подход базируется на лаконичности и функциональности: датский стиль, модерн и принципы Баухауса — лёгкость и комфорт в каждом проекте.</p>
     </div>
-    <div class="intro-right">
+    <div>
       <div class="tag-list">
         <span class="tag-pill">Датский стиль</span>
         <span class="tag-pill">Модерн</span>
         <span class="tag-pill">Баухаус</span>
         <span class="tag-pill">Кэжуал</span>
         <span class="tag-pill">3D-визуализация</span>
-        <span class="tag-pill">Архитектурный дизайн</span>
       </div>
-      <div class="tools-row">
-        <div class="tool-item"><i class="ti ti-cube"></i> 3ds Max</div>
-        <div class="tool-item"><i class="ti ti-vector"></i> AutoCAD</div>
-      </div>
-      <div class="steam-row">
-        <div class="steam-icon"><img src="assets/3dsmax-logo.png" alt="3ds Max"></div>
-        <div class="steam-info">
-          <div class="steam-name">3ds Max</div>
-          <div class="steam-sub">Autodesk · 3D-моделирование и визуализация</div>
-        </div>
-        <div class="steam-hours">
-          <div class="steam-hours-num">1 825</div>
-          <div class="steam-hours-label">часов наработки</div>
+
+      <div class="spec-card">
+        <div class="spec-row">
+          <div class="spec-icon"><i class="ti ti-cube"></i></div>
+          <div class="spec-info">
+            <div class="spec-name">3ds Max</div>
+            <div class="spec-sub">3D-моделирование и визуализация</div>
+          </div>
+          <div class="spec-value">
+            <div class="spec-value-num">1 825</div>
+            <div class="spec-value-label">часов</div>
+          </div>
         </div>
       </div>
+
       <div class="stat-row">
-        <div>
+        <div class="stat-cell">
           <div class="stat-n">15</div>
           <div class="stat-l">Концепт-проектов</div>
         </div>
-        <div>
+        <div class="stat-cell">
           <div class="stat-n">1</div>
           <div class="stat-l">Реализованный</div>
         </div>
-        <div>
+        <div class="stat-cell">
           <div class="stat-n">2</div>
           <div class="stat-l">Года опыта</div>
         </div>
@@ -557,47 +523,50 @@
 
   <section class="works-section" id="works">
     <div class="sec-header">
-      <span class="sec-num">01</span>
-      <span class="sec-title">Мои работы</span>
-      <div class="sec-line"></div>
+      <div class="sec-eyebrow">Портфолио</div>
+      <div class="sec-title">Мои работы</div>
     </div>
-    <div class="works-grid">
-      <div class="work-item large">
-        <div class="work-fill">
-          <i class="ti ti-photo"></i>
-          <span>Главная работа</span>
+    <div class="works-stage-wrap">
+      <div class="works-stage">
+        <div class="work-item">
+          <div class="work-fill"><i class="ti ti-photo"></i><span>Главная работа</span></div>
+          <div class="work-index">01 / 05</div>
+          <div class="work-caption">
+            <div class="work-h-title">Апартаменты «Свет и тень»</div>
+            <div class="work-h-type">Жилой · Ташкент · 2024</div>
+          </div>
         </div>
-        <div class="work-hover">
-          <div class="work-h-title">Апартаменты «Свет и тень»</div>
-          <div class="work-h-type">Жилой · Ташкент · 2024</div>
+        <div class="work-item">
+          <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 2</span></div>
+          <div class="work-index">02 / 05</div>
+          <div class="work-caption">
+            <div class="work-h-title">Скандинавский лофт</div>
+            <div class="work-h-type">Жилой · 2023</div>
+          </div>
         </div>
-      </div>
-      <div class="work-item">
-        <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 2</span></div>
-        <div class="work-hover">
-          <div class="work-h-title">Скандинавский лофт</div>
-          <div class="work-h-type">Жилой · 2023</div>
+        <div class="work-item">
+          <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 3</span></div>
+          <div class="work-index">03 / 05</div>
+          <div class="work-caption">
+            <div class="work-h-title">Кофейня Bloom</div>
+            <div class="work-h-type">Коммерческий · 2023</div>
+          </div>
         </div>
-      </div>
-      <div class="work-item">
-        <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 3</span></div>
-        <div class="work-hover">
-          <div class="work-h-title">Кофейня Bloom</div>
-          <div class="work-h-type">Коммерческий · 2023</div>
+        <div class="work-item">
+          <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 4</span></div>
+          <div class="work-index">04 / 05</div>
+          <div class="work-caption">
+            <div class="work-h-title">Квартира у моря</div>
+            <div class="work-h-type">Жилой · 2022</div>
+          </div>
         </div>
-      </div>
-      <div class="work-item">
-        <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 4</span></div>
-        <div class="work-hover">
-          <div class="work-h-title">Квартира у моря</div>
-          <div class="work-h-type">Жилой · 2022</div>
-        </div>
-      </div>
-      <div class="work-item">
-        <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 5</span></div>
-        <div class="work-hover">
-          <div class="work-h-title">Минималист-студия</div>
-          <div class="work-h-type">Жилой · 2022</div>
+        <div class="work-item">
+          <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 5</span></div>
+          <div class="work-index">05 / 05</div>
+          <div class="work-caption">
+            <div class="work-h-title">Минималист-студия</div>
+            <div class="work-h-type">Жилой · 2022</div>
+          </div>
         </div>
       </div>
     </div>
@@ -605,15 +574,14 @@
 
   <section class="project-section" id="project">
     <div class="sec-header">
-      <span class="sec-num" style="color:var(--rose)">02</span>
-      <span class="sec-title" style="color:var(--iv)">Реализованный проект</span>
-      <div class="sec-line" style="background:rgba(212,160,168,0.2)"></div>
+      <div class="sec-eyebrow" style="color: var(--bordeaux)">Флагманский проект</div>
+      <div class="sec-title">Реализованный проект</div>
     </div>
     <div class="project-inner">
       <div class="proj-top">
         <div>
           <div class="proj-label">Флагманский проект</div>
-          <div class="proj-title">Апартаменты<br>«Свет и тень»</div>
+          <div class="proj-title">Апартаменты «Свет и тень»</div>
         </div>
         <div class="proj-yr">24</div>
       </div>
@@ -628,7 +596,7 @@
             <div class="detail-r"><span class="d-k">Площадь</span><span class="d-v">120 м²</span></div>
             <div class="detail-r"><span class="d-k">Стиль</span><span class="d-v">Современный восток</span></div>
             <div class="detail-r"><span class="d-k">Срок</span><span class="d-v">6 месяцев</span></div>
-            <div class="detail-r" style="border:none"><span class="d-k">Год</span><span class="d-v">2024</span></div>
+            <div class="detail-r"><span class="d-k">Год</span><span class="d-v">2024</span></div>
           </div>
         </div>
       </div>
@@ -638,7 +606,6 @@
         <div class="pi"><span>Спальня</span></div>
       </div>
     </div>
-    <div class="proj-bottom-space"></div>
   </section>
 
   <footer id="contact">
@@ -651,5 +618,67 @@
   </footer>
 
 </div>
+
+<script>
+  (function () {
+    const stageWrap = document.querySelector('.works-stage-wrap');
+    const items = Array.from(document.querySelectorAll('.works-stage .work-item'));
+    if (!stageWrap || !items.length) return;
+
+    const SEGMENT = 220;               // px скролла на одну смену карточки
+    const SLIDE_PERCENT = 112;          // % от высоты карточки — полностью скрыта до своей очереди
+    const totalDwell = SEGMENT * (items.length - 1);
+
+    let smoothedPos = 0;
+    let lastScrollY = window.scrollY;
+    let scrollingDown = true;
+
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    const ease = p => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
+
+    function update() {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY + 0.5) scrollingDown = true;
+      else if (currentScrollY < lastScrollY - 0.5) scrollingDown = false;
+      lastScrollY = currentScrollY;
+
+      const rect = stageWrap.getBoundingClientRect();
+      const scrolled = clamp(-rect.top, 0, totalDwell);
+      const rawIndexPos = scrolled / SEGMENT;
+
+      if (scrollingDown) {
+        const diff = rawIndexPos - smoothedPos;
+        const maxStep = 0.045; // ограничивает скорость — каждая карточка показывается по очереди
+        const step = Math.sign(diff) * Math.min(Math.abs(diff) * 0.14, maxStep);
+        smoothedPos += step;
+        if (Math.abs(rawIndexPos - smoothedPos) < 0.001) smoothedPos = rawIndexPos;
+      } else {
+        smoothedPos = rawIndexPos; // на обратном пути — без анимации, просто пролистывание
+      }
+
+      items.forEach((item, i) => {
+        const isLast = i === items.length - 1;
+        const pOwn = clamp(smoothedPos - i, 0, 1);
+        const pArrive = i === 0 ? 1 : clamp(smoothedPos - (i - 1), 0, 1);
+        const easedOwn = ease(pOwn);
+        const easedArrive = ease(pArrive);
+
+        const slidePercent = (1 - easedArrive) * SLIDE_PERCENT;
+        const shrinkY = isLast ? 0 : easedOwn * -22;
+        const scale = isLast ? 1 : 1 - easedOwn * 0.12;
+        const brightness = isLast ? 1 : 1 - easedOwn * 0.32;
+
+        item.style.transform = `translateY(calc(${slidePercent}% + ${shrinkY}px)) scale(${scale})`;
+        item.style.filter = `brightness(${brightness})`;
+        item.style.zIndex = i;
+      });
+
+      requestAnimationFrame(update);
+    }
+
+    requestAnimationFrame(update);
+  })();
+</script>
+
 </body>
 </html>
