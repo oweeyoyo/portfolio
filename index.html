@@ -389,9 +389,10 @@
     margin-bottom: 8px;
   }
   .sec-title {
-    font-size: clamp(28px, 3vw, 36px);
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
   }
   .works-stage-wrap {
     display: block;
@@ -446,108 +447,6 @@
     backdrop-filter: blur(6px);
   }
   /* PROJECT */
-  .project-section { padding: 0 24px 80px; }
-  .project-inner {
-    position: relative;
-    background: var(--panel);
-    border: 0.5px solid var(--line);
-    border-radius: 28px;
-    overflow: hidden;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.05);
-  }
-  .proj-top {
-    position: relative;
-    background: var(--panel);
-    padding: 36px 36px 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    border-bottom: 0.5px solid var(--line);
-  }
-  .proj-label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--bordeaux);
-    margin-bottom: 8px;
-  }
-  .proj-title {
-    font-size: clamp(24px, 3vw, 32px);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-    line-height: 1.15;
-  }
-  .proj-yr {
-    position: relative;
-    z-index: 1;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--bordeaux);
-    letter-spacing: -0.01em;
-    padding: 8px 16px;
-    border-radius: 100px;
-    background: var(--ivory);
-    border: 1px solid var(--ivory-line);
-    flex-shrink: 0;
-    animation: capsuleFloat 9s ease-in-out infinite;
-    will-change: transform;
-  }
-  @keyframes capsuleFloat {
-    0%   { transform: translate(0, 0) rotate(0deg); }
-    25%  { transform: translate(-3px, 3px) rotate(-1.5deg); }
-    50%  { transform: translate(1px, 5px) rotate(1deg); }
-    75%  { transform: translate(3px, 1px) rotate(1.5deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .proj-yr { animation: none; }
-  }
-  .proj-body { display: grid; grid-template-columns: 1.1fr 1fr; }
-  .proj-img {
-    aspect-ratio: 1;
-    background: var(--ivory);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px;
-    color: rgba(107,30,46,0.3);
-    border-right: 0.5px solid var(--ivory-line);
-  }
-  .proj-img .icon-tabler { font-size: 32px; }
-  .proj-img span { font-size: 11px; letter-spacing: 0.02em; color: var(--ink-soft); }
-  .proj-info {
-    padding: 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  .proj-desc { font-size: 15px; line-height: 1.7; color: var(--ink-soft); }
-  .detail-r {
-    display: flex;
-    justify-content: space-between;
-    padding: 11px 0;
-    border-bottom: 0.5px solid var(--line);
-    font-size: 13px;
-  }
-  .detail-r:last-child { border-bottom: none; }
-  .d-k { color: var(--ink-soft); }
-  .d-v { color: var(--ink); font-weight: 500; }
-  .proj-imgs {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0.5px;
-    background: var(--line);
-    border-top: 0.5px solid var(--line);
-  }
-  .pi {
-    aspect-ratio: 4/3;
-    background: var(--panel);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .pi span { font-size: 11px; color: var(--ink-soft); }
   /* FOOTER */
   footer {
     padding: 48px 24px 64px;
@@ -652,9 +551,6 @@
     .work-item:nth-child(4) { top: 116px; }
     .work-item:nth-child(5) { top: 132px; }
     .work-h-title { font-size: 18px; }
-    .project-section { padding: 0 20px 56px; }
-    .proj-body { grid-template-columns: 1fr; }
-    .proj-top { padding: 28px 24px; flex-direction: column; align-items: flex-start; gap: 12px; }
     footer { padding: 40px 20px 48px; }
     .f-info { grid-template-columns: 1fr; }
     .f-bottom { flex-direction: column; align-items: flex-start; }
@@ -675,8 +571,7 @@
       <nav class="tabbar" id="tabbar">
         <span class="nav-indicator" id="navIndicator"></span>
         <a href="#about" class="tabbar-link active" data-tab>Обо мне</a>
-        <a href="#works" class="tabbar-link" data-tab>Проекты</a>
-        <a href="#project" class="tabbar-link" data-tab>Реализованный</a>
+        <a href="#works" class="tabbar-link" data-tab>Концепты</a>
         <a href="#contact" class="tabbar-link" data-tab>Контакты</a>
       </nav>
     </div>
@@ -744,7 +639,7 @@
         <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Главная работа</span></div>
         <div class="work-index">01 / 05</div>
         <div class="work-caption">
-          <div class="work-h-title">Апартаменты «Свет и тень»</div>
+          <div class="work-h-title">Концепт 1</div>
           <div class="work-h-type">Жилой · Ташкент · 2024</div>
         </div>
       </div>
@@ -752,7 +647,7 @@
         <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Работа 2</span></div>
         <div class="work-index">02 / 05</div>
         <div class="work-caption">
-          <div class="work-h-title">Скандинавский лофт</div>
+          <div class="work-h-title">Концепт 2</div>
           <div class="work-h-type">Жилой · 2023</div>
         </div>
       </div>
@@ -760,7 +655,7 @@
         <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Работа 3</span></div>
         <div class="work-index">03 / 05</div>
         <div class="work-caption">
-          <div class="work-h-title">Кофейня Bloom</div>
+          <div class="work-h-title">Концепт 3</div>
           <div class="work-h-type">Коммерческий · 2023</div>
         </div>
       </div>
@@ -768,7 +663,7 @@
         <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Работа 4</span></div>
         <div class="work-index">04 / 05</div>
         <div class="work-caption">
-          <div class="work-h-title">Квартира у моря</div>
+          <div class="work-h-title">Концепт 4</div>
           <div class="work-h-type">Жилой · 2022</div>
         </div>
       </div>
@@ -776,44 +671,9 @@
         <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Работа 5</span></div>
         <div class="work-index">05 / 05</div>
         <div class="work-caption">
-          <div class="work-h-title">Минималист-студия</div>
+          <div class="work-h-title">Концепт 5</div>
           <div class="work-h-type">Жилой · 2022</div>
         </div>
-      </div>
-    </div>
-  </section>
-  <section class="project-section" id="project">
-    <div class="sec-header">
-      <div class="sec-eyebrow" style="color: var(--bordeaux)">Флагманский проект</div>
-      <div class="sec-title">Реализованный проект</div>
-    </div>
-    <div class="project-inner">
-      <div class="proj-top">
-        <div>
-          <div class="proj-label">Флагманский проект</div>
-          <div class="proj-title">Апартаменты «Свет и тень»</div>
-        </div>
-        <div class="proj-yr">2024</div>
-      </div>
-      <div class="proj-body">
-        <div class="proj-img">
-          <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2"/><path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/></svg>
-          <span>Главное фото</span>
-        </div>
-        <div class="proj-info">
-          <p class="proj-desc">Трёхкомнатная квартира в Ташкенте. Задача — объединить восточный орнамент с современным минимализмом. Натуральный камень, латунь и тканые панели ручной работы.</p>
-          <div>
-            <div class="detail-r"><span class="d-k">Площадь</span><span class="d-v">120 м²</span></div>
-            <div class="detail-r"><span class="d-k">Стиль</span><span class="d-v">Современный восток</span></div>
-            <div class="detail-r"><span class="d-k">Срок</span><span class="d-v">6 месяцев</span></div>
-            <div class="detail-r"><span class="d-k">Год</span><span class="d-v">2024</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="proj-imgs">
-        <div class="pi"><span>Гостиная</span></div>
-        <div class="pi"><span>Кухня</span></div>
-        <div class="pi"><span>Спальня</span></div>
       </div>
     </div>
   </section>
