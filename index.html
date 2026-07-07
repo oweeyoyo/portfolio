@@ -4,10 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Виноградов Диёр — Дизайнер интерьера</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
+  .icon-tabler {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: -0.15em;
+    flex-shrink: 0;
+  }
   :root {
     --bg: #FBFBFD;
     --panel: #FFFFFF;
@@ -16,64 +21,155 @@
     --line: rgba(0,0,0,0.08);
     --bordeaux: #6B1E2E;
     --bordeaux-soft: #8C2A3E;
-    --ivory: #F4E8D8;
-    --ivory-line: #E7D6BC;
+    --ivory: #F6E3E6;
+    --ivory-line: #E9C3CB;
   }
-
   html { scroll-behavior: smooth; }
-
   body {
     background: var(--bg);
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
   }
-
   .site { max-width: 1080px; margin: 0 auto; }
 
-  /* NAV */
-  nav {
+  /* ============ FLOATING TAB BAR (iOS-style, liquid glass) ============ */
+  .topbar-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 24px;
-    height: 52px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(251,251,253,0.75);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 0.5px solid var(--line);
+    padding: 16px 24px 0;
+    pointer-events: none; /* let clicks pass through the empty strip */
   }
-  .nav-left { display: flex; gap: 34px; }
-  .nav-link {
-    font-size: 12px;
-    font-weight: 400;
-    color: var(--ink-soft);
-    text-decoration: none;
-    transition: color 0.2s ease;
-    letter-spacing: -0.01em;
-  }
-  .nav-link:hover, .nav-link.active { color: var(--ink); }
-  .nav-logo {
-    font-size: 14px;
+  .topbar-fixed > * { pointer-events: auto; }
+
+  .brand-fixed {
+    font-size: 13px;
     font-weight: 600;
     letter-spacing: -0.02em;
     color: var(--ink);
+    padding: 10px 16px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(255,255,255,0.55);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
   }
-  .nav-right { display: flex; gap: 20px; }
+
+  .social-fixed {
+    display: flex;
+    gap: 4px;
+    padding: 6px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(255,255,255,0.55);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
   .nav-social {
     font-size: 12px;
+    font-weight: 500;
     color: var(--ink-soft);
     text-decoration: none;
-    transition: color 0.2s ease;
+    padding: 8px 14px;
+    border-radius: 100px;
+    transition: color 0.2s ease, background 0.2s ease;
   }
-  .nav-social:hover { color: var(--ink); }
+  .nav-social:hover { color: var(--ink); background: rgba(0,0,0,0.04); }
+
+  .tabbar-wrap {
+    position: absolute;
+    left: 50%;
+    top: 16px;
+    transform: translateX(-50%);
+  }
+
+  .tabbar {
+    position: relative;
+    display: flex;
+    gap: 2px;
+    padding: 6px;
+    border-radius: 22px;
+    background: rgba(255,255,255,0.38);
+    border: 1px solid rgba(255,255,255,0.55);
+    box-shadow:
+      0 12px 36px rgba(0,0,0,0.14),
+      0 1px 1px rgba(255,255,255,0.6) inset,
+      0 -1px 8px rgba(255,255,255,0.35) inset;
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    isolation: isolate;
+    overflow: hidden;
+  }
+  /* glossy liquid sheen across the top of the bar */
+  .tabbar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.08) 42%, rgba(255,255,255,0) 70%);
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .nav-indicator {
+    position: absolute;
+    top: 6px;
+    left: 0;
+    height: calc(100% - 12px);
+    width: 0;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.85);
+    box-shadow:
+      0 4px 14px rgba(0,0,0,0.12),
+      0 0 0 0.5px rgba(255,255,255,0.9) inset;
+    transform: translateX(6px);
+    transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+                width 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform, width;
+    z-index: 0;
+  }
+
+  .tabbar-link {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 18px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    border-radius: 16px;
+    transition: color 0.35s ease;
+  }
+  .tabbar-link.active { color: var(--bordeaux); }
+  .tabbar-link:hover:not(.active) { color: var(--ink); }
+
+  @media (max-width: 720px) {
+    .social-fixed { display: none; }
+    .topbar-fixed { padding: 12px 16px 0; }
+    .tabbar-wrap { position: static; transform: none; margin: 0 auto; display: flex; justify-content: center; width: 100%; }
+    .tabbar { max-width: calc(100vw - 32px); overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
+    .tabbar::-webkit-scrollbar { display: none; }
+    .tabbar-link { padding: 9px 13px; font-size: 11.5px; }
+    .brand-fixed { display: none; }
+  }
+  /* ============ END FLOATING TAB BAR ============ */
 
   /* HERO */
   .hero {
-    padding: 40px 24px 80px;
+    padding: 108px 24px 80px;
   }
   .hero-card {
     position: relative;
@@ -86,6 +182,8 @@
     box-shadow: 0 2px 24px rgba(0,0,0,0.05);
     padding: 64px 32px 32px;
     text-align: center;
+    container-type: inline-size;
+    container-name: herocard;
   }
   .hero-glow {
     position: absolute;
@@ -123,12 +221,17 @@
   .hero-name {
     position: relative;
     z-index: 1;
-    font-size: clamp(36px, 8vw, 108px);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.02;
+    font-size: clamp(44px, 13cqw, 140px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
     color: var(--ink);
     word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  /* Fallback for browsers without container query support: scale off viewport instead */
+  @supports not (container-type: inline-size) {
+    .hero-name { font-size: clamp(36px, 8vw, 108px); }
   }
   .hero-name-en {
     position: relative;
@@ -142,19 +245,31 @@
   .hero-photo {
     position: relative;
     z-index: 1;
-    margin: 40px 0 0;
-    aspect-ratio: 16/9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px;
-    color: rgba(107,30,46,0.35);
+    margin: 6px auto 0;
+    width: min(400px, 74%);
+    border-radius: 30px;
     overflow: hidden;
+    box-shadow: 0 30px 70px -32px rgba(107,30,46,0.4);
   }
-  .hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .photo-hint { font-size: 12px; letter-spacing: 0.02em; }
-
+  .hero-photo img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .hero-photo::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 130px;
+    background: linear-gradient(to bottom,
+      var(--panel) 0%,
+      rgba(246,227,230,0.94) 30%,
+      rgba(140,42,62,0.22) 65%,
+      rgba(140,42,62,0) 100%);
+    pointer-events: none;
+  }
   /* INTRO */
   .intro-section {
     padding: 80px 24px;
@@ -183,7 +298,6 @@
     font-weight: 400;
   }
   .intro-text + .intro-text { margin-top: 16px; }
-
   .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
   .tag-pill {
     font-size: 12px;
@@ -194,7 +308,6 @@
     color: var(--bordeaux);
     letter-spacing: -0.01em;
   }
-
   /* SPEC CARD (formerly steam-row) */
   .spec-card {
     background: var(--panel);
@@ -243,7 +356,6 @@
     color: var(--ink-soft);
     margin-top: 3px;
   }
-
   .stat-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -267,7 +379,6 @@
     color: var(--ink-soft);
     margin-top: 6px;
   }
-
   /* WORKS */
   .works-section { padding: 40px 24px 80px; }
   .sec-header { margin-bottom: 28px; }
@@ -312,7 +423,7 @@
     gap: 10px;
     color: rgba(107,30,46,0.22);
   }
-  .work-fill i { font-size: 36px; }
+  .work-fill .icon-tabler { font-size: 36px; }
   .work-fill span { font-size: 12px; letter-spacing: 0.02em; }
   .work-caption {
     position: absolute;
@@ -334,10 +445,10 @@
     border-radius: 100px;
     backdrop-filter: blur(6px);
   }
-
   /* PROJECT */
   .project-section { padding: 0 24px 80px; }
   .project-inner {
+    position: relative;
     background: var(--panel);
     border: 0.5px solid var(--line);
     border-radius: 28px;
@@ -345,45 +456,66 @@
     box-shadow: 0 2px 20px rgba(0,0,0,0.05);
   }
   .proj-top {
-    background: var(--bordeaux);
-    padding: 40px 36px;
+    position: relative;
+    background: var(--panel);
+    padding: 36px 36px 28px;
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: flex-start;
+    border-bottom: 0.5px solid var(--line);
   }
   .proj-label {
     font-size: 12px;
     font-weight: 500;
-    color: var(--ivory);
-    opacity: 0.85;
+    color: var(--bordeaux);
     margin-bottom: 8px;
   }
   .proj-title {
-    font-size: clamp(26px, 3vw, 34px);
+    font-size: clamp(24px, 3vw, 32px);
     font-weight: 600;
     letter-spacing: -0.02em;
-    color: #fff;
-    line-height: 1.1;
+    color: var(--ink);
+    line-height: 1.15;
   }
   .proj-yr {
-    font-size: 56px;
-    font-weight: 700;
-    color: rgba(255,255,255,0.14);
-    line-height: 1;
+    position: relative;
+    z-index: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--bordeaux);
+    letter-spacing: -0.01em;
+    padding: 8px 16px;
+    border-radius: 100px;
+    background: var(--ivory);
+    border: 1px solid var(--ivory-line);
+    flex-shrink: 0;
+    animation: capsuleFloat 9s ease-in-out infinite;
+    will-change: transform;
+  }
+  @keyframes capsuleFloat {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    25%  { transform: translate(-3px, 3px) rotate(-1.5deg); }
+    50%  { transform: translate(1px, 5px) rotate(1deg); }
+    75%  { transform: translate(3px, 1px) rotate(1.5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .proj-yr { animation: none; }
   }
   .proj-body { display: grid; grid-template-columns: 1.1fr 1fr; }
   .proj-img {
     aspect-ratio: 1;
-    background: linear-gradient(135deg, #C7A6AE, #9B7482);
+    background: var(--ivory);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     gap: 10px;
-    color: rgba(255,255,255,0.35);
+    color: rgba(107,30,46,0.3);
+    border-right: 0.5px solid var(--ivory-line);
   }
-  .proj-img i { font-size: 32px; }
-  .proj-img span { font-size: 11px; letter-spacing: 0.02em; }
+  .proj-img .icon-tabler { font-size: 32px; }
+  .proj-img span { font-size: 11px; letter-spacing: 0.02em; color: var(--ink-soft); }
   .proj-info {
     padding: 32px;
     display: flex;
@@ -404,44 +536,104 @@
   .proj-imgs {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 2px;
+    gap: 0.5px;
     background: var(--line);
+    border-top: 0.5px solid var(--line);
   }
   .pi {
     aspect-ratio: 4/3;
-    background: linear-gradient(135deg, #F1E9E0, #E2D2C4);
+    background: var(--panel);
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .pi span { font-size: 11px; color: rgba(107,30,46,0.35); }
-
+  .pi span { font-size: 11px; color: var(--ink-soft); }
   /* FOOTER */
   footer {
-    padding: 40px 24px 56px;
+    padding: 48px 24px 64px;
+  }
+  .f-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .f-item {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: transparent;
+    border: 1px solid rgba(107,30,46,0.14);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .f-item-glow {
+    position: absolute;
+    top: -50%;
+    left: -30%;
+    width: 170%;
+    height: 200%;
+    background: radial-gradient(closest-side, rgba(140,42,62,0.30) 0%, rgba(166,121,138,0.18) 35%, rgba(201,166,176,0.08) 55%, transparent 75%);
+    filter: blur(26px);
+    z-index: 0;
+    pointer-events: none;
+    animation: heroGlowFloat 16s ease-in-out infinite;
+    will-change: transform;
+  }
+  .f-item:nth-child(2) .f-item-glow { animation-delay: -4s; }
+  .f-item:nth-child(3) .f-item-glow { animation-delay: -8s; }
+  .f-item:nth-child(4) .f-item-glow { animation-delay: -12s; }
+  @media (prefers-reduced-motion: reduce) {
+    .f-item-glow { animation: none; }
+  }
+  .f-item-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .f-item .icon-wrap {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bordeaux);
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .f-item .icon-wrap .icon-tabler { font-size: 17px; }
+  .f-item:hover {
+    background: rgba(255,255,255,0.5);
+    border-color: rgba(107,30,46,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(107,30,46,0.12);
+  }
+  .f-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 0.5px solid var(--line);
     flex-wrap: wrap;
     gap: 20px;
+    padding-top: 28px;
+    border-top: 0.5px solid var(--line);
   }
-  .f-info { display: flex; gap: 26px; flex-wrap: wrap; }
-  .f-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--ink-soft);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-  .f-item i { font-size: 15px; color: var(--bordeaux); }
-  .f-item:hover { color: var(--ink); }
+  .f-note { font-size: 13px; color: var(--ink-soft); }
   .f-btn {
-    font-size: 13px;
-    font-weight: 500;
-    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 13px 26px;
     border-radius: 100px;
     background: var(--bordeaux);
     color: #fff;
@@ -450,10 +642,7 @@
     text-decoration: none;
   }
   .f-btn:hover { background: var(--bordeaux-soft); transform: translateY(-1px); }
-
   @media (max-width: 720px) {
-    .nav-right { display: none; }
-    .nav-left { gap: 20px; }
     .intro-section { grid-template-columns: 1fr; gap: 40px; padding: 56px 20px; }
     .works-section { padding: 24px 20px 56px; }
     .work-item { height: 62vh; border-radius: 20px; margin-bottom: 16px; }
@@ -466,10 +655,12 @@
     .project-section { padding: 0 20px 56px; }
     .proj-body { grid-template-columns: 1fr; }
     .proj-top { padding: 28px 24px; flex-direction: column; align-items: flex-start; gap: 12px; }
-    footer { padding: 32px 20px 44px; flex-direction: column; align-items: flex-start; }
-    .hero { padding: 28px 20px 56px; }
+    footer { padding: 40px 20px 48px; }
+    .f-info { grid-template-columns: 1fr; }
+    .f-bottom { flex-direction: column; align-items: flex-start; }
+    .hero { padding: 96px 20px 56px; }
     .hero-card { padding: 48px 22px 22px; border-radius: 28px; }
-    .hero-photo { margin: 32px 0 0; }
+    .hero-photo { margin: 0 auto 0; width: min(420px, 84%); }
     .stat-row { grid-template-columns: 1fr; gap: 14px; }
     .stat-row { text-align: left; }
     .stat-cell { text-align: left; }
@@ -478,20 +669,18 @@
 </head>
 <body>
 <div class="site">
-
-  <nav>
-    <div class="nav-left">
-      <a href="#about" class="nav-link active">Обо мне</a>
-      <a href="#works" class="nav-link">Проекты</a>
-      <a href="#project" class="nav-link">Реализованный</a>
-      <a href="#contact" class="nav-link">Контакт</a>
+  <div class="topbar-fixed">
+    <div class="brand-fixed">D·V Studio</div>
+    <div class="tabbar-wrap">
+      <nav class="tabbar" id="tabbar">
+        <span class="nav-indicator" id="navIndicator"></span>
+        <a href="#about" class="tabbar-link active" data-tab>Обо мне</a>
+        <a href="#works" class="tabbar-link" data-tab>Проекты</a>
+        <a href="#project" class="tabbar-link" data-tab>Реализованный</a>
+        <a href="#contact" class="tabbar-link" data-tab>Контакты</a>
+      </nav>
     </div>
-    <div class="nav-logo">D·V Studio</div>
-    <div class="nav-right">
-      <a href="#" class="nav-social">Instagram</a>
-      <a href="#" class="nav-social">Behance</a>
-    </div>
-  </nav>
+  </div>
 
   <section class="hero" id="about">
     <div class="hero-card">
@@ -499,13 +688,8 @@
       <div class="hero-eyebrow">Дизайнер интерьера · Ташкент</div>
       <div class="hero-name">Виноградов<br>Диёр</div>
       <div class="hero-name-en">Diyor Vinogradov</div>
-      <div class="hero-photo">
-        <i class="ti ti-user" style="font-size:48px"></i>
-        <span class="photo-hint">Ваша фотография</span>
-      </div>
     </div>
   </section>
-
   <div class="intro-section">
     <div>
       <div class="intro-eyebrow">О себе</div>
@@ -521,7 +705,6 @@
         <span class="tag-pill">Кэжуал</span>
         <span class="tag-pill">3D-визуализация</span>
       </div>
-
       <div class="spec-card">
         <div class="spec-row">
           <div class="spec-icon"><img src="assets/3dsmax-logo.png" alt="3ds Max"></div>
@@ -535,7 +718,6 @@
           </div>
         </div>
       </div>
-
       <div class="stat-row">
         <div class="stat-cell">
           <div class="stat-n">15</div>
@@ -552,7 +734,6 @@
       </div>
     </div>
   </div>
-
   <section class="works-section" id="works">
     <div class="sec-header">
       <div class="sec-eyebrow">Портфолио</div>
@@ -560,7 +741,7 @@
     </div>
     <div class="works-stage-wrap">
       <div class="work-item">
-        <div class="work-fill"><i class="ti ti-photo"></i><span>Главная работа</span></div>
+        <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Главная работа</span></div>
         <div class="work-index">01 / 05</div>
         <div class="work-caption">
           <div class="work-h-title">Апартаменты «Свет и тень»</div>
@@ -568,7 +749,7 @@
         </div>
       </div>
       <div class="work-item">
-        <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 2</span></div>
+        <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Работа 2</span></div>
         <div class="work-index">02 / 05</div>
         <div class="work-caption">
           <div class="work-h-title">Скандинавский лофт</div>
@@ -576,7 +757,7 @@
         </div>
       </div>
       <div class="work-item">
-        <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 3</span></div>
+        <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Работа 3</span></div>
         <div class="work-index">03 / 05</div>
         <div class="work-caption">
           <div class="work-h-title">Кофейня Bloom</div>
@@ -584,7 +765,7 @@
         </div>
       </div>
       <div class="work-item">
-        <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 4</span></div>
+        <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Работа 4</span></div>
         <div class="work-index">04 / 05</div>
         <div class="work-caption">
           <div class="work-h-title">Квартира у моря</div>
@@ -592,7 +773,7 @@
         </div>
       </div>
       <div class="work-item">
-        <div class="work-fill"><i class="ti ti-photo"></i><span>Работа 5</span></div>
+        <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Работа 5</span></div>
         <div class="work-index">05 / 05</div>
         <div class="work-caption">
           <div class="work-h-title">Минималист-студия</div>
@@ -601,7 +782,6 @@
       </div>
     </div>
   </section>
-
   <section class="project-section" id="project">
     <div class="sec-header">
       <div class="sec-eyebrow" style="color: var(--bordeaux)">Флагманский проект</div>
@@ -613,11 +793,11 @@
           <div class="proj-label">Флагманский проект</div>
           <div class="proj-title">Апартаменты «Свет и тень»</div>
         </div>
-        <div class="proj-yr">24</div>
+        <div class="proj-yr">2024</div>
       </div>
       <div class="proj-body">
         <div class="proj-img">
-          <i class="ti ti-camera"></i>
+          <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2"/><path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/></svg>
           <span>Главное фото</span>
         </div>
         <div class="proj-info">
@@ -637,17 +817,127 @@
       </div>
     </div>
   </section>
-
   <footer id="contact">
-    <div class="f-info">
-      <a href="mailto:email@example.com" class="f-item"><i class="ti ti-mail"></i> email@example.com</a>
-      <a href="#" class="f-item"><i class="ti ti-brand-instagram"></i> @diyorvinogradov</a>
-      <a href="tel:+998000000000" class="f-item"><i class="ti ti-phone"></i> +998 XX XXX XX XX</a>
+    <div class="sec-header">
+      <div class="sec-title">Контакты</div>
     </div>
-    <a href="mailto:email@example.com" class="f-btn">Связаться →</a>
+    <div class="f-info">
+      <a href="mailto:diyorvinogradov77@gmail.com" class="f-item"><span class="f-item-glow"></span><span class="f-item-content"><span class="icon-wrap"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"/><path d="M3 7l9 6l9 -6"/></svg></span> diyorvinogradov77@gmail.com</span></a>
+      <a href="https://www.instagram.com/oweeyoyo/" target="_blank" rel="noopener" class="f-item"><span class="f-item-glow"></span><span class="f-item-content"><span class="icon-wrap"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 4a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4z"/><path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M16.5 7.5l0 .01"/></svg></span> @oweeyoyo</span></a>
+      <a href="https://t.me/oweeyoyo" target="_blank" rel="noopener" class="f-item"><span class="f-item-glow"></span><span class="f-item-content"><span class="icon-wrap"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"/></svg></span> @oweeyoyo</span></a>
+      <a href="tel:+998937871717" class="f-item"><span class="f-item-glow"></span><span class="f-item-content"><span class="icon-wrap"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></span> +998 93 787 17 17</span></a>
+    </div>
+    <div class="f-bottom">
+      <div class="f-note">D·V Studio — дизайн интерьера</div>
+      <a href="tel:+998937871717" class="f-btn">Связаться →</a>
+    </div>
   </footer>
-
 </div>
 
+<script>
+(function () {
+  var tabbar = document.getElementById('tabbar');
+  var indicator = document.getElementById('navIndicator');
+  var links = Array.prototype.slice.call(tabbar.querySelectorAll('[data-tab]'));
+  var sections = links.map(function (link) {
+    return document.querySelector(link.getAttribute('href'));
+  });
+
+  var linkForSection = new Map();
+  links.forEach(function (link, i) { linkForSection.set(sections[i], link); });
+
+  var isClickScrolling = false;
+  var clickScrollTimeout = null;
+
+  function moveIndicatorTo(link) {
+    if (!link) return;
+    indicator.style.width = link.offsetWidth + 'px';
+    indicator.style.transform = 'translateX(' + link.offsetLeft + 'px)';
+  }
+
+  function setActive(link) {
+    links.forEach(function (l) { l.classList.remove('active'); });
+    link.classList.add('active');
+    moveIndicatorTo(link);
+  }
+
+  // Smooth scroll on click + instant, optimistic indicator movement
+  links.forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      var targetId = link.getAttribute('href');
+      var target = document.querySelector(targetId);
+      if (!target) return;
+
+      setActive(link);
+      isClickScrolling = true;
+      clearTimeout(clickScrollTimeout);
+
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // release the "manual" lock once the smooth scroll has settled
+      clickScrollTimeout = setTimeout(function () { isClickScrolling = false; }, 900);
+    });
+  });
+
+  // Track which section is in view and slide the indicator to match.
+  // Uses each section's position relative to a reference line instead of
+  // IntersectionObserver, so short sections (like "Реализованный") can't
+  // get skipped over during a fast scroll in either direction.
+  var lastLink = links[links.length - 1];
+  var scrollRAF = null;
+
+  function updateActiveSection() {
+    scrollRAF = null;
+    if (isClickScrolling) return;
+
+    var scrollBottom = window.scrollY + window.innerHeight;
+    var pageHeight = document.documentElement.scrollHeight;
+    if (scrollBottom >= pageHeight - 4) {
+      if (lastLink && !lastLink.classList.contains('active')) setActive(lastLink);
+      return;
+    }
+
+    var refLine = window.innerHeight * 0.45;
+    var current = null;
+    for (var i = 0; i < sections.length; i++) {
+      var sec = sections[i];
+      if (!sec) continue;
+      var rect = sec.getBoundingClientRect();
+      if (rect.top <= refLine) {
+        current = links[i];
+      }
+    }
+    if (!current) current = links[0];
+    if (current && !current.classList.contains('active')) setActive(current);
+  }
+
+  window.addEventListener('scroll', function () {
+    if (scrollRAF) return;
+    scrollRAF = requestAnimationFrame(updateActiveSection);
+  }, { passive: true });
+
+  updateActiveSection();
+
+  // Keep the indicator aligned with its tab on resize / font load
+  var resizeTimeout;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function () {
+      var active = tabbar.querySelector('.tabbar-link.active');
+      moveIndicatorTo(active);
+    }, 120);
+  });
+
+  window.addEventListener('load', function () {
+    moveIndicatorTo(tabbar.querySelector('.tabbar-link.active'));
+  });
+
+  // Initial placement (in case load already fired)
+  requestAnimationFrame(function () {
+    moveIndicatorTo(tabbar.querySelector('.tabbar-link.active'));
+  });
+})();
+</script>
 </body>
 </html>
