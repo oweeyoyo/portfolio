@@ -48,20 +48,6 @@
   }
   .topbar-fixed > * { pointer-events: auto; }
 
-  .brand-fixed {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-    padding: 10px 16px;
-    border-radius: 100px;
-    background: rgba(255,255,255,0.45);
-    border: 1px solid rgba(255,255,255,0.55);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-  }
-
   .social-fixed {
     display: flex;
     gap: 4px;
@@ -163,7 +149,6 @@
     .tabbar { max-width: calc(100vw - 32px); overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
     .tabbar::-webkit-scrollbar { display: none; }
     .tabbar-link { padding: 9px 13px; font-size: 11.5px; }
-    .brand-fixed { display: none; }
   }
   /* ============ END FLOATING TAB BAR ============ */
 
@@ -378,6 +363,162 @@
     font-size: 11px;
     color: var(--ink-soft);
     margin-top: 6px;
+  }
+  /* SERVICES */
+  .services-section { padding: 8px 24px 72px; }
+  .services-lead {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 540px;
+    margin-top: 12px;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+    margin-top: 28px;
+  }
+  .service-card {
+    background: var(--panel);
+    border: 0.5px solid var(--line);
+    border-radius: 20px;
+    padding: 22px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .service-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+  }
+  .service-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--ivory);
+    color: var(--bordeaux);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    margin-bottom: 16px;
+  }
+  .service-name {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .service-desc {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  .service-sublist {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .service-subitem {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+  }
+  .service-subitem .icon-tabler {
+    flex-shrink: 0;
+    width: 15px;
+    height: 15px;
+    margin-top: 2px;
+    color: var(--bordeaux);
+  }
+  .service-subitem span {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  .services-note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 22px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .services-note .icon-tabler { color: var(--bordeaux); font-size: 16px; }
+  /* PRICE — standalone section, styled like a natural continuation of the portfolio */
+  .price-section {
+    position: relative;
+    padding: 12px 24px 64px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .price-glow {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    width: 900px;
+    height: 480px;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, rgba(140,42,62,0.16) 0%, rgba(201,166,176,0.09) 45%, transparent 75%);
+    filter: blur(60px);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .price-section .sec-header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .price-hero {
+    position: relative;
+    z-index: 1;
+    max-width: 540px;
+    margin: 32px auto 0;
+  }
+  .price-value-big {
+    font-size: clamp(52px, 8.5vw, 92px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .price-value-big span {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-left: 8px;
+    letter-spacing: -0.01em;
+  }
+  .price-desc-big {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-top: 18px;
+  }
+  .price-fixed {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 22px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--bordeaux);
+    background: var(--ivory);
+    border: 0.5px solid var(--ivory-line);
+    padding: 8px 16px;
+    border-radius: 100px;
+  }
+  .price-fixed .icon-tabler { font-size: 14px; }
+  .sec-eyebrow.price-eyebrow-big {
+    font-size: clamp(30px, 4.5vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 0;
   }
   /* WORKS */
   .works-section { padding: 40px 24px 80px; }
@@ -664,6 +805,8 @@
   .f-btn:hover { background: var(--bordeaux-soft); transform: translateY(-1px); }
   @media (max-width: 720px) {
     .intro-section { grid-template-columns: 1fr; gap: 40px; padding: 56px 20px; }
+    .services-section { padding: 0 20px 48px; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
     .works-section { padding: 24px 20px 56px; }
     .work-item { width: 80vw; max-height: 68vh; border-radius: 20px; }
     .work-h-title { font-size: 18px; }
@@ -682,12 +825,12 @@
 <body>
 <div class="site">
   <div class="topbar-fixed">
-    <div class="brand-fixed">D·V Studio</div>
     <div class="tabbar-wrap">
       <nav class="tabbar" id="tabbar">
         <span class="nav-indicator" id="navIndicator"></span>
         <a href="#about" class="tabbar-link active" data-tab>Обо мне</a>
         <a href="#works" class="tabbar-link" data-tab>Концепты</a>
+        <a href="#services" class="tabbar-link" data-tab>Что входит</a>
         <a href="#contact" class="tabbar-link" data-tab>Контакты</a>
       </nav>
     </div>
@@ -745,6 +888,7 @@
       </div>
     </div>
   </div>
+
   <section class="works-section" id="works">
     <div class="sec-header">
       <div class="sec-eyebrow">Портфолио</div>
@@ -815,6 +959,69 @@
     </div>
   </section>
 
+  <section class="services-section" id="services">
+    <div class="sec-header">
+      <div class="sec-eyebrow">Что входит</div>
+      <div class="sec-title">Полный дизайн-проект</div>
+      <p class="services-lead">В стоимость входит не просто визуал, а рабочий комплект документов: от планировки и инженерии до финального рендера каждого помещения.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">
+          <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h16v16h-16z"/><path d="M4 12h16"/><path d="M12 4v8"/><path d="M12 16v4"/></svg>
+        </div>
+        <div class="service-name">Планировочное решение</div>
+        <div class="service-desc">Зонирование пространства и расстановка мебели под Ваши сценарии жизни</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"/></svg>
+        </div>
+        <div class="service-name">Инженерные сети</div>
+        <div class="service-sublist">
+          <div class="service-subitem">
+            <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"/></svg>
+            <span>Электрика — розетки, выключатели и сценарии освещения по каждой комнате</span>
+          </div>
+          <div class="service-subitem">
+            <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 4v6.878a3 3 0 1 0 2 0v-6.878a1 1 0 0 0 -1 -1h0a1 1 0 0 0 -1 1z"/><path d="M9 15h.01"/><path d="M17 4v16"/><path d="M15 4h4"/><path d="M15 8h4"/></svg>
+            <span>Сантехника — точки подключения приборов, стояков и мокрых зон</span>
+          </div>
+          <div class="service-subitem">
+            <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 21a1 1 0 0 1 -1 -1v-5h-1a1 1 0 0 1 -1 -1v-3a5 5 0 0 1 10 0v3a1 1 0 0 1 -1 1h-1v5a1 1 0 0 1 -1 1z"/><path d="M12 3v3"/></svg>
+            <span>Тёплый пол — схема разводки и зоны обогрева с учётом мебели</span>
+          </div>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 17.6l-2 -1.1v-2.5"/><path d="M4 10v-2.5l2 -1.1"/><path d="M10 4.1l2 -1.1l2 1.1"/><path d="M18 6.4l2 1.1v2.5"/><path d="M20 14v2.5l-2 1.12"/><path d="M14 19.9l-2 1.1l-2 -1.1"/><path d="M12 12l2 -1.1"/><path d="M18 8.6l2 -1.1"/><path d="M12 12l0 2.5"/><path d="M12 18.5l0 2.5"/><path d="M12 12l-2 -1.12"/><path d="M6 8.6l-2 -1.1"/></svg>
+        </div>
+        <div class="service-name">3D-визуализация</div>
+        <div class="service-desc">Фотореалистичный рендер каждого помещения в согласованном стиле</div>
+      </div>
+    </div>
+    <div class="services-note">
+      <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 8h.01"/><path d="M11 12h1v4h1"/></svg>
+      <span>Всё это — один пакет, без доплат за «отдельные» разделы проекта</span>
+    </div>
+  </section>
+
+  <section class="price-section" id="price">
+    <div class="price-glow"></div>
+    <div class="sec-header">
+      <div class="sec-eyebrow price-eyebrow-big">Стоимость проекта</div>
+    </div>
+    <div class="price-hero">
+      <div class="price-value-big">от $20<span>/ м²</span></div>
+      <p class="price-desc-big">Цена фиксируется в договоре ещё до старта работ — Вы сразу знаете итоговую сумму, без доплат за «отдельные» разделы. В стоимость входит всё, что описано выше.</p>
+      <div class="price-fixed">
+        <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 12l2 2l4 -4"/><path d="M12 3l8 4.5v9l-8 4.5l-8 -4.5v-9z"/></svg>
+        <span>Фиксация цены в договоре</span>
+      </div>
+    </div>
+  </section>
+
   <div class="lightbox" id="lightbox">
     <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
     <div class="lightbox-content">
@@ -836,8 +1043,7 @@
       <a href="https://t.me/oweeyoyo" target="_blank" rel="noopener" class="f-item"><span class="f-item-glow"></span><span class="f-item-content"><span class="icon-wrap"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"/></svg></span> @oweeyoyo</span></a>
       <a href="tel:+998937871717" class="f-item"><span class="f-item-glow"></span><span class="f-item-content"><span class="icon-wrap"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></span> +998 93 787 17 17</span></a>
     </div>
-    <div class="f-bottom">
-      <div class="f-note">D·V Studio — дизайн интерьера</div>
+    <div class="f-bottom" style="justify-content: flex-end;">
       <a href="tel:+998937871717" class="f-btn">Связаться →</a>
     </div>
   </footer>
