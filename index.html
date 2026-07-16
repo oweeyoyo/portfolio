@@ -630,6 +630,7 @@
     background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
   }
   .work-h-title { font-size: 22px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
+  .work-h-title.heavy { font-weight: 800; letter-spacing: -0.03em; text-transform: uppercase; }
   .work-h-type { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 4px; }
   .work-index {
     position: absolute;
@@ -724,6 +725,7 @@
   }
   .lightbox-caption { margin-top: 18px; text-align: center; }
   .lightbox-caption .lb-title { font-size: 18px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
+  .lightbox-caption .lb-title.heavy { font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; }
   .lightbox-caption .lb-type { font-size: 12.5px; color: rgba(255,255,255,0.68); margin-top: 4px; }
   .lightbox-close {
     position: absolute;
@@ -956,7 +958,7 @@
         <img class="work-img" src="assets/work-06.jpg" alt="Концепт 1">
         <div class="work-index">01 / 08</div>
         <div class="work-caption">
-          <div class="work-h-title">Концепт 1</div>
+          <div class="work-h-title heavy">Белая полоса</div>
           <div class="work-h-type">Жилой · 2025</div>
         </div>
       </div>
@@ -964,7 +966,7 @@
         <img class="work-img" src="assets/work-07.jpg" alt="Концепт 2">
         <div class="work-index">02 / 08</div>
         <div class="work-caption">
-          <div class="work-h-title">Концепт 2</div>
+          <div class="work-h-title heavy">Белая полоса</div>
           <div class="work-h-type">Жилой · 2025</div>
         </div>
       </div>
@@ -972,7 +974,7 @@
         <img class="work-img" src="assets/work-08.jpg" alt="Концепт 3">
         <div class="work-index">03 / 08</div>
         <div class="work-caption">
-          <div class="work-h-title">Концепт 3</div>
+          <div class="work-h-title heavy">Белая полоса</div>
           <div class="work-h-type">Санузел · 2025</div>
         </div>
       </div>
@@ -1271,10 +1273,11 @@
   var lightboxClose = document.getElementById('lightboxClose');
   var lightboxBackdrop = document.getElementById('lightboxBackdrop');
 
-  function openLightbox(src, title, type) {
+  function openLightbox(src, title, type, isHeavy) {
     lightboxImg.src = src;
     lightboxTitle.textContent = title;
     lightboxType.textContent = type;
+    lightboxTitle.classList.toggle('heavy', !!isHeavy);
     lightbox.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -1290,7 +1293,8 @@
     item.addEventListener('click', function () {
       var title = item.querySelector('.work-h-title');
       var type = item.querySelector('.work-h-type');
-      openLightbox(img.src, title ? title.textContent : '', type ? type.textContent : '');
+      var isHeavy = title ? title.classList.contains('heavy') : false;
+      openLightbox(img.src, title ? title.textContent : '', type ? type.textContent : '', isHeavy);
     });
   });
 
