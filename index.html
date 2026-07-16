@@ -1303,6 +1303,38 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeLightbox();
   });
+// ============ СЧЁТЧИК ЧАСОВ В 3DS MAX (из Supabase) ============
+(function () {
+  var SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co'; // <- вставь адрес своего проекта
+  var SUPABASE_ANON_KEY = 'YOUR_ANON_PUBLIC_KEY';          // <- вставь публичный anon key (это НЕ секретный ключ, его можно светить на сайте)
+
+  function formatHours(h) {
+    return h.toLocaleString('ru-RU');
+  }
+
+  function updateHoursCounter() {
+    if (SUPABASE_URL.indexOf('YOUR_PROJECT') !== -1) return; // ещё не настроено — не пытаемся стучаться никуда
+
+    fetch(SUPABASE_URL + '/rest/v1/stats?id=eq.1&select=seconds', {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: 'Bearer ' + SUPABASE_ANON_KEY
+      }
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (rows) {
+        if (!rows || !rows[0]) return;
+        var hours = Math.floor(rows[0].seconds / 3600);
+        var el = document.querySelector('.spec-value-num');
+        if (el) el.textContent = formatHours(hours);
+      })
+      .catch(function (err) {
+        console.warn('Не удалось обновить счётчик часов:', err);
+      });
+  }
+
+  updateHoursCounter();
+  setInterval(updateHoursCounter, 5 * 60 * 1000); // обновляем раз в 5 минут, пока страница открыта
 })();
 </script>
 </body>
