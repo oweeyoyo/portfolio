@@ -749,7 +749,6 @@
   @media (max-width: 720px) {
     .lightbox-close { top: auto; bottom: -56px; right: 50%; transform: translateX(50%); }
   }
-  /* PROJECT */
   /* FOOTER */
   footer {
     padding: 48px 24px 64px;
@@ -1252,8 +1251,8 @@
     return closest;
   }
 
-  prevBtn.addEventListener('click', function () { scrollToIndex(getCurrentIndex() - 1); });
-  nextBtn.addEventListener('click', function () { scrollToIndex(getCurrentIndex() + 1); });
+  prevBtn.addEventListener('click', function () { scrollToIndex(getCurrentIndex() - 1); stopAutoplay(); startAutoplay(); });
+  nextBtn.addEventListener('click', function () { scrollToIndex(getCurrentIndex() + 1); stopAutoplay(); startAutoplay(); });
 
   var rafId = null;
   carousel.addEventListener('scroll', function () {
@@ -1264,6 +1263,53 @@
       dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
     });
   }, { passive: true });
+
+  // ---- Автопрокрутка ----
+  var AUTOPLAY_DELAY = 4000; // 4 секунды между слайдами
+  var autoplayTimer = null;
+
+  function advanceSlide() {
+    var next = getCurrentIndex() + 1;
+    if (next >= items.length) next = 0; // зацикливаем на первый слайд
+    scrollToIndex(next);
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    autoplayTimer = setInterval(advanceSlide, AUTOPLAY_DELAY);
+  }
+
+  function stopAutoplay() {
+    if (autoplayTimer) {
+      clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+  }
+
+  // Останавливаем при любом ручном взаимодействии, возобновляем через паузу
+  ['pointerdown', 'touchstart', 'wheel'].forEach(function (evt) {
+    carousel.addEventListener(evt, function () {
+      stopAutoplay();
+      clearTimeout(carousel._resumeTimeout);
+      carousel._resumeTimeout = setTimeout(startAutoplay, 5000);
+    }, { passive: true });
+  });
+
+  dots.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      stopAutoplay();
+      clearTimeout(carousel._resumeTimeout);
+      carousel._resumeTimeout = setTimeout(startAutoplay, 5000);
+    });
+  });
+
+  // Пауза, пока вкладка не активна (не тратим ресурсы и не "уезжает" незаметно)
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stopAutoplay();
+    else startAutoplay();
+  });
+
+  startAutoplay();
 
   // Lightbox: only for cards that have a real photo
   var lightbox = document.getElementById('lightbox');
@@ -1303,6 +1349,7 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeLightbox();
   });
+})();
 // ============ СЧЁТЧИК ЧАСОВ В 3DS MAX (из Supabase) ============
 (function () {
   var SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co'; // <- вставь адрес своего проекта
