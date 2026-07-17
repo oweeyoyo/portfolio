@@ -315,6 +315,7 @@
   }
   .spec-row + .spec-row { border-top: 0.5px solid var(--line); }
   .spec-icon {
+    position: relative;
     width: 44px;
     height: 44px;
     flex-shrink: 0;
@@ -329,6 +330,25 @@
     height: 100%;
     object-fit: contain;
     display: block;
+  }
+  .status-dot {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 2px solid var(--panel);
+    background: #C7C7CC;
+    transition: background 0.3s ease;
+  }
+  .status-dot.online {
+    background: #34C759;
+    box-shadow: 0 0 0 2px rgba(52,199,89,0.18);
+  }
+  .status-dot.offline {
+    background: #FFCC00;
+    box-shadow: 0 0 0 2px rgba(255,204,0,0.18);
   }
   .spec-info { flex: 1; min-width: 0; }
   .spec-name { font-size: 14px; font-weight: 500; color: var(--ink); }
@@ -916,7 +936,7 @@
       </div>
       <div class="spec-card">
         <div class="spec-row">
-          <div class="spec-icon"><img src="assets/3dsmax-logo.png" alt="3ds Max"></div>
+          <div class="spec-icon"><img src="assets/3dsmax-logo.png" alt="3ds Max"><span class="status-dot" id="statusDot" title="Проверка статуса..."></span></div>
           <div class="spec-info">
             <div class="spec-name">3ds Max</div>
             <div class="spec-sub">3D-моделирование и визуализация</div>
@@ -1350,19 +1370,33 @@
     if (e.key === 'Escape') closeLightbox();
   });
 })();
-// ============ СЧЁТЧИК ЧАСОВ В 3DS MAX (из Supabase) ============
+// ============ СЧЁТЧИК ЧАСОВ + СТАТУС "МАКС ОНЛАЙН/ОФЛАЙН" (из Supabase) ============
 (function () {
-  var SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co'; // <- вставь адрес своего проекта
-  var SUPABASE_ANON_KEY = 'YOUR_ANON_PUBLIC_KEY';          // <- вставь публичный anon key (это НЕ секретный ключ, его можно светить на сайте)
+  var SUPABASE_URL = 'https://xmnceaykceepgvbwqwgc.supabase.co';
+  var SUPABASE_ANON_KEY = 'sb_publishable_6ePKeIlHICRgC3PPAt34sQ_qZVTxa1r';
+
+  var POLL_INTERVAL_MS = 20 * 1000;       // как часто проверяем статус — раз в 20 сек
+  var ONLINE_THRESHOLD_SECONDS = 90;      // если last_seen свежее этого — считаем что макс открыт
+
+  var statusDot = document.getElementById('statusDot');
 
   function formatHours(h) {
     return h.toLocaleString('ru-RU');
   }
 
+  function setStatus(online, secondsAgo) {
+    if (!statusDot) return;
+    statusDot.classList.remove('online', 'offline');
+    statusDot.classList.add(online ? 'online' : 'offline');
+    statusDot.title = online
+      ? ('Максик открыт, часы считаются (обновлено ' + secondsAgo + ' сек назад)')
+      : ('Максик сейчас закрыт' + (secondsAgo != null ? (' (последний раз был ' + secondsAgo + ' сек назад)') : ''));
+  }
+
   function updateHoursCounter() {
     if (SUPABASE_URL.indexOf('YOUR_PROJECT') !== -1) return; // ещё не настроено — не пытаемся стучаться никуда
 
-    fetch(SUPABASE_URL + '/rest/v1/stats?id=eq.1&select=seconds', {
+    fetch(SUPABASE_URL + '/rest/v1/stats?id=eq.1&select=seconds,updated_at', {
       headers: {
         apikey: SUPABASE_ANON_KEY,
         Authorization: 'Bearer ' + SUPABASE_ANON_KEY
@@ -1371,17 +1405,28 @@
       .then(function (res) { return res.json(); })
       .then(function (rows) {
         if (!rows || !rows[0]) return;
-        var hours = Math.floor(rows[0].seconds / 3600);
+        var row = rows[0];
+
+        var hours = Math.floor(row.seconds / 3600);
         var el = document.querySelector('.spec-value-num');
         if (el) el.textContent = formatHours(hours);
+
+        if (row.updated_at) {
+          var lastSeenMs = new Date(row.updated_at).getTime();
+          var diffSec = Math.round((Date.now() - lastSeenMs) / 1000);
+          setStatus(diffSec <= ONLINE_THRESHOLD_SECONDS, diffSec);
+        } else {
+          setStatus(false, null);
+        }
       })
       .catch(function (err) {
         console.warn('Не удалось обновить счётчик часов:', err);
+        setStatus(false, null);
       });
   }
 
   updateHoursCounter();
-  setInterval(updateHoursCounter, 5 * 60 * 1000); // обновляем раз в 5 минут, пока страница открыта
+  setInterval(updateHoursCounter, POLL_INTERVAL_MS);
 })();
 </script>
 </body>
