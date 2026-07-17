@@ -1255,9 +1255,14 @@
   });
   var dots = Array.prototype.slice.call(dotsWrap.children);
 
+  // Прокручиваем ТОЛЬКО саму карусель по горизонтали (напрямую через scrollTo),
+  // а не scrollIntoView — иначе браузер докручивает всю страницу по вертикали,
+  // если карточка не полностью видна на экране.
   function scrollToIndex(i) {
     i = Math.max(0, Math.min(items.length - 1, i));
-    items[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    var item = items[i];
+    var target = item.offsetLeft - (carousel.clientWidth - item.offsetWidth) / 2;
+    carousel.scrollTo({ left: target, behavior: 'smooth' });
   }
 
   function getCurrentIndex() {
@@ -1287,8 +1292,10 @@
   // ---- Автопрокрутка ----
   var AUTOPLAY_DELAY = 4000; // 4 секунды между слайдами
   var autoplayTimer = null;
+  var carouselVisible = false; // крутим слайды, только пока раздел реально виден на экране
 
   function advanceSlide() {
+    if (!carouselVisible) return; // подстраховка на случай гонки таймера/observer'а
     var next = getCurrentIndex() + 1;
     if (next >= items.length) next = 0; // зацикливаем на первый слайд
     scrollToIndex(next);
@@ -1296,6 +1303,7 @@
 
   function startAutoplay() {
     stopAutoplay();
+    if (!carouselVisible) return;
     autoplayTimer = setInterval(advanceSlide, AUTOPLAY_DELAY);
   }
 
@@ -1304,6 +1312,24 @@
       clearInterval(autoplayTimer);
       autoplayTimer = null;
     }
+  }
+
+  // Крутим карусель только пока раздел "Мои работы" виден в окне —
+  // это и есть исправление того, что страницу "само" утаскивало к работам,
+  // даже если человек листал совсем другой раздел сайта.
+  if ('IntersectionObserver' in window) {
+    var visibilityObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        carouselVisible = entry.isIntersecting;
+        if (carouselVisible) startAutoplay();
+        else stopAutoplay();
+      });
+    }, { threshold: 0.35 });
+    visibilityObserver.observe(carousel);
+  } else {
+    // На всякий случай, если IntersectionObserver недоступен — не автокрутим вовсе,
+    // чтобы не тащить страницу вниз незаметно для пользователя.
+    carouselVisible = false;
   }
 
   // Останавливаем при любом ручном взаимодействии, возобновляем через паузу
@@ -1326,10 +1352,11 @@
   // Пауза, пока вкладка не активна (не тратим ресурсы и не "уезжает" незаметно)
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) stopAutoplay();
-    else startAutoplay();
+    else if (carouselVisible) startAutoplay();
   });
 
-  startAutoplay();
+  // Автоплей стартует сам по себе через IntersectionObserver, когда раздел
+  // окажется в поле зрения — раньше времени не запускаем.
 
   // Lightbox: only for cards that have a real photo
   var lightbox = document.getElementById('lightbox');
