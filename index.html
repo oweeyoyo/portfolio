@@ -594,6 +594,119 @@
     letter-spacing: -0.03em;
     line-height: 1.05;
   }
+
+  /* ============ ПЕРЕКЛЮЧАТЕЛЬ "РЕНДЕРЫ / ЧЕРТЕЖИ" ============ */
+  .view-toggle {
+    position: relative;
+    display: inline-flex;
+    gap: 2px;
+    padding: 5px;
+    border-radius: 16px;
+    background: var(--ivory);
+    border: 0.5px solid var(--ivory-line);
+    margin-bottom: 22px;
+  }
+  .view-toggle-btn {
+    position: relative;
+    z-index: 1;
+    border: none;
+    background: transparent;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--bordeaux);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    font-family: inherit;
+  }
+  .view-toggle-btn.active { color: #fff; }
+  .view-toggle-indicator {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    height: calc(100% - 10px);
+    width: 0;
+    border-radius: 12px;
+    background: var(--bordeaux);
+    box-shadow: 0 4px 14px rgba(107,30,46,0.28);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 0;
+  }
+  /* ============ КОНЕЦ ПЕРЕКЛЮЧАТЕЛЯ ============ */
+
+  /* ============ ПАЧКИ ЧЕРТЕЖЕЙ (ПРОЕКТЫ) ============ */
+  #drawingView { display: none; }
+  .pack-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .pack-pill {
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink-soft);
+    background: var(--panel);
+    border: 0.5px solid var(--line);
+    padding: 9px 16px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  }
+  .pack-pill.active {
+    color: #fff;
+    background: var(--bordeaux);
+    border-color: var(--bordeaux);
+  }
+  .pack-pill.disabled {
+    cursor: default;
+    color: rgba(110,110,115,0.45);
+    background: var(--panel);
+    pointer-events: none;
+  }
+  .pack-pill:not(.disabled):not(.active):hover { color: var(--ink); border-color: rgba(0,0,0,0.16); }
+  /* ============ КОНЕЦ ПАЧЕК ЧЕРТЕЖЕЙ ============ */
+
+  /* ============ ЕДИНАЯ РАМКА-СЛАЙДЕР ДЛЯ ЧЕРТЕЖЕЙ ============ */
+  .drawing-frame-wrap { position: relative; max-width: min(560px, 78vw); margin: 0 auto; }
+  .drawing-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3250 / 4050;
+    max-height: 74vh;
+    border-radius: 28px;
+    overflow: hidden;
+    background: var(--panel);
+    border: 0.5px solid var(--line);
+    box-shadow: 0 24px 56px -28px rgba(0,0,0,0.28);
+    cursor: zoom-in;
+    touch-action: pan-y;
+  }
+  .drawing-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+  .drawing-track.dragging { transition: none; }
+  .drawing-slide { flex: 0 0 100%; height: 100%; }
+  .drawing-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    -webkit-user-drag: none;
+    user-select: none;
+    pointer-events: none;
+  }
+  .drawing-frame .carousel-arrow.prev { left: 12px; }
+  .drawing-frame .carousel-arrow.next { right: 12px; }
+  /* ============ КОНЕЦ РАМКИ-СЛАЙДЕРА ============ */
+
   .works-carousel-wrap { position: relative; }
   .works-carousel {
     display: flex;
@@ -969,6 +1082,14 @@
       <div class="sec-eyebrow">Портфолио</div>
       <div class="sec-title">Мои работы</div>
     </div>
+
+    <div class="view-toggle" id="viewToggle">
+      <span class="view-toggle-indicator" id="viewToggleIndicator"></span>
+      <button type="button" class="view-toggle-btn active" data-mode="render">Визуализация</button>
+      <button type="button" class="view-toggle-btn" data-mode="drawing">Рабочие чертежи</button>
+    </div>
+
+    <div id="renderView">
     <div class="works-carousel-wrap">
     <button class="carousel-arrow prev" id="carouselPrev" aria-label="Предыдущий">‹</button>
     <button class="carousel-arrow next" id="carouselNext" aria-label="Следующий">›</button>
@@ -1055,6 +1176,35 @@
       </div>
     </div>
     <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+    </div>
+
+    <div id="drawingView">
+      <div class="pack-selector" id="packSelector">
+        <button type="button" class="pack-pill active" data-pack="1">Хрущёвка</button>
+        <button type="button" class="pack-pill disabled" data-pack="2" title="Скоро">Проект 2</button>
+        <button type="button" class="pack-pill disabled" data-pack="3" title="Скоро">Проект 3</button>
+        <button type="button" class="pack-pill disabled" data-pack="4" title="Скоро">Проект 4</button>
+        <button type="button" class="pack-pill disabled" data-pack="5" title="Скоро">Проект 5</button>
+      </div>
+      <div class="drawing-frame-wrap">
+        <div class="drawing-frame" id="drawingFrame">
+          <button class="carousel-arrow prev" id="drawingPrev" aria-label="Предыдущий">‹</button>
+          <button class="carousel-arrow next" id="drawingNext" aria-label="Следующий">›</button>
+          <div class="drawing-track" id="drawingTrack">
+            <div class="drawing-slide"><img src="assets/plan-01.jpg" alt="Проект 1 — лист 1"></div>
+            <div class="drawing-slide"><img src="assets/plan-02.jpg" alt="Проект 1 — лист 2"></div>
+            <div class="drawing-slide"><img src="assets/plan-03.jpg" alt="Проект 1 — лист 3"></div>
+            <div class="drawing-slide"><img src="assets/plan-04.jpg" alt="Проект 1 — лист 4"></div>
+            <div class="drawing-slide"><img src="assets/plan-05.jpg" alt="Проект 1 — лист 5"></div>
+          </div>
+          <div class="work-index" id="drawingIndex">01 / 05</div>
+          <div class="work-caption">
+            <div class="work-h-title">Хрущёвка</div>
+          </div>
+        </div>
+        <div class="carousel-dots" id="drawingDots"></div>
+      </div>
     </div>
   </section>
 
@@ -1253,14 +1403,54 @@
   });
 })();
 
-// ============ WORKS CAROUSEL + LIGHTBOX ============
+// ============ ПЕРЕКЛЮЧАТЕЛЬ "РЕНДЕРЫ / ЧЕРТЕЖИ" ============
 (function () {
-  var carousel = document.getElementById('worksCarousel');
+  var toggle = document.getElementById('viewToggle');
+  if (!toggle) return;
+  var indicator = document.getElementById('viewToggleIndicator');
+  var buttons = Array.prototype.slice.call(toggle.querySelectorAll('.view-toggle-btn'));
+  var currentMode = 'render';
+
+  function moveIndicator(btn) {
+    if (!indicator || !btn) return;
+    indicator.style.width = btn.offsetWidth + 'px';
+    indicator.style.transform = 'translateX(' + btn.offsetLeft + 'px)';
+  }
+
+  var renderView = document.getElementById('renderView');
+  var drawingView = document.getElementById('drawingView');
+
+  function applyMode(mode) {
+    currentMode = mode;
+    buttons.forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-mode') === mode);
+    });
+    var activeBtn = buttons.filter(function (b) { return b.getAttribute('data-mode') === mode; })[0];
+    moveIndicator(activeBtn);
+
+    if (renderView) renderView.style.display = mode === 'drawing' ? 'none' : '';
+    if (drawingView) drawingView.style.display = mode === 'drawing' ? 'block' : 'none';
+  }
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      applyMode(btn.getAttribute('data-mode'));
+    });
+  });
+
+  window.addEventListener('load', function () { moveIndicator(buttons[0]); });
+  requestAnimationFrame(function () { moveIndicator(buttons[0]); });
+})();
+// ============ КОНЕЦ ПЕРЕКЛЮЧАТЕЛЯ ============
+
+// ============ WORKS CAROUSEL + LIGHTBOX ============
+function initWorksCarousel(carouselId, dotsId, prevId, nextId) {
+  var carousel = document.getElementById(carouselId);
   if (!carousel) return;
   var items = Array.prototype.slice.call(carousel.querySelectorAll('.work-item'));
-  var dotsWrap = document.getElementById('carouselDots');
-  var prevBtn = document.getElementById('carouselPrev');
-  var nextBtn = document.getElementById('carouselNext');
+  var dotsWrap = document.getElementById(dotsId);
+  var prevBtn = document.getElementById(prevId);
+  var nextBtn = document.getElementById(nextId);
 
   // build dots
   items.forEach(function (item, i) {
@@ -1412,7 +1602,107 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeLightbox();
   });
+}
+
+initWorksCarousel('worksCarousel', 'carouselDots', 'carouselPrev', 'carouselNext');
+
+// ============ РАМКА-СЛАЙДЕР ДЛЯ ЧЕРТЕЖЕЙ (свайп внутри одного блока) ============
+(function () {
+  var frame = document.getElementById('drawingFrame');
+  if (!frame) return;
+  var track = document.getElementById('drawingTrack');
+  var slides = Array.prototype.slice.call(track.querySelectorAll('.drawing-slide'));
+  var dotsWrap = document.getElementById('drawingDots');
+  var prevBtn = document.getElementById('drawingPrev');
+  var nextBtn = document.getElementById('drawingNext');
+  var indexEl = document.getElementById('drawingIndex');
+  var current = 0;
+
+  slides.forEach(function (s, i) {
+    var dot = document.createElement('div');
+    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', function () { goTo(i); });
+    dotsWrap.appendChild(dot);
+  });
+  var dots = Array.prototype.slice.call(dotsWrap.children);
+
+  function goTo(i) {
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dots.forEach(function (d, di) { d.classList.toggle('active', di === current); });
+    var n = current + 1;
+    if (indexEl) indexEl.textContent = (n < 10 ? '0' + n : n) + ' / 0' + slides.length; // например "01 / 05"
+  }
+
+  prevBtn.addEventListener('click', function (e) { e.stopPropagation(); goTo(current - 1); });
+  nextBtn.addEventListener('click', function (e) { e.stopPropagation(); goTo(current + 1); });
+
+  // ---- Свайп (touch / mouse drag) прямо внутри рамки ----
+  var startX = 0, deltaX = 0, dragging = false, moved = false;
+
+  function pointerDown(e) {
+    dragging = true;
+    moved = false;
+    startX = (e.touches ? e.touches[0].clientX : e.clientX);
+    track.classList.add('dragging');
+  }
+  function pointerMove(e) {
+    if (!dragging) return;
+    var x = (e.touches ? e.touches[0].clientX : e.clientX);
+    deltaX = x - startX;
+    if (Math.abs(deltaX) > 6) moved = true;
+    var percent = (deltaX / frame.clientWidth) * 100;
+    track.style.transform = 'translateX(calc(-' + (current * 100) + '% + ' + percent + '%))';
+  }
+  function pointerUp() {
+    if (!dragging) return;
+    dragging = false;
+    track.classList.remove('dragging');
+    var threshold = frame.clientWidth * 0.18;
+    if (deltaX < -threshold) goTo(current + 1);
+    else if (deltaX > threshold) goTo(current - 1);
+    else goTo(current);
+    deltaX = 0;
+  }
+
+  frame.addEventListener('touchstart', pointerDown, { passive: true });
+  frame.addEventListener('touchmove', pointerMove, { passive: true });
+  frame.addEventListener('touchend', pointerUp);
+  frame.addEventListener('mousedown', pointerDown);
+  window.addEventListener('mousemove', pointerMove);
+  window.addEventListener('mouseup', pointerUp);
+
+  // Клик по рамке (без свайпа) — открыть лайтбокс с текущим листом
+  var lightbox = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  var lightboxTitle = document.getElementById('lightboxTitle');
+  var lightboxType = document.getElementById('lightboxType');
+  var lightboxClose = document.getElementById('lightboxClose');
+  var lightboxBackdrop = document.getElementById('lightboxBackdrop');
+
+  frame.addEventListener('click', function () {
+    if (moved) return; // это был свайп, а не клик
+    var img = slides[current].querySelector('img');
+    lightboxImg.src = img.src;
+    lightboxTitle.textContent = 'Хрущёвка';
+    lightboxTitle.classList.remove('heavy');
+    lightboxType.textContent = '';
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+  lightboxClose.addEventListener('click', function () {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+  lightboxBackdrop.addEventListener('click', function () {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+
+  goTo(0);
 })();
+// ============ КОНЕЦ РАМКИ-СЛАЙДЕРА ЧЕРТЕЖЕЙ ============
+
 // ============ СЧЁТЧИК ЧАСОВ + СТАТУС "МАКС ОНЛАЙН/ОФЛАЙН" (из Supabase) ============
 (function () {
   var SUPABASE_URL = 'https://xmnceaykceepgvbwqwgc.supabase.co';
