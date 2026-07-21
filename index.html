@@ -1003,6 +1003,7 @@
         <span class="nav-indicator" id="navIndicator"></span>
         <a href="#about" class="tabbar-link active" data-tab>Обо мне</a>
         <a href="#works" class="tabbar-link" data-tab>Концепты</a>
+        <a href="#realized" class="tabbar-link" data-tab>Реализованный</a>
         <a href="#services" class="tabbar-link" data-tab>Что входит</a>
         <a href="#contact" class="tabbar-link" data-tab>Контакты</a>
       </nav>
@@ -1205,6 +1206,68 @@
         </div>
         <div class="carousel-dots" id="drawingDots"></div>
       </div>
+    </div>
+  </section>
+
+  <section class="works-section" id="realized">
+    <div class="sec-header">
+      <div class="sec-eyebrow">Реализованный проект</div>
+      <div class="sec-title">История первого объекта</div>
+    </div>
+
+    <div class="tag-list" style="margin-bottom:8px;">
+      <span class="tag-pill">Кабинет директора</span>
+      <span class="tag-pill">30 м²</span>
+      <span class="tag-pill">Реализовано полностью</span>
+    </div>
+
+    <div class="works-carousel-wrap">
+      <button class="carousel-arrow prev" id="realizedPrev" aria-label="Предыдущий">‹</button>
+      <button class="carousel-arrow next" id="realizedNext" aria-label="Следующий">›</button>
+      <div class="works-carousel" id="realizedCarousel">
+        <div class="work-item">
+          <img class="work-img" src="assets/realized-01.jpg" alt="Планировка кабинета директора">
+          <div class="work-index">01 / 08</div>
+          <div class="work-caption">
+            <div class="work-h-title heavy">С этого всё началось</div>
+          </div>
+        </div>
+        <div class="work-item">
+          <img class="work-img" src="assets/realized-02.jpg" alt="Монтаж напольного покрытия">
+          <div class="work-index">02 / 08</div>
+        </div>
+        <div class="work-item">
+          <img class="work-img" src="assets/realized-03.jpg" alt="Подготовка стен">
+          <div class="work-index">03 / 08</div>
+        </div>
+        <div class="work-item">
+          <img class="work-img" src="assets/realized-04.jpg" alt="Отделка стен и укладка пола">
+          <div class="work-index">04 / 08</div>
+        </div>
+        <div class="work-item">
+          <img class="work-img" src="assets/realized-05.jpg" alt="Монтаж мраморной панели">
+          <div class="work-index">05 / 08</div>
+        </div>
+        <div class="work-item">
+          <img class="work-img" src="assets/realized-06.jpg" alt="Кабинет директора — визуализация">
+          <div class="work-index">06 / 08</div>
+        </div>
+        <div class="work-item">
+          <img class="work-img" src="assets/realized-07.jpg" alt="Кабинет директора — визуализация, вид 2">
+          <div class="work-index">07 / 08</div>
+        </div>
+        <div class="work-item">
+          <img class="work-img" src="assets/realized-08.jpg" alt="Кабинет директора — готовый результат">
+          <div class="work-index">08 / 08</div>
+        </div>
+      </div>
+      <div class="carousel-dots" id="realizedDots"></div>
+    </div>
+
+    <div style="max-width:620px; margin:36px auto 0;">
+      <p class="intro-text">Это мой первый реализованный объект — не концепт на бумаге, а пространство, в котором теперь реально работают люди. И честно говоря, почти всё на этом проекте шло не по плану: сроки срывались, часть решений приходилось пересматривать буквально на месте, а не в проекте, а заказчик менял решения уже на этапе реализации.</p>
+      <p class="intro-text">С точки зрения дизайна это тоже был мой первый настоящий опыт — сейчас я вижу моменты, которые сделал бы иначе. Но именно поэтому этот проект для меня особенный: он научил меня большему, чем любой концепт до этого — работать с реальными ограничениями, реальными людьми и реальными сроками.</p>
+      <p class="intro-text">Дальше будет больше проектов — но этот кабинет навсегда останется той точкой, с которой всё началось.</p>
     </div>
   </section>
 
@@ -1605,6 +1668,7 @@ function initWorksCarousel(carouselId, dotsId, prevId, nextId) {
 }
 
 initWorksCarousel('worksCarousel', 'carouselDots', 'carouselPrev', 'carouselNext');
+initWorksCarousel('realizedCarousel', 'realizedDots', 'realizedPrev', 'realizedNext');
 
 // ============ РАМКА-СЛАЙДЕР ДЛЯ ЧЕРТЕЖЕЙ (свайп внутри одного блока) ============
 (function () {
