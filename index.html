@@ -43,7 +43,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
+    right: 0;     
     z-index: 200;
     display: flex;
     justify-content: space-between;
@@ -1172,6 +1172,7 @@
             <div class="work-subslide"><img src="assets/work-pauza-2.jpg" alt="Пауза — фото 2"></div>
             <div class="work-subslide"><img src="assets/work-pauza-3.jpg" alt="Пауза — фото 3"></div>
             <div class="work-subslide"><img src="assets/work-pauza-4.jpg" alt="Пауза — фото 4"></div>
+            <div class="work-subslide"><img src="assets/work-pauza-5.jpg" alt="Пауза — фото 5"></div>
           </div>
           <div class="carousel-dots" id="pauzaDots"></div>
         </div>
@@ -1733,7 +1734,9 @@ function initWorkSubslider(opts) {
   function goTo(i) {
     current = Math.max(0, Math.min(slides.length - 1, i));
     track.style.transform = 'translateX(-' + (current * 100) + '%)';
-    dots.forEach(function (d, di) { d.classList.toggle('active', di === current); });
+   dots.forEach(function (d, di) { d.classList.toggle('active', di === current); });
+    prevBtn.style.display = current === 0 ? 'none' : 'flex';
+    nextBtn.style.display = current === slides.length - 1 ? 'none' : 'flex';
   }
 
   prevBtn.addEventListener('click', function (e) { e.stopPropagation(); goTo(current - 1); });
