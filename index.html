@@ -1588,12 +1588,18 @@ function initWorksCarousel(carouselId, dotsId, prevId, nextId) {
   nextBtn.addEventListener('click', function () { scrollToIndex(getCurrentIndex() + 1); stopAutoplay(); startAutoplay(); });
 
   var rafId = null;
+  function updateArrowVisibility(idx) {
+    prevBtn.style.display = idx === 0 ? 'none' : 'flex';
+    nextBtn.style.display = idx === items.length - 1 ? 'none' : 'flex';
+  }
+  updateArrowVisibility(0);
   carousel.addEventListener('scroll', function () {
     if (rafId) return;
     rafId = requestAnimationFrame(function () {
       rafId = null;
       var idx = getCurrentIndex();
       dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
+      updateArrowVisibility(idx);
     });
   }, { passive: true });
 
