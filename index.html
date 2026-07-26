@@ -1986,10 +1986,11 @@ initWorkSubslider({
         var row = rows[0];
 
         var hours = Math.floor(row.seconds / 3600);
-        if (hours > maxHoursShown) {
-          maxHoursShown = hours;
-          if (hoursEl) hoursEl.textContent = formatHours(maxHoursShown);
-        }
+var totalHours = BASE_HOURS + hours;
+if (totalHours > maxHoursShown) {
+  maxHoursShown = totalHours;
+  if (hoursEl) hoursEl.textContent = formatHours(maxHoursShown);
+}
         // если пришедшее значение меньше уже показанного — просто игнорируем его,
         // счётчик не откатывается назад и не "моргает"
 
