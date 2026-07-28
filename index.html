@@ -432,7 +432,7 @@
       <div class="sheet-label"><span class="num mono">FAQ</span><span class="title">Состав проекта и подбор материалов — простыми словами</span><span class="rule"></span></div>
       <p style="opacity:.75; max-width:70ch; margin-bottom:34px;">Дизайн-проект — это чёткая и понятная инструкция для ремонта. Как схема для сборки LEGO. Вы получаете картинки, показывающие, как будет выглядеть ваша квартира, и комплект чертежей, по которым строители построят всё ровно и без лишних вопросов.</p>
 
-      <div class="faq-item open">
+      <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)"><span>1. Что именно вы получаете на руки</span><span class="plus mono">+</span></button>
         <div class="faq-a"><div class="faq-a-in">
           <p>Весь проект делится на три понятные части:</p>
@@ -532,11 +532,7 @@ function toggleFaq(el){
     answer.style.maxHeight = answer.scrollHeight + 'px';
   }
 }
-window.addEventListener('load', ()=>{
-  document.querySelectorAll('.faq-item.open .faq-a').forEach(a=>{
-    a.style.maxHeight = a.scrollHeight + 'px';
-  });
-});
+
 
 // ---- view tabs (Визуализация / Рабочие чертежи) ----
 document.querySelectorAll('.vtab').forEach(btn=>{
