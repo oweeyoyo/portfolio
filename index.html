@@ -9,2311 +9,660 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  .icon-tabler {
-    width: 1em;
-    height: 1em;
-    display: inline-block;
-    vertical-align: -0.15em;
-    flex-shrink: 0;
+  :root{
+    --stone:#E7E1D3;
+    --paper:#F3EEE2;
+    --ink:#1C1A15;
+    --graphite:#242219;
+    --accent:#B33A2E;
+    --line:#a89a7c;
+    --line-soft:rgba(28,26,21,.16);
+    --line-soft-2:rgba(243,238,226,.22);
   }
-  :root {
-    --bg: #FBFBFD;
-    --panel: #FFFFFF;
-    --ink: #1D1D1F;
-    --ink-soft: #6E6E73;
-    --line: rgba(0,0,0,0.08);
-    --bordeaux: #6B1E2E;
-    --bordeaux-soft: #8C2A3E;
-    --ivory: #F6E3E6;
-    --ivory-line: #E9C3CB;
-  }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-    color: var(--ink);
-    -webkit-font-smoothing: antialiased;
-  }
-  .site { max-width: 1080px; margin: 0 auto; }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{ background:var(--stone); color:var(--ink); font-family:'Manrope', sans-serif; font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; }
+  ::selection{background:var(--accent); color:var(--paper);}
+  img{display:block; max-width:100%;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; background:none; border:none; cursor:pointer; color:inherit;}
+  ul{padding-left:20px;}
+  li{margin-bottom:6px;}
 
-  /* ============ FLOATING TAB BAR (iOS-style, liquid glass) ============ */
-  .topbar-fixed {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;     
-    z-index: 200;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px 0;
-    pointer-events: none; /* let clicks pass through the empty strip */
-  }
-  .topbar-fixed > * { pointer-events: auto; }
+  .mono{font-family:'JetBrains Mono', monospace; letter-spacing:.02em;}
+  .disp{font-family:'Unbounded', sans-serif;}
 
-  .social-fixed {
-    display: flex;
-    gap: 4px;
-    padding: 6px;
-    border-radius: 100px;
-    background: rgba(255,255,255,0.45);
-    border: 1px solid rgba(255,255,255,0.55);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-  }
-  .nav-social {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 100px;
-    transition: color 0.2s ease, background 0.2s ease;
-  }
-  .nav-social:hover { color: var(--ink); background: rgba(0,0,0,0.04); }
+  /* ---------- drafting frame ---------- */
+  .sheet{ position:relative; margin:14px; border:1.5px solid var(--ink); }
+  .crosshair{position:absolute; width:16px; height:16px; pointer-events:none;}
+  .crosshair::before, .crosshair::after{ content:""; position:absolute; background:var(--ink); }
+  .crosshair::before{ width:16px; height:1.5px; top:7px; left:0; }
+  .crosshair::after{ width:1.5px; height:16px; top:0; left:7px; }
+  .cr-tl{ top:-8px; left:-8px; } .cr-tr{ top:-8px; right:-8px; }
+  .cr-bl{ bottom:-8px; left:-8px; } .cr-br{ bottom:-8px; right:-8px; }
 
-  .tabbar-wrap {
-    position: absolute;
-    left: 50%;
-    top: 16px;
-    transform: translateX(-50%);
-  }
+  header{ position:sticky; top:14px; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:14px 24px; background:rgba(231,225,211,.86); backdrop-filter:blur(6px); border-bottom:1px solid var(--line-soft); }
+  header .brand{ font-family:'Unbounded'; font-weight:700; font-size:14px; letter-spacing:.03em; text-transform:uppercase; }
+  header nav{display:flex; gap:26px;}
+  header nav a{ font-family:'JetBrains Mono'; font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; opacity:.7; transition:opacity .2s; }
+  header nav a:hover{opacity:1;}
+  header nav a::before{ content: attr(data-sheet); color:var(--accent); margin-right:6px; }
+  @media(max-width:900px){ header nav{display:none;} }
 
-  .tabbar {
-    position: relative;
-    display: flex;
-    gap: 2px;
-    padding: 6px;
-    border-radius: 22px;
-    background: rgba(255,255,255,0.38);
-    border: 1px solid rgba(255,255,255,0.55);
-    box-shadow:
-      0 12px 36px rgba(0,0,0,0.14),
-      0 1px 1px rgba(255,255,255,0.6) inset,
-      0 -1px 8px rgba(255,255,255,0.35) inset;
-    backdrop-filter: blur(28px) saturate(190%);
-    -webkit-backdrop-filter: blur(28px) saturate(190%);
-    isolation: isolate;
-    overflow: hidden;
-  }
-  /* glossy liquid sheen across the top of the bar */
-  .tabbar::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.08) 42%, rgba(255,255,255,0) 70%);
-    mix-blend-mode: overlay;
-    pointer-events: none;
-    z-index: 2;
-  }
+  section{ position:relative; padding:100px 24px 80px; border-top:1px solid var(--line-soft); }
+  section:first-of-type{border-top:none;}
+  .sheet-label{ display:flex; align-items:baseline; gap:14px; margin-bottom:56px; }
+  .sheet-label .num{ font-family:'Unbounded'; font-weight:800; font-size:13px; color:var(--accent); letter-spacing:.04em; }
+  .sheet-label .title{ font-family:'JetBrains Mono'; font-size:11.5px; text-transform:uppercase; letter-spacing:.12em; opacity:.6; }
+  .sheet-label .rule{ flex:1; height:1px; background:var(--line-soft); }
+  .wrap{ max-width:1180px; margin:0 auto; }
 
-  .nav-indicator {
-    position: absolute;
-    top: 6px;
-    left: 0;
-    height: calc(100% - 12px);
-    width: 0;
-    border-radius: 16px;
-    background: rgba(255,255,255,0.85);
-    box-shadow:
-      0 4px 14px rgba(0,0,0,0.12),
-      0 0 0 0.5px rgba(255,255,255,0.9) inset;
-    transform: translateX(6px);
-    transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
-                width 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
-    will-change: transform, width;
-    z-index: 0;
-  }
+  /* ---------- hero ---------- */
+  .hero{ padding:64px 24px 0; border-top:none; }
+  .hero-grid{ display:grid; grid-template-columns:1.4fr 1fr; gap:60px; align-items:end; padding-bottom:56px; }
+  .eyebrow{ font-family:'JetBrains Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.1em; opacity:.65; margin-bottom:28px; display:flex; align-items:center; gap:10px; }
+  .eyebrow::before{ content:""; width:26px; height:1px; background:var(--accent); }
+  h1.name{ font-family:'Unbounded'; font-weight:800; font-size:clamp(48px, 8vw, 104px); line-height:.94; letter-spacing:-.01em; text-transform:uppercase; }
+  h1.name em{ font-style:normal; color:var(--accent); }
+  .name-en{ font-family:'JetBrains Mono'; font-size:13px; opacity:.55; margin-top:18px; letter-spacing:.05em; }
+  .hero-index{ font-family:'JetBrains Mono'; font-size:13px; border-left:1px solid var(--line-soft); padding-left:24px; }
+  .hero-index .row{ display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px dashed var(--line-soft); }
+  .hero-index .row span:first-child{ opacity:.55; }
+  .hero-index .row:hover{ color:var(--accent); }
+  .hero-index .row:last-child{ border-bottom:none; }
+  .titleblock{ display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--ink); }
+  .titleblock .cell{ padding:22px 24px; border-right:1px solid var(--line-soft); }
+  .titleblock .cell:last-child{border-right:none;}
+  .titleblock .val{ font-family:'Unbounded'; font-weight:700; font-size:34px; color:var(--accent); }
+  .titleblock .lbl{ font-family:'JetBrains Mono'; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; opacity:.6; margin-top:6px; }
+  .status-dot{ display:inline-block; width:7px; height:7px; border-radius:50%; background:#C7C7CC; margin-left:6px; vertical-align:middle; }
+  .status-dot.online{ background:#34C759; box-shadow:0 0 0 2px rgba(52,199,89,.18); }
+  .status-dot.offline{ background:#FFCC00; box-shadow:0 0 0 2px rgba(255,204,0,.18); }
+  @media(max-width:760px){ .hero-grid{grid-template-columns:1fr;} .titleblock{grid-template-columns:1fr 1fr;} .titleblock .cell:nth-child(2){border-right:none;} }
 
-  .tabbar-link {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    padding: 10px 18px;
-    font-size: 12.5px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    text-decoration: none;
-    letter-spacing: -0.01em;
-    white-space: nowrap;
-    border-radius: 16px;
-    transition: color 0.35s ease;
-  }
-  .tabbar-link.active { color: var(--bordeaux); }
-  .tabbar-link:hover:not(.active) { color: var(--ink); }
+  /* ---------- about ---------- */
+  .about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:70px; }
+  .about-grid h2{ font-family:'Unbounded'; font-weight:600; font-size:30px; line-height:1.28; margin-bottom:26px; }
+  .about-grid p{ opacity:.85; max-width:46ch; }
+  .subblock{ margin-top:38px; }
+  .subblock h3{ font-family:'JetBrains Mono'; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:10px; }
+  .tags{ display:flex; flex-wrap:wrap; gap:10px; margin-top:36px; }
+  .tag{ font-family:'JetBrains Mono'; font-size:11.5px; border:1px solid var(--line-soft); padding:7px 13px; text-transform:uppercase; letter-spacing:.04em; }
+  @media(max-width:760px){ .about-grid{grid-template-columns:1fr; gap:36px;} }
 
-  @media (max-width: 720px) {
-    .social-fixed { display: none; }
-    .topbar-fixed { padding: 12px 16px 0; }
-    .tabbar-wrap { position: static; transform: none; margin: 0 auto; display: flex; justify-content: center; width: 100%; }
-    .tabbar { max-width: calc(100vw - 32px); overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
-    .tabbar::-webkit-scrollbar { display: none; }
-    .tabbar-link { padding: 9px 13px; font-size: 11.5px; }
-  }
-  /* ============ END FLOATING TAB BAR ============ */
+  /* ---------- works: tabs ---------- */
+  .view-switch{ display:flex; gap:2px; margin-bottom:34px; border:1px solid var(--ink); width:fit-content; }
+  .vtab{ padding:11px 22px; font-family:'JetBrains Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.06em; opacity:.55; }
+  .vtab.active{ background:var(--ink); color:var(--paper); opacity:1; }
+  .view-panel[hidden]{ display:none; }
 
-  /* HERO */
-  .hero {
-    padding: 108px 24px 80px;
-  }
-  .hero-card {
-    position: relative;
-    max-width: 900px;
-    margin: 0 auto;
-    border-radius: 36px;
-    overflow: hidden;
-    background: var(--panel);
-    border: 0.5px solid var(--line);
-    box-shadow: 0 2px 24px rgba(0,0,0,0.05);
-    padding: 64px 32px 32px;
-    text-align: center;
-    container-type: inline-size;
-    container-name: herocard;
-  }
-  .hero-glow {
-    position: absolute;
-    top: -60px;
-    left: 50%;
-    width: 1200px;
-    height: 680px;
-    transform: translateX(-50%);
-    background: radial-gradient(closest-side, rgba(140,42,62,0.62) 0%, rgba(166,121,138,0.42) 30%, rgba(201,166,176,0.22) 52%, rgba(201,166,176,0.09) 68%, transparent 82%);
-    filter: blur(78px);
-    z-index: 0;
-    pointer-events: none;
-    animation: heroGlowFloat 18s ease-in-out infinite;
-    will-change: transform;
-  }
-  @keyframes heroGlowFloat {
-    0%   { transform: translate(-50%, 0%)    scale(1);    }
-    25%  { transform: translate(-18%, 8%)    scale(1.1);  }
-    50%  { transform: translate(-50%, -8%)   scale(0.92); }
-    75%  { transform: translate(-82%, 6%)    scale(1.08); }
-    100% { transform: translate(-50%, 0%)    scale(1);    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-glow { animation: none; }
-  }
-  .hero-eyebrow {
-    position: relative;
-    z-index: 1;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--bordeaux);
-    letter-spacing: -0.01em;
-    margin-bottom: 8px;
-  }
-  .hero-name {
-    position: relative;
-    z-index: 1;
-    font-size: clamp(44px, 13cqw, 140px);
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 0.95;
-    color: var(--ink);
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-  /* Fallback for browsers without container query support: scale off viewport instead */
-  @supports not (container-type: inline-size) {
-    .hero-name { font-size: clamp(36px, 8vw, 108px); }
-  }
-  .hero-name-en {
-    position: relative;
-    z-index: 1;
-    font-size: clamp(16px, 2vw, 20px);
-    font-weight: 400;
-    color: var(--ink-soft);
-    letter-spacing: 0.01em;
-    margin-top: 18px;
-  }
-  .hero-photo {
-    position: relative;
-    z-index: 1;
-    margin: 6px auto 0;
-    width: min(400px, 74%);
-    border-radius: 30px;
-    overflow: hidden;
-    box-shadow: 0 30px 70px -32px rgba(107,30,46,0.4);
-  }
-  .hero-photo img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  .hero-photo::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 130px;
-    background: linear-gradient(to bottom,
-      var(--panel) 0%,
-      rgba(246,227,230,0.94) 30%,
-      rgba(140,42,62,0.22) 65%,
-      rgba(140,42,62,0) 100%);
-    pointer-events: none;
-  }
-  /* INTRO */
-  .intro-section {
-    padding: 80px 24px;
-    display: grid;
-    grid-template-columns: 0.85fr 1fr;
-    gap: 56px;
-    align-items: start;
-  }
-  .intro-eyebrow {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--bordeaux);
-    margin-bottom: 14px;
-  }
-  .intro-heading {
-    font-size: clamp(28px, 3vw, 36px);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-    margin-bottom: 20px;
-  }
-  .intro-text {
-    font-size: 16px;
-    line-height: 1.7;
-    color: var(--ink-soft);
-    font-weight: 400;
-  }
-  .intro-text + .intro-text { margin-top: 16px; }
-  .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-  .tag-pill {
-    font-size: 12px;
-    font-weight: 500;
-    padding: 7px 14px;
-    background: var(--ivory);
-    border-radius: 100px;
-    color: var(--bordeaux);
-    letter-spacing: -0.01em;
-  }
-  /* SPEC CARD (formerly steam-row) */
-  .spec-card {
-    background: var(--panel);
-    border: 0.5px solid var(--line);
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-    margin-bottom: 20px;
-  }
-  .spec-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 12px 4px;
-  }
-  .spec-row + .spec-row { border-top: 0.5px solid var(--line); }
-  .spec-icon {
-    position: relative;
-    width: 44px;
-    height: 44px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--bordeaux);
-    font-size: 18px;
-  }
-  .spec-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-  }
-  .status-dot {
-    position: absolute;
-    bottom: -2px;
-    right: -2px;
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    border: 2px solid var(--panel);
-    background: #C7C7CC;
-    transition: background 0.3s ease;
-  }
-  .status-dot.online {
-    background: #34C759;
-    box-shadow: 0 0 0 2px rgba(52,199,89,0.18);
-  }
-  .status-dot.offline {
-    background: #FFCC00;
-    box-shadow: 0 0 0 2px rgba(255,204,0,0.18);
-  }
-  .spec-info { flex: 1; min-width: 0; }
-  .spec-name { font-size: 14px; font-weight: 500; color: var(--ink); }
-  .spec-sub { font-size: 12px; color: var(--ink-soft); margin-top: 1px; }
-  .spec-value { text-align: right; flex-shrink: 0; }
-  .spec-value-num {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-    line-height: 1;
-  }
-  .spec-value-label {
-    font-size: 10px;
-    color: var(--ink-soft);
-    margin-top: 3px;
-  }
-  .stat-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
-    background: var(--panel);
-    border: 0.5px solid var(--line);
-    border-radius: 20px;
-    padding: 22px 8px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-  }
-  .stat-cell { text-align: center; padding: 0 4px; }
-  .stat-n {
-    font-size: 30px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-    line-height: 1;
-  }
-  .stat-l {
-    font-size: 11px;
-    color: var(--ink-soft);
-    margin-top: 6px;
-  }
-  /* SERVICES */
-  .services-section { padding: 8px 24px 72px; }
-  .services-lead {
-    font-size: 15px;
-    line-height: 1.65;
-    color: var(--ink-soft);
-    max-width: 540px;
-    margin-top: 12px;
-  }
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 14px;
-    margin-top: 28px;
-  }
-  .service-card {
-    background: var(--panel);
-    border: 0.5px solid var(--line);
-    border-radius: 20px;
-    padding: 22px 20px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .service-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 30px rgba(0,0,0,0.08);
-  }
-  .service-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: var(--ivory);
-    color: var(--bordeaux);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 19px;
-    margin-bottom: 16px;
-  }
-  .service-name {
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    margin-bottom: 6px;
-  }
-  .service-desc {
-    font-size: 13px;
-    line-height: 1.55;
-    color: var(--ink-soft);
-  }
-  .service-sublist {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 4px;
-  }
-  .service-subitem {
-    display: flex;
-    align-items: flex-start;
-    gap: 9px;
-  }
-  .service-subitem .icon-tabler {
-    flex-shrink: 0;
-    width: 15px;
-    height: 15px;
-    margin-top: 2px;
-    color: var(--bordeaux);
-  }
-  .service-subitem span {
-    font-size: 13px;
-    line-height: 1.55;
-    color: var(--ink-soft);
-  }
-  .services-note {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 22px;
-    font-size: 13px;
-    color: var(--ink-soft);
-  }
-  .services-note .icon-tabler { color: var(--bordeaux); font-size: 16px; }
-  /* PRICE — standalone section, styled like a natural continuation of the portfolio */
-  .price-section {
-    position: relative;
-    padding: 12px 24px 64px;
-    text-align: center;
-    overflow: hidden;
-  }
-  .price-glow {
-    position: absolute;
-    top: -40px;
-    left: 50%;
-    width: 900px;
-    height: 480px;
-    transform: translateX(-50%);
-    background: radial-gradient(closest-side, rgba(140,42,62,0.16) 0%, rgba(201,166,176,0.09) 45%, transparent 75%);
-    filter: blur(60px);
-    z-index: 0;
-    pointer-events: none;
-  }
-  .price-section .sec-header {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  .price-hero {
-    position: relative;
-    z-index: 1;
-    max-width: 540px;
-    margin: 32px auto 0;
-  }
-  .price-value-big {
-    font-size: clamp(52px, 8.5vw, 92px);
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    color: var(--ink);
-    line-height: 1;
-  }
-  .price-value-big span {
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    margin-left: 8px;
-    letter-spacing: -0.01em;
-  }
-  .price-desc-big {
-    font-size: 14.5px;
-    line-height: 1.7;
-    color: var(--ink-soft);
-    margin-top: 18px;
-  }
-  .price-fixed {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 22px;
-    font-size: 12.5px;
-    font-weight: 500;
-    color: var(--bordeaux);
-    background: var(--ivory);
-    border: 0.5px solid var(--ivory-line);
-    padding: 8px 16px;
-    border-radius: 100px;
-  }
-  .price-fixed .icon-tabler { font-size: 14px; }
-  .sec-eyebrow.price-eyebrow-big {
-    font-size: clamp(30px, 4.5vw, 44px);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--ink);
-    margin-bottom: 0;
-  }
-  .price-packages {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
-    max-width: 820px;
-    margin: 32px auto 0;
-    text-align: center;
-    align-items: stretch;
-  }
-  .price-package {
-    background: var(--panel);
-    border: 0.5px solid var(--line);
-    border-radius: 24px;
-    padding: 32px 26px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  .price-package-name {
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--bordeaux);
-    letter-spacing: -0.01em;
-    margin-bottom: 10px;
-  }
-  .price-package-value {
-    font-size: clamp(30px, 4.5vw, 40px);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--ink);
-    line-height: 1;
-  }
-  .price-package-value span {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink-soft);
-    margin-left: 6px;
-    letter-spacing: -0.01em;
-  }
-  .price-package-desc {
-    font-size: 13.5px;
-    font-weight: 500;
-    line-height: 1.6;
-    color: var(--ink-soft);
-    margin-top: 14px;
-  }
-  .price-package-list {
-    margin-top: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 9px;
-    flex: 1;
-  }
-  .price-package-list li {
-    position: relative;
-    padding-left: 16px;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.5;
-    color: var(--ink-soft);
-  }
-  .price-package-list li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 7px;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--bordeaux);
-  }
-  .price-package-list ul {
-    margin-top: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 7px;
-  }
-  .price-package-list ul li {
-    font-size: 12.5px;
-  }
-  .price-package-subhead {
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-    margin-top: 20px;
-  }
-  .price-package-subintro {
-    font-size: 13px;
-    line-height: 1.55;
-    color: var(--ink-soft);
-    margin-top: 8px;
-  }
-  .price-package-note {
-    font-size: 11.5px;
-    line-height: 1.55;
-    color: var(--ink-soft);
-    opacity: 0.85;
-    font-style: italic;
-    margin-top: 10px;
-  }
-  .price-package-tag {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--ink-soft);
-    margin-top: 2px;
-  }
-  @media (max-width: 720px) {
-    .price-packages { grid-template-columns: 1fr; }
-  }
-  .intro-competencies {
-    margin-top: 26px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-  .intro-comp-item {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-  }
-  .intro-comp-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 11px;
-    background: var(--ivory);
-    color: var(--bordeaux);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-    flex-shrink: 0;
-  }
-  .intro-comp-title {
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    margin-bottom: 4px;
-  }
-  .intro-comp-desc {
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--ink-soft);
-  }
-  /* WORKS */
-  .works-section { padding: 40px 24px 80px; }
-  .sec-header { margin-bottom: 28px; }
-  .sec-eyebrow {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--bordeaux);
-    margin-bottom: 8px;
-  }
-  .sec-title {
-    font-size: clamp(32px, 4vw, 44px);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-  }
+  .proj-tabs{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:30px; }
+  .ptab{ padding:8px 14px; font-family:'JetBrains Mono'; font-size:11.5px; border:1px solid var(--line-soft); opacity:.6; }
+  .ptab.active{ border-color:var(--accent); color:var(--accent); opacity:1; }
 
-  /* ============ ПЕРЕКЛЮЧАТЕЛЬ "РЕНДЕРЫ / ЧЕРТЕЖИ" ============ */
-  .view-toggle {
-    position: relative;
-    display: inline-flex;
-    gap: 2px;
-    padding: 5px;
-    border-radius: 16px;
-    background: var(--ivory);
-    border: 0.5px solid var(--ivory-line);
-    margin-bottom: 22px;
-  }
-  .view-toggle-btn {
-    position: relative;
-    z-index: 1;
-    border: none;
-    background: transparent;
-    padding: 10px 20px;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--bordeaux);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    font-family: inherit;
-  }
-  .view-toggle-btn.active { color: #fff; }
-  .view-toggle-indicator {
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    height: calc(100% - 10px);
-    width: 0;
-    border-radius: 12px;
-    background: var(--bordeaux);
-    box-shadow: 0 4px 14px rgba(107,30,46,0.28);
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 0;
-  }
-  /* ============ КОНЕЦ ПЕРЕКЛЮЧАТЕЛЯ ============ */
+  .pc{ display:none; }
+  .pc.active{ display:block; }
 
-  /* ============ ПАЧКИ ЧЕРТЕЖЕЙ (ПРОЕКТЫ) ============ */
-  #drawingView { display: none; }
-  .pack-selector {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 18px;
-  }
-  .pack-pill {
-    font-family: inherit;
-    font-size: 12.5px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--ink-soft);
-    background: var(--panel);
-    border: 0.5px solid var(--line);
-    padding: 9px 16px;
-    border-radius: 100px;
-    cursor: pointer;
-    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-  }
-  .pack-pill.active {
-    color: #fff;
-    background: var(--bordeaux);
-    border-color: var(--bordeaux);
-  }
-  .pack-pill.disabled {
-    cursor: default;
-    color: rgba(110,110,115,0.45);
-    background: var(--panel);
-    pointer-events: none;
-  }
-  .pack-pill:not(.disabled):not(.active):hover { color: var(--ink); border-color: rgba(0,0,0,0.16); }
-  /* ============ КОНЕЦ ПАЧЕК ЧЕРТЕЖЕЙ ============ */
+  .carousel{ position:relative; }
+  .carousel-frame{ position:relative; width:100%; max-width:640px; aspect-ratio:3/4; border:1px solid var(--ink); overflow:hidden; background:repeating-linear-gradient(135deg, var(--line-soft) 0 2px, transparent 2px 14px); }
+  .carousel-frame img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .35s ease; }
+  .carousel-frame img.active{ opacity:1; }
+  .placeholder-note{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; font-family:'JetBrains Mono'; font-size:11.5px; opacity:.55; }
+  .c-controls{ display:flex; align-items:center; gap:16px; margin-top:18px; }
+  .c-btn{ width:34px; height:34px; border:1px solid var(--ink); display:flex; align-items:center; justify-content:center; font-size:16px; }
+  .c-btn:hover{ background:var(--ink); color:var(--paper); }
+  .c-counter{ font-size:12.5px; opacity:.65; }
+  .c-caption{ margin-top:18px; display:flex; justify-content:space-between; align-items:baseline; font-family:'JetBrains Mono'; font-size:12px; max-width:640px; }
+  .c-caption .pname{ font-family:'Unbounded'; font-size:17px; }
+  .c-caption .pmeta{ opacity:.6; }
 
-  /* ============ ЕДИНАЯ РАМКА-СЛАЙДЕР ДЛЯ ЧЕРТЕЖЕЙ ============ */
-  .drawing-frame-wrap { position: relative; max-width: min(560px, 78vw); margin: 0 auto; }
-  .drawing-frame {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 3250 / 4050;
-    max-height: 74vh;
-    border-radius: 28px;
-    overflow: hidden;
-    background: var(--panel);
-    border: 0.5px solid var(--line);
-    box-shadow: 0 24px 56px -28px rgba(0,0,0,0.28);
-    cursor: zoom-in;
-    touch-action: pan-y;
-  }
-  .drawing-track {
-    display: flex;
-    height: 100%;
-    transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: transform;
-  }
-  .drawing-track.dragging { transition: none; }
-  .drawing-slide { flex: 0 0 100%; height: 100%; }
-  .drawing-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    -webkit-user-drag: none;
-    user-select: none;
-    pointer-events: none;
-  }
-  .drawing-frame .carousel-arrow.prev { left: 12px; }
-  .drawing-frame .carousel-arrow.next { right: 12px; }
-  /* ============ КОНЕЦ РАМКИ-СЛАЙДЕРА ============ */
+  /* ---------- realized case study ---------- */
+  .case-top{ margin-bottom:40px; max-width:70ch; }
+  .case-top .kicker{ font-family:'JetBrains Mono'; font-size:11px; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:14px; }
+  .case-top h3{ font-family:'Unbounded'; font-size:26px; font-weight:600; margin-bottom:6px; }
+  .case-top .subline{ opacity:.6; font-family:'JetBrains Mono'; font-size:12.5px; margin-bottom:22px; }
+  .case-top p{ opacity:.85; margin-bottom:14px; }
 
-  .works-carousel-wrap { position: relative; }
-  .works-carousel {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding: 0 calc(50% - min(320px, 46%));
-    padding: 6px 4px 28px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .works-carousel::-webkit-scrollbar { display: none; }
-  .work-item {
-    background: var(--panel);
-    border: 0.5px solid var(--line);
-    border-radius: 28px;
-    flex: 0 0 auto;
-    width: min(560px, 78vw);
-    aspect-ratio: 3250 / 4050;
-    max-height: 74vh;
-    position: relative;
-    overflow: hidden;
-    scroll-snap-align: center;
-    box-shadow: 0 24px 56px -28px rgba(0,0,0,0.28);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .work-item.has-photo { cursor: zoom-in; }
-  .work-item.has-photo:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 30px 64px -26px rgba(0,0,0,0.36);
-  }
-  .work-fill {
-    width: 100%; height: 100%;
-    background: linear-gradient(150deg, #EDE3DA, #D9C6B8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px;
-    color: rgba(107,30,46,0.22);
-  }
-  .work-fill .icon-tabler { font-size: 36px; }
-  .work-fill span { font-size: 12px; letter-spacing: 0.02em; }
-  .work-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .work-caption {
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    padding: 28px 32px;
-    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
-  }
-  .work-h-title { font-size: 22px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
-  .work-h-title.heavy { font-weight: 800; letter-spacing: -0.03em; text-transform: uppercase; }
-  .work-h-type { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 4px; }
-  .work-index {
-    position: absolute;
-    top: 24px;
-    right: 28px;
-    font-size: 13px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.85);
-    background: rgba(0,0,0,0.28);
-    padding: 5px 12px;
-    border-radius: 100px;
-    backdrop-filter: blur(6px);
-  }
-  .carousel-arrow {
-    position: absolute;
-    top: 45%;
-    transform: translateY(-50%);
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.9);
-    border: 0.5px solid var(--line);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    color: var(--ink);
-    cursor: pointer;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.14);
-    z-index: 10;
-    transition: background 0.2s ease, transform 0.2s ease;
-  }
-  .carousel-arrow:hover { background: #fff; transform: translateY(-50%) scale(1.06); }
-  .carousel-arrow.prev { left: -4px; }
-  .carousel-arrow.next { right: -4px; }
-  .carousel-dots {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-top: 2px;
-  }
-  .carousel-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: rgba(107,30,46,0.18);
-    cursor: pointer;
-    transition: background 0.25s ease, width 0.25s ease, border-radius 0.25s ease;
-  }
-  .carousel-dot.active { background: var(--bordeaux); width: 22px; border-radius: 4px; }
-  @media (max-width: 720px) {
-    .carousel-arrow { display: none; }
-  }
-  /* ============ ВНУТРЕННИЙ СЛАЙДЕР ВНУТРИ КАРТОЧКИ РАБОТЫ (для пачек фото типа "Пауза") ============ */
-  .work-item.has-subslider { cursor: default; }
-  .work-subslider {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    touch-action: pan-y;
-  }
-  .work-subslider-track {
-    display: flex;
-    height: 100%;
-    transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: transform;
-  }
-  .work-subslider-track.dragging { transition: none; }
-  .work-subslide { flex: 0 0 100%; height: 100%; cursor: zoom-in; }
-  .work-subslide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    -webkit-user-drag: none;
-    user-select: none;
-    pointer-events: none;
-  }
-  .work-subslider .carousel-arrow {
-    width: 38px;
-    height: 38px;
-    font-size: 17px;
-    top: 45%;
-  }
-  .work-subslider .carousel-arrow.prev { left: 12px; }
-  .work-subslider .carousel-arrow.next { right: 12px; }
-  .work-subslider .carousel-dots {
-    position: absolute;
-    left: 0; right: 0;
-    bottom: 78px;
-    margin-top: 0;
-    z-index: 2;
-  }
-  .work-subslider .carousel-dot {
-    background: rgba(255,255,255,0.4);
-  }
-  .work-subslider .carousel-dot.active { background: #fff; }
-  @media (max-width: 720px) {
-    .work-subslider .carousel-arrow { display: none; }
-  }
-  /* ============ КОНЕЦ ВНУТРЕННЕГО СЛАЙДЕРА ============ */
-  /* LIGHTBOX */
-  .lightbox {
-    position: fixed;
-    inset: 0;
-    z-index: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.32s ease;
-  }
-  .lightbox.open { opacity: 1; pointer-events: auto; }
-  .lightbox-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(12,8,10,0.88);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-  .lightbox-content {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 92vw;
-    transform: scale(0.95);
-    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .lightbox.open .lightbox-content { transform: scale(1); }
-  .lightbox-content img {
-    max-width: 90vw;
-    max-height: 80vh;
-    border-radius: 16px;
-    display: block;
-    box-shadow: 0 50px 120px rgba(0,0,0,0.55);
-  }
-  .lightbox-caption { margin-top: 18px; text-align: center; }
-  .lightbox-caption .lb-title { font-size: 18px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
-  .lightbox-caption .lb-title.heavy { font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; }
-  .lightbox-caption .lb-type { font-size: 12.5px; color: rgba(255,255,255,0.68); margin-top: 4px; }
-  .lightbox-close {
-    position: absolute;
-    top: -54px;
-    right: 0;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.25);
-    color: #fff;
-    font-size: 18px;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s ease;
-  }
-  .lightbox-close:hover { background: rgba(255,255,255,0.2); }
-  @media (max-width: 720px) {
-    .lightbox-close { top: auto; bottom: -56px; right: 50%; transform: translateX(50%); }
-  }
-  /* FAQ */
-  .faq-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 18px;
-    margin-bottom: 14px;
-    font-size: 12.5px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: #fff;
-    background: var(--bordeaux);
-    padding: 8px 16px;
-    border-radius: 100px;
-    box-shadow: 0 8px 20px rgba(107,30,46,0.22);
-  }
-  .faq-badge .icon-tabler { font-size: 15px; }
-  .faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 24px;
-  }
-  .faq-item {
-    background: var(--panel);
-    border: 0.5px solid var(--line);
-    border-radius: 18px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-    overflow: hidden;
-  }
-  .faq-question {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    text-align: left;
-    background: none;
-    border: none;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-    padding: 20px 22px;
-    cursor: pointer;
-  }
-  .faq-question .faq-icon {
-    flex-shrink: 0;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: var(--ivory);
-    color: var(--bordeaux);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease;
-  }
-  .faq-item.open .faq-question .faq-icon { transform: rotate(45deg); }
-  .faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.35s ease;
-  }
-  .faq-answer-inner {
-    padding: 0 22px 20px;
-    font-size: 14px;
-    line-height: 1.65;
-    color: var(--ink-soft);
-  }
-  .faq-answer-inner p + p,
-  .faq-answer-inner p + ul,
-  .faq-answer-inner ul + p {
-    margin-top: 12px;
-  }
-  .faq-answer-inner strong {
-    color: var(--ink);
-    font-weight: 600;
-  }
-  .faq-answer-inner ul {
-    margin-top: 10px;
-    padding-left: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .faq-answer-inner ul ul {
-    margin-top: 8px;
-    margin-left: 4px;
-  }
-  .faq-answer-inner li {
-    position: relative;
-    padding-left: 16px;
-  }
-  .faq-answer-inner li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 8px;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--bordeaux);
-  }
-  /* FOOTER */
-  footer {
-    padding: 48px 24px 64px;
-  }
-  .f-info {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 14px;
-    margin-bottom: 32px;
-  }
-  .f-item {
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--ink);
-    text-decoration: none;
-    padding: 18px 20px;
-    border-radius: 18px;
-    background: transparent;
-    border: 1px solid rgba(107,30,46,0.14);
-    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .f-item-glow {
-    position: absolute;
-    top: -50%;
-    left: -30%;
-    width: 170%;
-    height: 200%;
-    background: radial-gradient(closest-side, rgba(140,42,62,0.30) 0%, rgba(166,121,138,0.18) 35%, rgba(201,166,176,0.08) 55%, transparent 75%);
-    filter: blur(26px);
-    z-index: 0;
-    pointer-events: none;
-    animation: heroGlowFloat 16s ease-in-out infinite;
-    will-change: transform;
-  }
-  .f-item:nth-child(2) .f-item-glow { animation-delay: -4s; }
-  .f-item:nth-child(3) .f-item-glow { animation-delay: -8s; }
-  .f-item:nth-child(4) .f-item-glow { animation-delay: -12s; }
-  @media (prefers-reduced-motion: reduce) {
-    .f-item-glow { animation: none; }
-  }
-  .f-item-content {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .f-item .icon-wrap {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--bordeaux);
-    color: #fff;
-    flex-shrink: 0;
-  }
-  .f-item .icon-wrap .icon-tabler { font-size: 17px; }
-  .f-item:hover {
-    background: rgba(255,255,255,0.5);
-    border-color: rgba(107,30,46,0.4);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(107,30,46,0.12);
-  }
-  .f-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding-top: 28px;
-    border-top: 0.5px solid var(--line);
-  }
-  .f-note { font-size: 13px; color: var(--ink-soft); }
-  .f-btn {
-    font-size: 14px;
-    font-weight: 600;
-    padding: 13px 26px;
-    border-radius: 100px;
-    background: var(--bordeaux);
-    color: #fff;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
-    text-decoration: none;
-  }
-  .f-btn:hover { background: var(--bordeaux-soft); transform: translateY(-1px); }
-  @media (max-width: 720px) {
-    .intro-section { grid-template-columns: 1fr; gap: 40px; padding: 56px 20px; }
-    .services-section { padding: 0 20px 48px; }
-    .services-grid { grid-template-columns: 1fr 1fr; }
-    .works-section { padding: 24px 20px 56px; }
-    .work-item { width: 80vw; max-height: 68vh; border-radius: 20px; }
-    .work-h-title { font-size: 18px; }
-    footer { padding: 40px 20px 48px; }
-    .f-info { grid-template-columns: 1fr; }
-    .f-bottom { flex-direction: column; align-items: flex-start; }
-    .hero { padding: 96px 20px 56px; }
-    .hero-card { padding: 48px 22px 22px; border-radius: 28px; }
-    .hero-photo { margin: 0 auto 0; width: min(420px, 84%); }
-    .stat-row { grid-template-columns: 1fr; gap: 14px; }
-    .stat-row { text-align: left; }
-    .stat-cell { text-align: left; }
-  }
+  /* ---------- services (dark inverted sheet) ---------- */
+  .dark{ background:var(--graphite); color:var(--paper); }
+  .dark .sheet-label .rule{ background:var(--line-soft-2); }
+  .dark .sheet-label .title{ opacity:.55; }
+  .svc-intro{ max-width:60ch; opacity:.8; margin-bottom:46px; }
+  .services-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-soft-2); border:1px solid var(--line-soft-2); }
+  .svc{ background:var(--graphite); padding:32px 26px; }
+  .svc .idx{ font-family:'JetBrains Mono'; font-size:12px; color:var(--accent); }
+  .svc h4{ font-family:'Unbounded'; font-size:17px; font-weight:600; margin:14px 0 10px; }
+  .svc p{ font-size:14px; opacity:.72; margin-bottom:6px; }
+  .svc .sub{ font-size:12.5px; opacity:.55; margin-top:8px; }
+  .svc .note{ margin-top:14px; font-family:'JetBrains Mono'; font-size:10.5px; color:var(--accent); text-transform:uppercase; letter-spacing:.05em; }
+  @media(max-width:900px){ .services-grid{grid-template-columns:1fr;} }
+
+  /* ---------- FAQ ---------- */
+  .faq-item{ border-bottom:1px solid var(--line-soft); }
+  .faq-q{ display:flex; justify-content:space-between; align-items:center; width:100%; text-align:left; padding:22px 0; cursor:pointer; font-family:'Unbounded'; font-weight:600; font-size:16px; }
+  .faq-q .plus{ font-family:'JetBrains Mono'; color:var(--accent); font-size:18px; transition:transform .25s; flex-shrink:0; margin-left:20px; }
+  .faq-item.open .plus{ transform:rotate(45deg); }
+  .faq-a{ max-height:0; overflow:hidden; transition:max-height .35s ease; font-size:14.5px; opacity:.85; }
+  .faq-a-in{ padding-bottom:26px; max-width:72ch; }
+  .faq-a-in h5{ font-family:'JetBrains Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--accent); margin:18px 0 8px; }
+  .faq-a-in h5:first-child{ margin-top:0; }
+  .faq-a-in strong{ font-weight:700; }
+
+  /* ---------- pricing ---------- */
+  .pricing-grid{ display:grid; grid-template-columns:1fr 1fr; gap:2px; background:var(--ink); border:1px solid var(--ink); margin-bottom:24px; }
+  .plan{ background:var(--paper); padding:40px 34px; }
+  .plan.hi{ background:var(--ink); color:var(--paper); }
+  .plan .pname{ font-family:'JetBrains Mono'; font-size:11px; text-transform:uppercase; letter-spacing:.1em; opacity:.6; }
+  .plan .price{ font-family:'Unbounded'; font-weight:800; font-size:44px; margin:14px 0 18px; }
+  .plan .price span{ font-size:16px; opacity:.55; font-family:'JetBrains Mono'; }
+  .plan p{ opacity:.8; max-width:40ch; font-size:14.5px; }
+  .price-foot{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-family:'JetBrains Mono'; font-size:12px; opacity:.6; }
+  @media(max-width:760px){ .pricing-grid{grid-template-columns:1fr;} }
+
+  /* ---------- footer / title block ---------- */
+  footer{ padding:70px 24px 40px; }
+  .tblock{ border:1px solid var(--ink); display:grid; grid-template-columns:2fr 1fr 1fr 1fr; }
+  .tblock > div{ padding:22px 24px; border-right:1px solid var(--line-soft); }
+  .tblock > div:last-child{ border-right:none; }
+  .tblock .k{ font-family:'JetBrains Mono'; font-size:10px; text-transform:uppercase; opacity:.55; letter-spacing:.08em; margin-bottom:8px; }
+  .tblock .v{ font-family:'Unbounded'; font-size:15px; font-weight:600; }
+  .tblock a.v:hover{ color:var(--accent); }
+  @media(max-width:800px){ .tblock{grid-template-columns:1fr 1fr;} .tblock>div{border-bottom:1px solid var(--line-soft);} }
+  .foot-note{ margin-top:28px; font-family:'JetBrains Mono'; font-size:11px; opacity:.45; }
+  .legal{ margin-top:18px; padding-top:18px; border-top:1px dashed var(--line-soft); display:flex; flex-direction:column; gap:6px; font-family:'JetBrains Mono'; font-size:10.5px; opacity:.4; max-width:70ch; }
 </style>
 </head>
 <body>
-<div class="site">
-  <div class="topbar-fixed">
-    <div class="tabbar-wrap">
-      <nav class="tabbar" id="tabbar">
-        <span class="nav-indicator" id="navIndicator"></span>
-        <a href="#about" class="tabbar-link active" data-tab>Обо мне</a>
-        <a href="#works" class="tabbar-link" data-tab>Концепты</a>
-        <a href="#realized" class="tabbar-link" data-tab>Реализованный</a>
-        <a href="#services" class="tabbar-link" data-tab>Что входит</a>
-        <a href="#faq" class="tabbar-link" data-tab>FAQ</a>
-        <a href="#contact" class="tabbar-link" data-tab>Контакты</a>
-      </nav>
-    </div>
-  </div>
 
-  <section class="hero" id="about">
-    <div class="hero-card">
-      <div class="hero-glow"></div>
-      <div class="hero-eyebrow">Дизайнер интерьера · Ташкент</div>
-      <div class="hero-name">Виноградов<br>Диёр</div>
-      <div class="hero-name-en">Diyor Vinogradov</div>
-    </div>
-  </section>
-  <div class="intro-section">
-    <div>
-      <div class="intro-eyebrow">О себе</div>
-      <div class="intro-heading">Дизайн, который работает на Ваши сценарии жизни.</div>
-      <p class="intro-text">При проектировании я в первую очередь думаю о том, как пространством будут пользоваться каждый день — где удобно разместить розетки, как расставить свет по сценариям. Эстетика выстраивается уже на основе этой логики, а не отдельно от неё.</p>
-      <div class="intro-competencies">
-        <div class="intro-comp-item">
-          <div class="intro-comp-icon"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 3l4 4l-14 14l-4 -4l14 -14"/><path d="M16 7l-1.5 -1.5"/><path d="M13 10l-1.5 -1.5"/><path d="M10 13l-1.5 -1.5"/><path d="M7 16l-1.5 -1.5"/></svg></div>
-          <div>
-            <div class="intro-comp-title">Техническая база</div>
-            <div class="intro-comp-desc">Работаю в 3ds Max и AutoCAD — делаю рабочие чертежи и визуализации, которые соответствуют финальному результату.</div>
-          </div>
-        </div>
-        <div class="intro-comp-item">
-          <div class="intro-comp-icon"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 21a9 9 0 0 1 0 -18c4.97 0 9 3.582 9 8c0 1.06 -.474 2.078 -1.318 2.828c-.844 .75 -1.989 1.172 -3.182 1.172h-2.5a2 2 0 0 0 -1 3.75a1.3 1.3 0 0 1 -1 2.25"/><path d="M7.5 10.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11.5 7.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M15.5 10.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></div>
-          <div>
-            <div class="intro-comp-title">Стилистические направления</div>
-            <div class="intro-comp-desc">Работаю в датском стиле, модерне и Баухаусе — ценю их за функциональность и отсутствие лишнего декора.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <div class="tag-list">
-        <span class="tag-pill">Датский стиль</span>
-        <span class="tag-pill">Модерн</span>
-        <span class="tag-pill">Баухаус</span>
-        <span class="tag-pill">Кэжуал</span>
-        <span class="tag-pill">3D-визуализация</span>
-      </div>
-      <div class="spec-card">
-        <div class="spec-row">
-          <div class="spec-icon"><img src="assets/3dsmax-logo.png" alt="3ds Max"><span class="status-dot" id="statusDot" title="Проверка статуса..."></span></div>
-          <div class="spec-info">
-            <div class="spec-name">3ds Max</div>
-            <div class="spec-sub">3D-моделирование и визуализация</div>
-          </div>
-          <div class="spec-value">
-            <div class="spec-value-num">2 170</div>
-            <div class="spec-value-label">часов наработано</div>
-          </div>
-        </div>
-      </div>
-      <div class="stat-row">
-        <div class="stat-cell">
-          <div class="stat-n">15</div>
-          <div class="stat-l">Концепт-проектов</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-n">1</div>
-          <div class="stat-l">Реализованный</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-n">2</div>
-          <div class="stat-l">Года опыта</div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="sheet">
+  <span class="crosshair cr-tl"></span><span class="crosshair cr-tr"></span>
+  <span class="crosshair cr-bl"></span><span class="crosshair cr-br"></span>
 
-  <section class="works-section" id="works">
-    <div class="sec-header">
-      <div class="sec-eyebrow">Портфолио</div>
-      <div class="sec-title">Мои работы</div>
-    </div>
+  <header>
+    <div class="brand">Виноградов Диёр</div>
+    <nav>
+      <a href="#about" data-sheet="Л.01">Обо мне</a>
+      <a href="#works" data-sheet="Л.02">Концепты</a>
+      <a href="#realized" data-sheet="Л.03">Реализованный</a>
+      <a href="#services" data-sheet="Л.04">Что входит</a>
+      <a href="#pricing" data-sheet="Л.05">Стоимость</a>
+      <a href="#contact" data-sheet="Л.06">Контакты</a>
+    </nav>
+  </header>
 
-    <div class="view-toggle" id="viewToggle">
-      <span class="view-toggle-indicator" id="viewToggleIndicator"></span>
-      <button type="button" class="view-toggle-btn active" data-mode="render">Визуализация</button>
-      <button type="button" class="view-toggle-btn" data-mode="drawing">Рабочие чертежи</button>
-    </div>
-
-    <div id="renderView">
-    <div class="works-carousel-wrap">
-    <button class="carousel-arrow prev" id="carouselPrev" aria-label="Предыдущий">‹</button>
-    <button class="carousel-arrow next" id="carouselNext" aria-label="Следующий">›</button>
-    <div class="works-carousel" id="worksCarousel">
-      <div class="work-item has-subslider" id="belayaPolosaWorkItem">
-        <div class="work-subslider" id="belayaPolosaSubslider">
-          <button class="carousel-arrow prev" id="belayaPolosaPrev" aria-label="Предыдущий">‹</button>
-          <button class="carousel-arrow next" id="belayaPolosaNext" aria-label="Следующий">›</button>
-          <div class="work-subslider-track" id="belayaPolosaTrack">
-            <div class="work-subslide"><img src="assets/work-09.jpg" alt="Белая полоса — фото 1"></div>
-            <div class="work-subslide"><img src="assets/work-10.jpg" alt="Белая полоса — фото 2"></div>
-            <div class="work-subslide"><img src="assets/work-06.jpg" alt="Белая полоса — фото 3"></div>
-            <div class="work-subslide"><img src="assets/work-07.jpg" alt="Белая полоса — фото 4"></div>
-            <div class="work-subslide"><img src="assets/work-detskaya.jpg" alt="Белая полоса — детская"></div>
-            <div class="work-subslide"><img src="assets/work-08.jpg" alt="Белая полоса — санузел"></div>
-          </div>
-          <div class="carousel-dots" id="belayaPolosaDots"></div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow mono">Дизайнер интерьера · Ташкент</div>
+      <div class="hero-grid">
+        <div>
+          <h1 class="name">Виноградов<br><em>Диёр</em></h1>
+          <div class="name-en">Diyor Vinogradov — Interior Designer</div>
         </div>
-        <div class="work-index">01 / 06</div>
-        <div class="work-caption">
-          <div class="work-h-title heavy">Белая полоса</div>
-          <div class="work-h-type">Жилой · 2025</div>
+        <div class="hero-index">
+          <div class="row"><span>Л.01</span><span>О себе</span></div>
+          <div class="row"><span>Л.02</span><span>Концепт-проекты</span></div>
+          <div class="row"><span>Л.03</span><span>Реализованный объект</span></div>
+          <div class="row"><span>Л.04</span><span>Что входит в проект</span></div>
+          <div class="row"><span>Л.05</span><span>Стоимость</span></div>
+          <div class="row"><span>Л.06</span><span>Контакты</span></div>
         </div>
       </div>
-      <div class="work-item has-subslider" id="pauzaWorkItem">
-        <div class="work-subslider" id="pauzaSubslider">
-          <button class="carousel-arrow prev" id="pauzaPrev" aria-label="Предыдущий">‹</button>
-          <button class="carousel-arrow next" id="pauzaNext" aria-label="Следующий">›</button>
-          <div class="work-subslider-track" id="pauzaTrack">
-            <div class="work-subslide"><img src="assets/work-pauza.jpg" alt="Пауза — фото 1"></div>
-            <div class="work-subslide"><img src="assets/work-pauza-2.jpg" alt="Пауза — фото 2"></div>
-            <div class="work-subslide"><img src="assets/work-pauza-3.jpg" alt="Пауза — фото 3"></div>
-            <div class="work-subslide"><img src="assets/work-pauza-4.jpg" alt="Пауза — фото 4"></div>
-            <div class="work-subslide"><img src="assets/work-pauza-5.jpg" alt="Пауза — фото 5"></div>
-          </div>
-          <div class="carousel-dots" id="pauzaDots"></div>
-        </div>
-        <div class="work-index">02 / 06</div>
-        <div class="work-caption">
-          <div class="work-h-title heavy">Пауза</div> 
-        </div>
-      </div>
-      <div class="work-item">
-        <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Работа 5</span></div>
-        <div class="work-index">03 / 06</div>
-        <div class="work-caption">
-          <div class="work-h-title">Концепт 5</div>
-          <div class="work-h-type">Жилой · 2023</div>
-        </div>
-      </div>
-      <div class="work-item">
-        <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Работа 6</span></div>
-        <div class="work-index">04 / 06</div>
-        <div class="work-caption">
-          <div class="work-h-title">Концепт 6</div>
-          <div class="work-h-type">Коммерческий · 2023</div>
-        </div>
-      </div>
-      <div class="work-item">
-        <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Работа 7</span></div>
-        <div class="work-index">05 / 06</div>
-        <div class="work-caption">
-          <div class="work-h-title">Концепт 7</div>
-          <div class="work-h-type">Жилой · 2022</div>
-        </div>
-      </div>
-      <div class="work-item">
-        <div class="work-fill"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg><span>Работа 8</span></div>
-        <div class="work-index">06 / 06</div>
-        <div class="work-caption">
-          <div class="work-h-title">Концепт 8</div>
-          <div class="work-h-type">Жилой · 2022</div>
-        </div>
-      </div>
-    </div>
-    <div class="carousel-dots" id="carouselDots"></div>
-    </div>
-    </div>
-
-    <div id="drawingView">
-      <div class="pack-selector" id="packSelector">
-        <button type="button" class="pack-pill active" data-pack="1">Хрущёвка</button>
-        <button type="button" class="pack-pill disabled" data-pack="2" title="Скоро">Проект 2</button>
-        <button type="button" class="pack-pill disabled" data-pack="3" title="Скоро">Проект 3</button>
-        <button type="button" class="pack-pill disabled" data-pack="4" title="Скоро">Проект 4</button>
-        <button type="button" class="pack-pill disabled" data-pack="5" title="Скоро">Проект 5</button>
-      </div>
-      <div class="drawing-frame-wrap">
-        <div class="drawing-frame" id="drawingFrame">
-          <button class="carousel-arrow prev" id="drawingPrev" aria-label="Предыдущий">‹</button>
-          <button class="carousel-arrow next" id="drawingNext" aria-label="Следующий">›</button>
-          <div class="drawing-track" id="drawingTrack">
-            <div class="drawing-slide"><img src="assets/plan-01.jpg" alt="Проект 1 — лист 1"></div>
-            <div class="drawing-slide"><img src="assets/plan-02.jpg" alt="Проект 1 — лист 2"></div>
-            <div class="drawing-slide"><img src="assets/plan-03.jpg" alt="Проект 1 — лист 3"></div>
-            <div class="drawing-slide"><img src="assets/plan-04.jpg" alt="Проект 1 — лист 4"></div>
-            <div class="drawing-slide"><img src="assets/plan-05.jpg" alt="Проект 1 — лист 5"></div>
-          </div>
-          <div class="work-index" id="drawingIndex">01 / 05</div>
-          <div class="work-caption">
-            <div class="work-h-title">Хрущёвка</div>
-          </div>
-        </div>
-        <div class="carousel-dots" id="drawingDots"></div>
+      <div class="titleblock">
+        <div class="cell"><div class="val mono" id="hoursValue">2170</div><div class="lbl">часов наработано <span id="statusDot" class="status-dot" title="Проверка статуса..."></span></div></div>
+        <div class="cell"><div class="val mono">15</div><div class="lbl">концепт-проектов</div></div>
+        <div class="cell"><div class="val mono">1</div><div class="lbl">реализованный</div></div>
+        <div class="cell"><div class="val mono">2</div><div class="lbl">года опыта</div></div>
       </div>
     </div>
   </section>
 
-  <section class="works-section" id="realized">
-    <div class="sec-header">
-      <div class="sec-eyebrow">Реализованный проект</div>
-      <div class="sec-title">История первого объекта</div>
-    </div>
-
-    <div class="tag-list" style="margin-bottom:8px;">
-      <span class="tag-pill">Кабинет директора</span>
-      <span class="tag-pill">30 м²</span>
-      <span class="tag-pill">Реализовано полностью</span>
-    </div>
-
-    <div class="works-carousel-wrap">
-      <button class="carousel-arrow prev" id="realizedPrev" aria-label="Предыдущий">‹</button>
-      <button class="carousel-arrow next" id="realizedNext" aria-label="Следующий">›</button>
-      <div class="works-carousel" id="realizedCarousel">
-        <div class="work-item">
-          <img class="work-img" src="assets/realized-02.jpg" alt="Монтаж напольного покрытия">
-          <div class="work-index">01 / 08</div>
-          <div class="work-caption">
-            <div class="work-h-title heavy">С этого всё началось</div>
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap">
+      <div class="sheet-label"><span class="num mono">Л.01</span><span class="title">Обо мне</span><span class="rule"></span></div>
+      <div class="about-grid">
+        <div>
+          <h2>Дизайн, который работает на Ваши сценарии жизни.</h2>
+          <p>При проектировании я в первую очередь думаю о том, как пространством будут пользоваться каждый день — где удобно разместить розетки, как расставить свет по сценариям. Эстетика выстраивается уже на основе этой логики, а не отдельно от неё.</p>
+          <div class="tags">
+            <span class="tag">Датский стиль</span>
+            <span class="tag">Модерн</span>
+            <span class="tag">Баухаус</span>
+            <span class="tag">Кэжуал</span>
+            <span class="tag">3D-визуализация</span>
           </div>
         </div>
-        <div class="work-item">
-          <img class="work-img" src="assets/realized-03.jpg" alt="Подготовка стен">
-          <div class="work-index">02 / 08</div>
-        </div>
-        <div class="work-item">
-          <img class="work-img" src="assets/realized-04.jpg" alt="Отделка стен и укладка пола">
-          <div class="work-index">03 / 08</div>
-        </div>
-        <div class="work-item">
-          <img class="work-img" src="assets/realized-05.jpg" alt="Монтаж мраморной панели">
-          <div class="work-index">04 / 08</div>
-        </div>
-        <div class="work-item">
-          <img class="work-img" src="assets/realized-06.jpg" alt="Кабинет директора — визуализация">
-          <div class="work-index">05 / 08</div>
-        </div>
-        <div class="work-item">
-          <img class="work-img" src="assets/realized-07.jpg" alt="Кабинет директора — визуализация, вид 2">
-          <div class="work-index">06 / 08</div>
-        </div>
-        <div class="work-item">
-          <img class="work-img" src="assets/realized-01.jpg" alt="Планировка кабинета директора">
-          <div class="work-index">07 / 08</div>
-        </div>
-        <div class="work-item">
-          <img class="work-img" src="assets/realized-08.jpg" alt="Кабинет директора — готовый результат">
-          <div class="work-index">08 / 08</div>
+        <div>
+          <div class="subblock">
+            <h3 class="mono">Техническая база</h3>
+            <p>Работаю в 3ds Max и AutoCAD — делаю рабочие чертежи и визуализации, которые соответствуют финальному результату.</p>
+          </div>
+          <div class="subblock">
+            <h3 class="mono">Стилистические направления</h3>
+            <p>Ценю датский стиль, модерн и Баухаус — за функциональность и отсутствие лишнего декора.</p>
+          </div>
         </div>
       </div>
-      <div class="carousel-dots" id="realizedDots"></div>
-    </div>
-
-    <div style="max-width:620px; margin:36px auto 0;">
-      <p class="intro-text">Это мой первый реализованный объект — не концепт на бумаге, а пространство, в котором теперь реально работают люди. И честно говоря, почти всё на этом проекте шло не по плану: сроки срывались, часть решений приходилось пересматривать буквально на месте, а не в проекте, а заказчик менял решения уже на этапе реализации.</p>
-      <p class="intro-text">С точки зрения дизайна это тоже был мой первый настоящий опыт — сейчас я вижу моменты, которые сделал бы иначе. После этого проекта у меня даже были мысли больше не заниматься дизайном интерьера — слишком много всего навалилось одновременно. Но спустя паузу я понял: не всё получается с первого раза, и это нормально. Я вернулся — уже с желанием идти дальше.</p>
-      <p class="intro-text">Именно поэтому этот проект для меня особенный: он научил меня большему, чем любой концепт до этого — работать с реальными ограничениями, реальными людьми и реальными сроками. Дальше будет больше проектов — но этот кабинет навсегда останется той точкой, с которой всё началось.</p>
     </div>
   </section>
 
-  <section class="services-section" id="services">
-    <div class="sec-header">
-      <div class="sec-eyebrow">Что входит</div>
-      <div class="sec-title">Полный дизайн-проект</div>
-      <p class="services-lead">В стоимость входит не просто визуал, а рабочий комплект документов: от планировки и инженерии до финального рендера каждого помещения.</p>
-    </div>
-    <div class="services-grid">
-      <div class="service-card">
-        <div class="service-icon">
-          <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h16v16h-16z"/><path d="M4 12h16"/><path d="M12 4v8"/><path d="M12 16v4"/></svg>
-        </div>
-        <div class="service-name">Планировочное решение</div>
-        <div class="service-desc">Зонирование пространства и расстановка мебели под Ваши сценарии жизни</div>
+  <!-- WORKS -->
+  <section id="works">
+    <div class="wrap">
+      <div class="sheet-label"><span class="num mono">Л.02</span><span class="title">Портфолио</span><span class="rule"></span></div>
+
+      <div class="view-switch">
+        <button class="vtab active" data-view="viz">Визуализация</button>
+        <button class="vtab" data-view="draw">Рабочие чертежи</button>
       </div>
-      <div class="service-card">
-        <div class="service-icon">
-          <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"/></svg>
+
+      <!-- VISUALIZATION PANEL -->
+      <div class="view-panel" data-view-panel="viz">
+        <div class="proj-tabs">
+          <button class="ptab active" data-proj="bp">01 · Белая полоса</button>
+          <button class="ptab" data-proj="pauza">02 · Пауза</button>
+          <button class="ptab" data-proj="k5">03 · Концепт 5</button>
+          <button class="ptab" data-proj="k6">04 · Концепт 6</button>
+          <button class="ptab" data-proj="k7">05 · Концепт 7</button>
+          <button class="ptab" data-proj="k8">06 · Концепт 8</button>
         </div>
-        <div class="service-name">Инженерные сети</div>
-        <div class="service-sublist">
-          <div class="service-subitem">
-            <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"/></svg>
-            <span>Электрика — розетки, выключатели и сценарии освещения по каждой комнате</span>
+
+        <div class="pc active" data-proj-panel="bp">
+          <div class="carousel" data-carousel data-caption="Белая полоса" data-meta="Жилой · 2025">
+            <div class="carousel-frame">
+              <img class="active" src="assets/work-09.jpg" alt="Белая полоса — фото 1">
+              <img src="assets/work-10.jpg" alt="Белая полоса — фото 2">
+              <img src="assets/work-06.jpg" alt="Белая полоса — фото 3">
+              <img src="assets/work-07.jpg" alt="Белая полоса — фото 4">
+              <img src="assets/work-detskaya.jpg" alt="Белая полоса — детская">
+              <img src="assets/work-08.jpg" alt="Белая полоса — санузел">
+            </div>
+            <div class="c-controls">
+              <button class="c-btn" data-dir="-1">‹</button>
+              <span class="c-counter mono"><span class="cur">01</span> / <span class="total">06</span></span>
+              <button class="c-btn" data-dir="1">›</button>
+            </div>
+            <div class="c-caption"><span class="pname">Белая полоса</span><span class="pmeta">Жилой · 2025</span></div>
           </div>
-          <div class="service-subitem">
-            <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 4v6.878a3 3 0 1 0 2 0v-6.878a1 1 0 0 0 -1 -1h0a1 1 0 0 0 -1 1z"/><path d="M9 15h.01"/><path d="M17 4v16"/><path d="M15 4h4"/><path d="M15 8h4"/></svg>
-            <span>Сантехника — точки подключения приборов, стояков и мокрых зон</span>
+        </div>
+
+        <div class="pc" data-proj-panel="pauza">
+          <div class="carousel" data-carousel>
+            <div class="carousel-frame">
+              <img class="active" src="assets/work-pauza.jpg" alt="Пауза — фото 1">
+              <img src="assets/work-pauza-2.jpg" alt="Пауза — фото 2">
+              <img src="assets/work-pauza-3.jpg" alt="Пауза — фото 3">
+              <img src="assets/work-pauza-4.jpg" alt="Пауза — фото 4">
+              <img src="assets/work-pauza-5.jpg" alt="Пауза — фото 5">
+            </div>
+            <div class="c-controls">
+              <button class="c-btn" data-dir="-1">‹</button>
+              <span class="c-counter mono"><span class="cur">01</span> / <span class="total">05</span></span>
+              <button class="c-btn" data-dir="1">›</button>
+            </div>
+            <div class="c-caption"><span class="pname">Пауза</span><span class="pmeta">Концепт</span></div>
           </div>
-          <div class="service-subitem">
-            <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 21a1 1 0 0 1 -1 -1v-5h-1a1 1 0 0 1 -1 -1v-3a5 5 0 0 1 10 0v3a1 1 0 0 1 -1 1h-1v5a1 1 0 0 1 -1 1z"/><path d="M12 3v3"/></svg>
-            <span>Тёплый пол — схема разводки и зоны обогрева с учётом мебели</span>
+        </div>
+
+        <div class="pc" data-proj-panel="k5">
+          <div class="carousel" data-carousel>
+            <div class="carousel-frame"><div class="placeholder-note">Нет фото в источнике —<br>вставь ссылку на assets/work-…jpg</div></div>
+            <div class="c-caption"><span class="pname">Концепт 5</span><span class="pmeta">Жилой · 2023</span></div>
+          </div>
+        </div>
+        <div class="pc" data-proj-panel="k6">
+          <div class="carousel" data-carousel>
+            <div class="carousel-frame"><div class="placeholder-note">Нет фото в источнике —<br>вставь ссылку на assets/work-…jpg</div></div>
+            <div class="c-caption"><span class="pname">Концепт 6</span><span class="pmeta">Коммерческий · 2023</span></div>
+          </div>
+        </div>
+        <div class="pc" data-proj-panel="k7">
+          <div class="carousel" data-carousel>
+            <div class="carousel-frame"><div class="placeholder-note">Нет фото в источнике —<br>вставь ссылку на assets/work-…jpg</div></div>
+            <div class="c-caption"><span class="pname">Концепт 7</span><span class="pmeta">Жилой · 2022</span></div>
+          </div>
+        </div>
+        <div class="pc" data-proj-panel="k8">
+          <div class="carousel" data-carousel>
+            <div class="carousel-frame"><div class="placeholder-note">Нет фото в источнике —<br>вставь ссылку на assets/work-…jpg</div></div>
+            <div class="c-caption"><span class="pname">Концепт 8</span><span class="pmeta">Жилой · 2022</span></div>
           </div>
         </div>
       </div>
-      <div class="service-card">
-        <div class="service-icon">
-          <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 17.6l-2 -1.1v-2.5"/><path d="M4 10v-2.5l2 -1.1"/><path d="M10 4.1l2 -1.1l2 1.1"/><path d="M18 6.4l2 1.1v2.5"/><path d="M20 14v2.5l-2 1.12"/><path d="M14 19.9l-2 1.1l-2 -1.1"/><path d="M12 12l2 -1.1"/><path d="M18 8.6l2 -1.1"/><path d="M12 12l0 2.5"/><path d="M12 18.5l0 2.5"/><path d="M12 12l-2 -1.12"/><path d="M6 8.6l-2 -1.1"/></svg>
+
+      <!-- DRAWINGS PANEL -->
+      <div class="view-panel" data-view-panel="draw" hidden>
+        <div class="proj-tabs">
+          <button class="ptab active" data-proj="hr">Хрущёвка</button>
+          <button class="ptab" data-proj="p2">Проект 2</button>
+          <button class="ptab" data-proj="p3">Проект 3</button>
+          <button class="ptab" data-proj="p4">Проект 4</button>
+          <button class="ptab" data-proj="p5">Проект 5</button>
         </div>
-        <div class="service-name">3D-визуализация</div>
-        <div class="service-desc">Фотореалистичный рендер каждого помещения в согласованном стиле</div>
-      </div>
-      <div class="service-card">
-        <div class="service-icon">
-          <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7l-4 0l0 -2a2 2 0 0 1 2 -2l10 0a2 2 0 0 1 2 2l0 14a2 2 0 0 1 -2 2l-10 0a2 2 0 0 1 -2 -2l0 -2l4 0"/><path d="M9 12h10"/><path d="M9 12l3 3"/><path d="M9 12l3 -3"/></svg>
+
+        <div class="pc active" data-proj-panel="hr">
+          <div class="carousel" data-carousel>
+            <div class="carousel-frame">
+              <img class="active" src="assets/plan-01.jpg" alt="Хрущёвка — лист 1">
+              <img src="assets/plan-02.jpg" alt="Хрущёвка — лист 2">
+              <img src="assets/plan-03.jpg" alt="Хрущёвка — лист 3">
+              <img src="assets/plan-04.jpg" alt="Хрущёвка — лист 4">
+              <img src="assets/plan-05.jpg" alt="Хрущёвка — лист 5">
+            </div>
+            <div class="c-controls">
+              <button class="c-btn" data-dir="-1">‹</button>
+              <span class="c-counter mono"><span class="cur">01</span> / <span class="total">05</span></span>
+              <button class="c-btn" data-dir="1">›</button>
+            </div>
+            <div class="c-caption"><span class="pname">Хрущёвка</span><span class="pmeta">Рабочие чертежи</span></div>
+          </div>
         </div>
-        <div class="service-name">Готовая ведомость</div>
-        <div class="service-desc">Excel-таблица с артикулами, ссылками на магазины и точными объёмами материалов — идёте по списку, а не считаете вручную</div>
+        <div class="pc" data-proj-panel="p2"><div class="carousel"><div class="carousel-frame"><div class="placeholder-note">Нет чертежей в источнике —<br>вставь ссылки на assets/plan-…jpg</div></div><div class="c-caption"><span class="pname">Проект 2</span></div></div></div>
+        <div class="pc" data-proj-panel="p3"><div class="carousel"><div class="carousel-frame"><div class="placeholder-note">Нет чертежей в источнике —<br>вставь ссылки на assets/plan-…jpg</div></div><div class="c-caption"><span class="pname">Проект 3</span></div></div></div>
+        <div class="pc" data-proj-panel="p4"><div class="carousel"><div class="carousel-frame"><div class="placeholder-note">Нет чертежей в источнике —<br>вставь ссылки на assets/plan-…jpg</div></div><div class="c-caption"><span class="pname">Проект 4</span></div></div></div>
+        <div class="pc" data-proj-panel="p5"><div class="carousel"><div class="carousel-frame"><div class="placeholder-note">Нет чертежей в источнике —<br>вставь ссылки на assets/plan-…jpg</div></div><div class="c-caption"><span class="pname">Проект 5</span></div></div></div>
       </div>
-    </div>
-    <div class="services-note">
-      <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 8h.01"/><path d="M11 12h1v4h1"/></svg>
-      <span>Ведомость покупок — часть пакета «Оптимальный», остальное входит в оба пакета без доплат</span>
     </div>
   </section>
 
-  <section class="works-section" id="faq">
-    <div class="sec-header">
-      <div class="sec-eyebrow">Вопросы и ответы</div>
-      <div class="sec-title">Состав проекта и подбор материалов: простыми словами</div>
-      <p class="services-lead">Дизайн-проект — это чёткая и понятная инструкция для ремонта. Как схема для сборки LEGO. Вы получаете картинки, показывающие, как будет выглядеть Ваша квартира, и комплект чертежей, по которым строители построят всё ровно и без лишних вопросов.</p>
-      <div class="faq-badge">
-        <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg>
-        Обязательно к прочтению
+  <!-- REALIZED -->
+  <section id="realized">
+    <div class="wrap">
+      <div class="sheet-label"><span class="num mono">Л.03</span><span class="title">Реализованный проект</span><span class="rule"></span></div>
+
+      <div class="case-top">
+        <div class="kicker mono">История первого объекта</div>
+        <h3>Кабинет директора</h3>
+        <div class="subline mono">30 м² · реализовано полностью</div>
+        <p>Это мой первый реализованный объект — не концепт на бумаге, а пространство, в котором теперь реально работают люди. И честно говоря, почти всё на этом проекте шло не по плану: сроки срывались, часть решений приходилось пересматривать буквально на месте, а заказчик менял решения уже на этапе реализации.</p>
+        <p>С точки зрения дизайна это тоже был мой первый настоящий опыт — сейчас я вижу моменты, которые сделал бы иначе. После этого проекта у меня даже были мысли больше не заниматься дизайном интерьера — слишком много всего навалилось одновременно. Но спустя паузу я понял: не всё получается с первого раза, и это нормально. Я вернулся — уже с желанием идти дальше.</p>
+        <p>Именно поэтому этот проект для меня особенный: он научил меня большему, чем любой концепт до этого — работать с реальными ограничениями, реальными людьми и реальными сроками. Дальше будет больше проектов — но этот кабинет навсегда останется той точкой, с которой всё началось.</p>
+      </div>
+
+      <div class="carousel" data-carousel>
+        <div class="carousel-frame">
+          <img class="active" src="assets/realized-02.jpg" alt="С этого всё началось">
+          <img src="assets/realized-03.jpg" alt="Подготовка стен">
+          <img src="assets/realized-04.jpg" alt="Отделка стен и укладка пола">
+          <img src="assets/realized-05.jpg" alt="Монтаж мраморной панели">
+          <img src="assets/realized-06.jpg" alt="Визуализация">
+          <img src="assets/realized-07.jpg" alt="Визуализация, вид 2">
+          <img src="assets/realized-01.jpg" alt="Планировка кабинета">
+          <img src="assets/realized-08.jpg" alt="Готовый результат">
+        </div>
+        <div class="c-controls">
+          <button class="c-btn" data-dir="-1">‹</button>
+          <span class="c-counter mono"><span class="cur">01</span> / <span class="total">08</span></span>
+          <button class="c-btn" data-dir="1">›</button>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="faq-list" id="faqList">
-      <div class="faq-item">
-        <button class="faq-question" type="button">
-          <span>1. Что именно Вы получаете на руки</span>
-          <span class="faq-icon"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></span>
-        </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            <p>Весь проект делится на три понятные части:</p>
-            <ul>
-              <li><strong>Планировка</strong> — понятное зонирование и расстановка мебели. Сделаем так, чтобы Вам было удобно ходить, ничего не мешало, а двери и шкафы свободно открывались.</li>
-              <li><strong>3D-картинки (визуализация)</strong> — реалистичные фото Вашей будущей квартиры. Вы заранее увидите цвет стен, материалы, свет и общую атмосферу ещё до начала ремонта.</li>
-              <li><strong>Чертежи для строителей</strong>
-                <ul>
-                  <li>Где сносить и где строить новые стены.</li>
-                  <li>Где ставить розетки с указанием точной высоты от пола (чтобы они не оказались за диваном).</li>
-                  <li>Куда выводить трубы под раковину, стиралку и душ.</li>
-                  <li>Как правильно уложить паркет, плитку и тёплый пол (чтобы пол не грел воздух под шкафами).</li>
-                </ul>
-              </li>
-            </ul>
-          </div>
+  <!-- SERVICES -->
+  <section id="services" class="dark">
+    <div class="wrap">
+      <div class="sheet-label"><span class="num mono" style="color:var(--accent)">Л.04</span><span class="title">Что входит — полный дизайн-проект</span><span class="rule"></span></div>
+      <p class="svc-intro">В стоимость входит не просто визуал, а рабочий комплект документов: от планировки и инженерии до финального рендера каждого помещения.</p>
+      <div class="services-grid">
+        <div class="svc">
+          <div class="idx">01</div>
+          <h4>Планировочное решение</h4>
+          <p>Зонирование пространства и расстановка мебели под ваши сценарии жизни.</p>
         </div>
+        <div class="svc">
+          <div class="idx">02</div>
+          <h4>Инженерные сети</h4>
+          <p>Электрика — розетки, выключатели и сценарии освещения по каждой комнате.</p>
+          <p class="sub">Сантехника — точки подключения приборов, стояков и мокрых зон.</p>
+          <p class="sub">Тёплый пол — схема разводки и зоны обогрева с учётом мебели.</p>
+        </div>
+        <div class="svc">
+          <div class="idx">03</div>
+          <h4>3D-визуализация</h4>
+          <p>Фотореалистичный рендер каждого помещения в согласованном стиле.</p>
+        </div>
+        <div class="svc">
+          <div class="idx">04</div>
+          <h4>Готовая ведомость</h4>
+          <p>Excel-таблица с артикулами, ссылками на магазины и точными объёмами материалов — идёте по списку, а не считаете вручную.</p>
+          <div class="note">Часть пакета «Оптимальный»</div>
+        </div>
+        <div class="svc">
+          <div class="idx">05</div>
+          <h4>Рабочие чертежи</h4>
+          <p>Комплект для строителей: где сносить и строить стены, где ставить розетки с точной высотой от пола, куда выводить трубы.</p>
+        </div>
+        <div class="svc">
+          <div class="idx">06</div>
+          <h4>Фиксация цены</h4>
+          <p>Цена закрепляется в договоре ещё до старта работ — без доплат за «отдельные» разделы.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="wrap">
+      <div class="sheet-label"><span class="num mono">FAQ</span><span class="title">Состав проекта и подбор материалов — простыми словами</span><span class="rule"></span></div>
+      <p style="opacity:.75; max-width:70ch; margin-bottom:34px;">Дизайн-проект — это чёткая и понятная инструкция для ремонта. Как схема для сборки LEGO. Вы получаете картинки, показывающие, как будет выглядеть ваша квартира, и комплект чертежей, по которым строители построят всё ровно и без лишних вопросов.</p>
+
+      <div class="faq-item open">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>1. Что именно вы получаете на руки</span><span class="plus mono">+</span></button>
+        <div class="faq-a"><div class="faq-a-in">
+          <p>Весь проект делится на три понятные части:</p>
+          <ul>
+            <li><strong>Планировка</strong> — понятное зонирование и расстановка мебели. Сделаем так, чтобы вам было удобно ходить, ничего не мешало, а двери и шкафы свободно открывались.</li>
+            <li><strong>3D-картинки (визуализация)</strong> — реалистичные фото вашей будущей квартиры. Вы заранее увидите цвет стен, материалы, свет и общую атмосферу ещё до начала ремонта.</li>
+            <li><strong>Чертежи для строителей</strong> — где сносить и где строить новые стены; где ставить розетки с указанием точной высоты от пола; куда выводить трубы под раковину, стиралку и душ; как правильно уложить паркет, плитку и тёплый пол.</li>
+          </ul>
+        </div></div>
       </div>
 
       <div class="faq-item">
-        <button class="faq-question" type="button">
-          <span>2. А где мне потом всё это покупать?</span>
-          <span class="faq-icon"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></span>
-        </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            <p>Главный страх любого клиента — увидеть на 3D-картинке красивый диван или плитку, а потом не найти их в магазинах. Вам не придётся искать несуществующие вещи или покупать мебель за миллионы. Все проекты я собираю по реальным стандартам:</p>
-            <ul>
-              <li><strong>Диваны, кровати, кресла</strong> — на картинках заложены стандартные формы и габариты. Вы сможете купить готовый диван в любом мебельном салоне или отдать картинку с размерами местным мастерам — они сшьют точно такой же.</li>
-              <li><strong>Шкафы и кухни</strong> — в 95% случаев их всё равно делают на заказ под Ваши стены. В чертежах я даю точные размеры (ширину, глубину, высоту). Вы просто отдаёте этот лист мебельщикам, и они считают стоимость.</li>
-              <li><strong>Плитка и керамогранит</strong> — на 3D и в чертежах я закладываю стандартные заводские размеры (например, 60×60 или 60×120 см). Вы сможете выбрать плитку абсолютно любого бренда и на любой бюджет — главное, чтобы совпадал размер.</li>
-              <li><strong>Краска для стен</strong> — в чертеже указывается конкретный международный код цвета (NCS или RAL). Вы приходите в любой строительный магазин, называете этот код, и Вам смешивают точный оттенок.</li>
-            </ul>
-            <p><strong>Главный плюс:</strong> Вы получаете полную свободу. Вы не привязаны к конкретным дорогим брендам и можете покупать материалы там, где Вам выгодно.</p>
-          </div>
-        </div>
+        <button class="faq-q" onclick="toggleFaq(this)"><span>2. А где мне потом всё это покупать?</span><span class="plus mono">+</span></button>
+        <div class="faq-a"><div class="faq-a-in">
+          <p>Главный страх любого клиента — увидеть на 3D-картинке красивый диван или плитку, а потом не найти их в магазинах. Вам не придётся искать несуществующие вещи. Все проекты я собираю по реальным стандартам:</p>
+          <ul>
+            <li><strong>Диваны, кровати, кресла</strong> — заложены стандартные формы и габариты. Купите готовый вариант в любом мебельном салоне или отдайте картинку с размерами местным мастерам.</li>
+            <li><strong>Шкафы и кухни</strong> — в 95% случаев их делают на заказ под ваши стены. В чертежах даю точные размеры — просто отдаёте лист мебельщикам.</li>
+            <li><strong>Плитка и керамогранит</strong> — заложены стандартные заводские размеры (например, 60×60 или 60×120 см). Можно выбрать любой бренд, главное — совпадение размера.</li>
+            <li><strong>Краска для стен</strong> — указывается конкретный международный код цвета (NCS или RAL). Приходите в любой магазин и называете код.</li>
+          </ul>
+          <p><strong>Главный плюс:</strong> вы получаете полную свободу и не привязаны к конкретным дорогим брендам.</p>
+        </div></div>
       </div>
 
       <div class="faq-item">
-        <button class="faq-question" type="button">
-          <span>3. В чём разница между «Базовым» и «Оптимальным»?</span>
-          <span class="faq-icon"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></span>
-        </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            <p>Оба пакета включают полный комплект: планировку, 3D-визуализацию и рабочие чертежи. Разница — в том, что происходит дальше, когда Вы уже готовы идти в магазин.</p>
-            <ul>
-              <li><strong>Базовый ($20/м²)</strong> — Вы получаете чертежи и картинки, но объёмы материалов считаете сами: сколько банок краски, сколько коробок плитки с учётом подрезки, сколько метров трека для света. Это нормально, если у Вас уже есть строители, которые умеют это сами прикинуть.</li>
-              <li><strong>Оптимальный ($35/м²)</strong> — то же самое, плюс готовая ведомость покупок в Excel: конкретные позиции с артикулами, ссылками на магазины и точными объёмами по каждой комнате. Вы просто идёте по списку, а не пересчитываете вручную и не рискуете купить на 2 коробки плитки меньше, чем нужно.</li>
-            </ul>
-            <p>Это не поход по магазинам за Вас — Вы или Ваши строители покупаете и заказываете сами.</p>
-          </div>
+        <button class="faq-q" onclick="toggleFaq(this)"><span>3. В чём разница между «Базовым» и «Оптимальным»?</span><span class="plus mono">+</span></button>
+        <div class="faq-a"><div class="faq-a-in">
+          <p>Оба пакета включают полный комплект: планировку, 3D-визуализацию и рабочие чертежи. Разница — в том, что происходит дальше, когда вы уже готовы идти в магазин.</p>
+          <ul>
+            <li><strong>Базовый ($20/м²)</strong> — чертежи и картинки, объёмы материалов считаете сами: сколько банок краски, коробок плитки, метров трека для света. Нормально, если у вас уже есть строители, которые умеют это прикинуть.</li>
+            <li><strong>Оптимальный ($35/м²)</strong> — то же самое, плюс готовая ведомость покупок в Excel: конкретные позиции с артикулами, ссылками на магазины и точными объёмами по каждой комнате.</li>
+          </ul>
+          <p>Это не поход по магазинам за вас — вы или ваши строители покупаете и заказываете сами.</p>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="sheet-label"><span class="num mono">Л.05</span><span class="title">Стоимость проекта</span><span class="rule"></span></div>
+      <div class="pricing-grid">
+        <div class="plan">
+          <div class="pname mono">Базовый</div>
+          <div class="price">$20<span>/м²</span></div>
+          <p>Полный комплект чертежей и 3D-визуализации. Материалы, мебель и мастеров вы подбираете и покупаете самостоятельно.</p>
+        </div>
+        <div class="plan hi">
+          <div class="pname mono">Оптимальный</div>
+          <div class="price">$35<span>/м²</span></div>
+          <p>Всё из «Базового» + готовая ведомость покупок с артикулами, ссылками и точными объёмами материалов.</p>
         </div>
       </div>
-
-    </div>
-  </section>
-
-  <section class="price-section" id="price">
-    <div class="price-glow"></div>
-    <div class="sec-header">
-      <div class="sec-eyebrow price-eyebrow-big">Стоимость проекта</div>
-    </div>
-    <p class="price-desc-big" style="position:relative;z-index:1;max-width:540px;margin:16px auto 0;">Цена фиксируется в договоре ещё до старта работ — Вы сразу знаете итоговую сумму, без доплат за «отдельные» разделы.</p>
-
-    <div class="price-packages">
-      <div class="price-package">
-        <div class="price-package-name">Базовый</div>
-        <div class="price-package-value">$20<span>/ м²</span></div>
-        <p class="price-package-desc">Полный комплект чертежей и 3D-визуализации. Материалы, мебель и мастеров Вы подбираете и покупаете самостоятельно.</p>
-      </div>
-      <div class="price-package">
-        <div class="price-package-name">Оптимальный</div>
-        <div class="price-package-tag">Проект + готовый список покупок</div>
-        <div class="price-package-value">$35<span>/ м²</span></div>
-        <p class="price-package-desc">Всё из «Базового» + готовая ведомость покупок с артикулами, ссылками и точными объёмами материалов.</p>
-      </div>
-    </div>
-    <p style="position:relative;z-index:1;text-align:center;font-size:12.5px;color:var(--ink-soft);margin-top:14px;">Подробный состав каждого пакета — в разделе <a href="#faq" style="color:var(--bordeaux);font-weight:600;text-decoration:none;">FAQ</a> выше</p>
-
-    <div style="position:relative;z-index:1;text-align:center;">
-      <div class="price-fixed">
-        <svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 12l2 2l4 -4"/><path d="M12 3l8 4.5v9l-8 4.5l-8 -4.5v-9z"/></svg>
-        <span>Фиксация цены в договоре</span>
+      <div class="price-foot">
+        <span>Цена фиксируется в договоре ещё до старта работ</span>
+        <span>Подробный состав каждого пакета — в разделе FAQ</span>
       </div>
     </div>
   </section>
 
-  <div class="lightbox" id="lightbox">
-    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
-    <div class="lightbox-content">
-      <button class="lightbox-close" id="lightboxClose" aria-label="Закрыть">✕</button>
-      <img id="lightboxImg" src="" alt="">
-      <div class="lightbox-caption">
-        <div class="lb-title" id="lightboxTitle"></div>
-        <div class="lb-type" id="lightboxType"></div>
-      </div>
-    </div>
-  </div>
+  <!-- CONTACT / TITLE BLOCK -->
   <footer id="contact">
-    <div class="sec-header">
-      <div class="sec-title">Контакты</div>
-    </div>
-    <div class="f-info">
-      <a href="mailto:diyorvinogradov77@gmail.com" class="f-item"><span class="f-item-glow"></span><span class="f-item-content"><span class="icon-wrap"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"/><path d="M3 7l9 6l9 -6"/></svg></span> diyorvinogradov77@gmail.com</span></a>
-      <a href="https://www.instagram.com/oweeyoyo/" target="_blank" rel="noopener" class="f-item"><span class="f-item-glow"></span><span class="f-item-content"><span class="icon-wrap"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 4a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4z"/><path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M16.5 7.5l0 .01"/></svg></span> @oweeyoyo</span></a>
-      <a href="https://t.me/oweeyoyo" target="_blank" rel="noopener" class="f-item"><span class="f-item-glow"></span><span class="f-item-content"><span class="icon-wrap"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"/></svg></span> @oweeyoyo</span></a>
-      <a href="tel:+998937871717" class="f-item"><span class="f-item-glow"></span><span class="f-item-content"><span class="icon-wrap"><svg class="icon-tabler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></span> +998 93 787 17 17</span></a>
-    </div>
-    <div class="f-bottom" style="justify-content: flex-end;">
-      <a href="tel:+998937871717" class="f-btn">Связаться →</a>
+    <div class="wrap">
+      <div class="sheet-label"><span class="num mono">Л.06</span><span class="title">Контакты</span><span class="rule"></span></div>
+      <div class="tblock">
+        <div><div class="k">Свяжитесь напрямую</div><a class="v" href="tel:+998937871717">+998 93 787 17 17</a></div>
+        <div><div class="k">Почта</div><a class="v" href="mailto:diyorvinogradov77@gmail.com" style="font-size:13px;">diyorvinogradov77@gmail.com</a></div>
+        <div><div class="k">Instagram</div><a class="v" href="https://www.instagram.com/oweeyoyo/" target="_blank">@oweeyoyo</a></div>
+        <div><div class="k">Telegram</div><a class="v" href="https://t.me/oweeyoyo" target="_blank">@oweeyoyo</a></div>
+      </div>
+      <div class="foot-note mono">Виноградов Диёр — D·V STUDIO / Ташкент — Лист 06 из 06</div>
+
+      <div class="legal">
+        <span>© 2024–2026 Виноградов Диёр. Все права защищены.</span>
+        <span>Самозанятый · Республика Узбекистан</span>
+        <span>Цены на сайте носят справочный характер и не являются публичной офертой. Итоговая стоимость фиксируется в договоре.</span>
+      </div>
     </div>
   </footer>
+
 </div>
 
 <script>
-(function () {
-  var tabbar = document.getElementById('tabbar');
-  var indicator = document.getElementById('navIndicator');
-  var links = Array.prototype.slice.call(tabbar.querySelectorAll('[data-tab]'));
-  var sections = links.map(function (link) {
-    return document.querySelector(link.getAttribute('href'));
+// ---- FAQ accordion ----
+function toggleFaq(el){
+  const item = el.parentElement;
+  const answer = item.querySelector('.faq-a');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>{
+    i.classList.remove('open');
+    i.querySelector('.faq-a').style.maxHeight = null;
   });
-
-  var linkForSection = new Map();
-  links.forEach(function (link, i) { linkForSection.set(sections[i], link); });
-
-  var isClickScrolling = false;
-  var clickScrollTimeout = null;
-
-  function moveIndicatorTo(link) {
-    if (!link) return;
-    indicator.style.width = link.offsetWidth + 'px';
-    indicator.style.transform = 'translateX(' + link.offsetLeft + 'px)';
+  if(!isOpen){
+    item.classList.add('open');
+    answer.style.maxHeight = answer.scrollHeight + 'px';
   }
-
-  function setActive(link) {
-    links.forEach(function (l) { l.classList.remove('active'); });
-    link.classList.add('active');
-    moveIndicatorTo(link);
-  }
-
-  // Smooth scroll on click + instant, optimistic indicator movement
-  links.forEach(function (link) {
-    link.addEventListener('click', function (e) {
-      e.preventDefault();
-      var targetId = link.getAttribute('href');
-      var target = document.querySelector(targetId);
-      if (!target) return;
-
-      setActive(link);
-      isClickScrolling = true;
-      clearTimeout(clickScrollTimeout);
-
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-      // release the "manual" lock once the smooth scroll has settled
-      clickScrollTimeout = setTimeout(function () { isClickScrolling = false; }, 900);
-    });
-  });
-
-  // Track which section is in view and slide the indicator to match.
-  // Uses each section's position relative to a reference line instead of
-  // IntersectionObserver, so short sections (like "Реализованный") can't
-  // get skipped over during a fast scroll in either direction.
-  var lastLink = links[links.length - 1];
-  var scrollRAF = null;
-
-  function updateActiveSection() {
-    scrollRAF = null;
-    if (isClickScrolling) return;
-
-    var scrollBottom = window.scrollY + window.innerHeight;
-    var pageHeight = document.documentElement.scrollHeight;
-    if (scrollBottom >= pageHeight - 4) {
-      if (lastLink && !lastLink.classList.contains('active')) setActive(lastLink);
-      return;
-    }
-
-    var refLine = window.innerHeight * 0.45;
-    var current = null;
-    for (var i = 0; i < sections.length; i++) {
-      var sec = sections[i];
-      if (!sec) continue;
-      var rect = sec.getBoundingClientRect();
-      if (rect.top <= refLine) {
-        current = links[i];
-      }
-    }
-    if (!current) current = links[0];
-    if (current && !current.classList.contains('active')) setActive(current);
-  }
-
-  window.addEventListener('scroll', function () {
-    if (scrollRAF) return;
-    scrollRAF = requestAnimationFrame(updateActiveSection);
-  }, { passive: true });
-
-  updateActiveSection();
-
-  // Keep the indicator aligned with its tab on resize / font load
-  var resizeTimeout;
-  window.addEventListener('resize', function () {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(function () {
-      var active = tabbar.querySelector('.tabbar-link.active');
-      moveIndicatorTo(active);
-    }, 120);
-  });
-
-  window.addEventListener('load', function () {
-    moveIndicatorTo(tabbar.querySelector('.tabbar-link.active'));
-  });
-
-  // Initial placement (in case load already fired)
-  requestAnimationFrame(function () {
-    moveIndicatorTo(tabbar.querySelector('.tabbar-link.active'));
-  });
-})();
-
-// ============ ПЕРЕКЛЮЧАТЕЛЬ "РЕНДЕРЫ / ЧЕРТЕЖИ" ============
-(function () {
-  var toggle = document.getElementById('viewToggle');
-  if (!toggle) return;
-  var indicator = document.getElementById('viewToggleIndicator');
-  var buttons = Array.prototype.slice.call(toggle.querySelectorAll('.view-toggle-btn'));
-  var currentMode = 'render';
-
-  function moveIndicator(btn) {
-    if (!indicator || !btn) return;
-    indicator.style.width = btn.offsetWidth + 'px';
-    indicator.style.transform = 'translateX(' + btn.offsetLeft + 'px)';
-  }
-
-  var renderView = document.getElementById('renderView');
-  var drawingView = document.getElementById('drawingView');
-
-  function applyMode(mode) {
-    currentMode = mode;
-    buttons.forEach(function (b) {
-      b.classList.toggle('active', b.getAttribute('data-mode') === mode);
-    });
-    var activeBtn = buttons.filter(function (b) { return b.getAttribute('data-mode') === mode; })[0];
-    moveIndicator(activeBtn);
-
-    if (renderView) renderView.style.display = mode === 'drawing' ? 'none' : '';
-    if (drawingView) drawingView.style.display = mode === 'drawing' ? 'block' : 'none';
-  }
-
-  buttons.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      applyMode(btn.getAttribute('data-mode'));
-    });
-  });
-
-  window.addEventListener('load', function () { moveIndicator(buttons[0]); });
-  requestAnimationFrame(function () { moveIndicator(buttons[0]); });
-})();
-// ============ КОНЕЦ ПЕРЕКЛЮЧАТЕЛЯ ============
-
-// ============ FAQ ACCORDION ============
-(function () {
-  var faqList = document.getElementById('faqList');
-  if (!faqList) return;
-  var items = Array.prototype.slice.call(faqList.querySelectorAll('.faq-item'));
-
-  items.forEach(function (item) {
-    var question = item.querySelector('.faq-question');
-    var answer = item.querySelector('.faq-answer');
-
-    question.addEventListener('click', function () {
-      var isOpen = item.classList.contains('open');
-
-      // закрываем остальные пункты (классический аккордеон)
-      items.forEach(function (other) {
-        if (other !== item) {
-          other.classList.remove('open');
-          other.querySelector('.faq-answer').style.maxHeight = null;
-        }
-      });
-
-      if (isOpen) {
-        item.classList.remove('open');
-        answer.style.maxHeight = null;
-      } else {
-        item.classList.add('open');
-        answer.style.maxHeight = answer.scrollHeight + 'px';
-      }
-    });
-  });
-})();
-// ============ КОНЕЦ FAQ ============
-
-// ============ WORKS CAROUSEL + LIGHTBOX ============
-function initWorksCarousel(carouselId, dotsId, prevId, nextId) {
-  var carousel = document.getElementById(carouselId);
-  if (!carousel) return;
-  var items = Array.prototype.slice.call(carousel.querySelectorAll('.work-item'));
-  var dotsWrap = document.getElementById(dotsId);
-  var prevBtn = document.getElementById(prevId);
-  var nextBtn = document.getElementById(nextId);
-
-  // build dots
-  items.forEach(function (item, i) {
-    var dot = document.createElement('div');
-    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-    dot.addEventListener('click', function () { scrollToIndex(i); });
-    dotsWrap.appendChild(dot);
-  });
-  var dots = Array.prototype.slice.call(dotsWrap.children);
-
-  // Прокручиваем ТОЛЬКО саму карусель по горизонтали (напрямую через scrollTo),
-  // а не scrollIntoView — иначе браузер докручивает всю страницу по вертикали,
-  // если карточка не полностью видна на экране.
-  function scrollToIndex(i) {
-    i = Math.max(0, Math.min(items.length - 1, i));
-    var item = items[i];
-    var target = item.offsetLeft - (carousel.clientWidth - item.offsetWidth) / 2;
-    carousel.scrollTo({ left: target, behavior: 'smooth' });
-  }
-
-  function getCurrentIndex() {
-    var center = carousel.scrollLeft + carousel.clientWidth / 2;
-    var closest = 0, min = Infinity;
-    items.forEach(function (item, i) {
-      var mid = item.offsetLeft + item.offsetWidth / 2;
-      var d = Math.abs(mid - center);
-      if (d < min) { min = d; closest = i; }
-    });
-    return closest;
-  }
-
-  prevBtn.addEventListener('click', function () { scrollToIndex(getCurrentIndex() - 1); stopAutoplay(); startAutoplay(); });
-  nextBtn.addEventListener('click', function () { scrollToIndex(getCurrentIndex() + 1); stopAutoplay(); startAutoplay(); });
-
-  var rafId = null;
-  function updateArrowVisibility(idx) {
-    prevBtn.style.display = idx === 0 ? 'none' : 'flex';
-    nextBtn.style.display = idx === items.length - 1 ? 'none' : 'flex';
-  }
-  updateArrowVisibility(0);
-  carousel.addEventListener('scroll', function () {
-    if (rafId) return;
-    rafId = requestAnimationFrame(function () {
-      rafId = null;
-      var idx = getCurrentIndex();
-      dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
-      updateArrowVisibility(idx);
-    });
-  }, { passive: true });
-
-  // ---- Автопрокрутка ----
-  var AUTOPLAY_DELAY = 4000; // 4 секунды между слайдами
-  var autoplayTimer = null;
-  var carouselVisible = false; // крутим слайды, только пока раздел реально виден на экране
-
-  function advanceSlide() {
-    if (!carouselVisible) return; // подстраховка на случай гонки таймера/observer'а
-    var next = getCurrentIndex() + 1;
-    if (next >= items.length) next = 0; // зацикливаем на первый слайд
-    scrollToIndex(next);
-  }
-
-  function startAutoplay() {
-    stopAutoplay();
-    if (!carouselVisible) return;
-    autoplayTimer = setInterval(advanceSlide, AUTOPLAY_DELAY);
-  }
-
-  function stopAutoplay() {
-    if (autoplayTimer) {
-      clearInterval(autoplayTimer);
-      autoplayTimer = null;
-    }
-  }
-
-  // Крутим карусель только пока раздел "Мои работы" виден в окне —
-  // это и есть исправление того, что страницу "само" утаскивало к работам,
-  // даже если человек листал совсем другой раздел сайта.
-  if ('IntersectionObserver' in window) {
-    var visibilityObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        carouselVisible = entry.isIntersecting;
-        if (carouselVisible) startAutoplay();
-        else stopAutoplay();
-      });
-    }, { threshold: 0.35 });
-    visibilityObserver.observe(carousel);
-  } else {
-    // На всякий случай, если IntersectionObserver недоступен — не автокрутим вовсе,
-    // чтобы не тащить страницу вниз незаметно для пользователя.
-    carouselVisible = false;
-  }
-
-  // Останавливаем при любом ручном взаимодействии, возобновляем через паузу
-  ['pointerdown', 'touchstart', 'wheel'].forEach(function (evt) {
-    carousel.addEventListener(evt, function () {
-      stopAutoplay();
-      clearTimeout(carousel._resumeTimeout);
-      carousel._resumeTimeout = setTimeout(startAutoplay, 5000);
-    }, { passive: true });
-  });
-
-  dots.forEach(function (dot) {
-    dot.addEventListener('click', function () {
-      stopAutoplay();
-      clearTimeout(carousel._resumeTimeout);
-      carousel._resumeTimeout = setTimeout(startAutoplay, 5000);
-    });
-  });
-
-  // Пауза, пока вкладка не активна (не тратим ресурсы и не "уезжает" незаметно)
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) stopAutoplay();
-    else if (carouselVisible) startAutoplay();
-  });
-
-  // Автоплей стартует сам по себе через IntersectionObserver, когда раздел
-  // окажется в поле зрения — раньше времени не запускаем.
-
-  // Lightbox: only for cards that have a real photo
-  var lightbox = document.getElementById('lightbox');
-  var lightboxImg = document.getElementById('lightboxImg');
-  var lightboxTitle = document.getElementById('lightboxTitle');
-  var lightboxType = document.getElementById('lightboxType');
-  var lightboxClose = document.getElementById('lightboxClose');
-  var lightboxBackdrop = document.getElementById('lightboxBackdrop');
-
-  function openLightbox(src, title, type, isHeavy) {
-    lightboxImg.src = src;
-    lightboxTitle.textContent = title;
-    lightboxType.textContent = type;
-    lightboxTitle.classList.toggle('heavy', !!isHeavy);
-    lightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeLightbox() {
-    lightbox.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  items.forEach(function (item) {
-    if (item.classList.contains('has-subslider')) return; // у "Паузы" свой обработчик клика/лайтбокса
-    var img = item.querySelector('.work-img');
-    if (!img) return;
-    item.classList.add('has-photo');
-    item.addEventListener('click', function () {
-      var title = item.querySelector('.work-h-title');
-      var type = item.querySelector('.work-h-type');
-      var isHeavy = title ? title.classList.contains('heavy') : false;
-      openLightbox(img.src, title ? title.textContent : '', type ? type.textContent : '', isHeavy);
-    });
-  });
-
-  lightboxClose.addEventListener('click', closeLightbox);
-  lightboxBackdrop.addEventListener('click', closeLightbox);
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeLightbox();
-  });
-
-  return { openLightbox: openLightbox };
 }
-
-var mainCarouselApi = initWorksCarousel('worksCarousel', 'carouselDots', 'carouselPrev', 'carouselNext');
-initWorksCarousel('realizedCarousel', 'realizedDots', 'realizedPrev', 'realizedNext');
-
-// ============ ВНУТРЕННИЙ СЛАЙДЕР ВНУТРИ КАРТОЧКИ РАБОТЫ (переиспользуется для "Белой полосы", "Паузы" и т.д.) ============
-function initWorkSubslider(opts) {
-  var subslider = document.getElementById(opts.subsliderId);
-  if (!subslider) return;
-  var track = document.getElementById(opts.trackId);
-  var slides = Array.prototype.slice.call(track.querySelectorAll('.work-subslide'));
-  var dotsWrap = document.getElementById(opts.dotsId);
-  var prevBtn = document.getElementById(opts.prevId);
-  var nextBtn = document.getElementById(opts.nextId);
-  var current = 0;
-
-  slides.forEach(function (s, i) {
-    var dot = document.createElement('div');
-    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-    dot.addEventListener('click', function (e) { e.stopPropagation(); goTo(i); });
-    dotsWrap.appendChild(dot);
+window.addEventListener('load', ()=>{
+  document.querySelectorAll('.faq-item.open .faq-a').forEach(a=>{
+    a.style.maxHeight = a.scrollHeight + 'px';
   });
-  var dots = Array.prototype.slice.call(dotsWrap.children);
-
-  function goTo(i) {
-    current = Math.max(0, Math.min(slides.length - 1, i));
-    track.style.transform = 'translateX(-' + (current * 100) + '%)';
-   dots.forEach(function (d, di) { d.classList.toggle('active', di === current); });
-    prevBtn.style.display = current === 0 ? 'none' : 'flex';
-    nextBtn.style.display = current === slides.length - 1 ? 'none' : 'flex';
-  }
-
-  prevBtn.addEventListener('click', function (e) { e.stopPropagation(); goTo(current - 1); });
-  nextBtn.addEventListener('click', function (e) { e.stopPropagation(); goTo(current + 1); });
-
-  // ---- Свайп (touch / mouse drag) прямо внутри карточки, не мешая внешней карусели ----
-  var startX = 0, startY = 0, deltaX = 0, dragging = false, moved = false, lockedAxis = null;
-
-  function pointerDown(e) {
-    dragging = true;
-    moved = false;
-    lockedAxis = null;
-    startX = (e.touches ? e.touches[0].clientX : e.clientX);
-    startY = (e.touches ? e.touches[0].clientY : e.clientY);
-    track.classList.add('dragging');
-  }
-  function pointerMove(e) {
-    if (!dragging) return;
-    var x = (e.touches ? e.touches[0].clientX : e.clientX);
-    var y = (e.touches ? e.touches[0].clientY : e.clientY);
-    deltaX = x - startX;
-    var deltaY = y - startY;
-
-    if (!lockedAxis && (Math.abs(deltaX) > 6 || Math.abs(deltaY) > 6)) {
-      lockedAxis = Math.abs(deltaX) > Math.abs(deltaY) ? 'x' : 'y';
-    }
-    if (lockedAxis !== 'x') return; // вертикальный свайп — отдаём странице/внешней карусели
-
-    if (e.cancelable) e.preventDefault();
-    if (Math.abs(deltaX) > 6) moved = true;
-    var percent = (deltaX / subslider.clientWidth) * 100;
-    track.style.transform = 'translateX(calc(-' + (current * 100) + '% + ' + percent + '%))';
-  }
-  function pointerUp() {
-    if (!dragging) return;
-    dragging = false;
-    track.classList.remove('dragging');
-    if (lockedAxis === 'x') {
-      var threshold = subslider.clientWidth * 0.18;
-      if (deltaX < -threshold) goTo(current + 1);
-      else if (deltaX > threshold) goTo(current - 1);
-      else goTo(current);
-    }
-    deltaX = 0;
-    lockedAxis = null;
-  }
-
-  subslider.addEventListener('touchstart', pointerDown, { passive: true });
-  subslider.addEventListener('touchmove', pointerMove, { passive: false });
-  subslider.addEventListener('touchend', pointerUp);
-  subslider.addEventListener('mousedown', function (e) { e.stopPropagation(); pointerDown(e); });
-  window.addEventListener('mousemove', pointerMove);
-  window.addEventListener('mouseup', pointerUp);
-
-  // Клик по слайду (без свайпа) — открыть лайтбокс с текущим фото
-  var lightbox = document.getElementById('lightbox');
-  var lightboxImg = document.getElementById('lightboxImg');
-  var lightboxTitle = document.getElementById('lightboxTitle');
-  var lightboxType = document.getElementById('lightboxType');
-  var lightboxClose = document.getElementById('lightboxClose');
-  var lightboxBackdrop = document.getElementById('lightboxBackdrop');
-
-  subslider.addEventListener('click', function (e) {
-    e.stopPropagation();
-    if (moved) return; // это был свайп, а не клик
-    var img = slides[current].querySelector('img');
-    lightboxImg.src = img.src;
-    lightboxTitle.textContent = opts.title;
-    lightboxTitle.classList.add('heavy');
-    lightboxType.textContent = opts.type || '';
-    lightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  });
-  lightboxClose.addEventListener('click', function () {
-    lightbox.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-  lightboxBackdrop.addEventListener('click', function () {
-    lightbox.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-
-  goTo(0);
-}
-
-initWorkSubslider({
-  subsliderId: 'belayaPolosaSubslider',
-  trackId: 'belayaPolosaTrack',
-  dotsId: 'belayaPolosaDots',
-  prevId: 'belayaPolosaPrev',
-  nextId: 'belayaPolosaNext',
-  title: 'Белая полоса',
-  type: 'Жилой · 2025'
 });
 
-initWorkSubslider({
-  subsliderId: 'pauzaSubslider',
-  trackId: 'pauzaTrack',
-  dotsId: 'pauzaDots',
-  prevId: 'pauzaPrev',
-  nextId: 'pauzaNext',
-  title: 'Пауза',
-  type: ''
+// ---- view tabs (Визуализация / Рабочие чертежи) ----
+document.querySelectorAll('.vtab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.vtab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const view = btn.dataset.view;
+    document.querySelectorAll('.view-panel').forEach(p=>{
+      p.hidden = p.dataset.viewPanel !== view;
+    });
+  });
 });
-// ============ КОНЕЦ ВНУТРЕННЕГО СЛАЙДЕРА КАРТОЧЕК РАБОТ ============
 
-// ============ РАМКА-СЛАЙДЕР ДЛЯ ЧЕРТЕЖЕЙ (свайп внутри одного блока) ============
-(function () {
-  var frame = document.getElementById('drawingFrame');
-  if (!frame) return;
-  var track = document.getElementById('drawingTrack');
-  var slides = Array.prototype.slice.call(track.querySelectorAll('.drawing-slide'));
-  var dotsWrap = document.getElementById('drawingDots');
-  var prevBtn = document.getElementById('drawingPrev');
-  var nextBtn = document.getElementById('drawingNext');
-  var indexEl = document.getElementById('drawingIndex');
-  var current = 0;
-
-  slides.forEach(function (s, i) {
-    var dot = document.createElement('div');
-    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-    dot.addEventListener('click', function () { goTo(i); });
-    dotsWrap.appendChild(dot);
+// ---- project tabs within each view ----
+document.querySelectorAll('.proj-tabs').forEach(tabGroup=>{
+  tabGroup.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.ptab');
+    if(!btn) return;
+    tabGroup.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const proj = btn.dataset.proj;
+    const panelGroup = tabGroup.nextElementSibling;
+    panelGroup.querySelectorAll('.pc').forEach(pc=>{
+      pc.classList.toggle('active', pc.dataset.projPanel === proj);
+    });
   });
-  var dots = Array.prototype.slice.call(dotsWrap.children);
+});
 
-  function goTo(i) {
-    current = Math.max(0, Math.min(slides.length - 1, i));
-    track.style.transform = 'translateX(-' + (current * 100) + '%)';
-    dots.forEach(function (d, di) { d.classList.toggle('active', di === current); });
-    var n = current + 1;
-    if (indexEl) indexEl.textContent = (n < 10 ? '0' + n : n) + ' / 0' + slides.length; // например "01 / 05"
+// ---- photo carousels (click arrows) ----
+document.querySelectorAll('[data-carousel]').forEach(car=>{
+  const imgs = [...car.querySelectorAll('.carousel-frame img')];
+  if(imgs.length < 2) return;
+  let idx = 0;
+  const curEl = car.querySelector('.cur');
+  function show(i){
+    imgs[idx].classList.remove('active');
+    idx = (i + imgs.length) % imgs.length;
+    imgs[idx].classList.add('active');
+    if(curEl) curEl.textContent = String(idx+1).padStart(2,'0');
   }
+  car.querySelectorAll('.c-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=> show(idx + parseInt(btn.dataset.dir)));
+  });
 
-  prevBtn.addEventListener('click', function (e) { e.stopPropagation(); goTo(current - 1); });
-  nextBtn.addEventListener('click', function (e) { e.stopPropagation(); goTo(current + 1); });
-
-  // ---- Свайп (touch / mouse drag) прямо внутри рамки ----
-  var startX = 0, deltaX = 0, dragging = false, moved = false;
-
-  function pointerDown(e) {
-    dragging = true;
-    moved = false;
-    startX = (e.touches ? e.touches[0].clientX : e.clientX);
-    track.classList.add('dragging');
+  // ---- свайп/драг мышью или пальцем, перенесено с текущего сайта ----
+  const frame = car.querySelector('.carousel-frame');
+  let startX = 0, dragging = false, moved = false;
+  function down(e){ dragging = true; moved = false; startX = (e.touches ? e.touches[0].clientX : e.clientX); }
+  function move(e){
+    if(!dragging) return;
+    const x = (e.touches ? e.touches[0].clientX : e.clientX);
+    if(Math.abs(x - startX) > 6) moved = true;
   }
-  function pointerMove(e) {
-    if (!dragging) return;
-    var x = (e.touches ? e.touches[0].clientX : e.clientX);
-    deltaX = x - startX;
-    if (Math.abs(deltaX) > 6) moved = true;
-    var percent = (deltaX / frame.clientWidth) * 100;
-    track.style.transform = 'translateX(calc(-' + (current * 100) + '% + ' + percent + '%))';
-  }
-  function pointerUp() {
-    if (!dragging) return;
+  function up(e){
+    if(!dragging) return;
     dragging = false;
-    track.classList.remove('dragging');
-    var threshold = frame.clientWidth * 0.18;
-    if (deltaX < -threshold) goTo(current + 1);
-    else if (deltaX > threshold) goTo(current - 1);
-    else goTo(current);
-    deltaX = 0;
+    if(!moved) return;
+    const x = (e.changedTouches ? e.changedTouches[0].clientX : e.clientX);
+    const delta = x - startX;
+    const threshold = frame.clientWidth * 0.15;
+    if(delta < -threshold) show(idx + 1);
+    else if(delta > threshold) show(idx - 1);
   }
+  frame.addEventListener('touchstart', down, {passive:true});
+  frame.addEventListener('touchmove', move, {passive:true});
+  frame.addEventListener('touchend', up);
+  frame.addEventListener('mousedown', down);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', up);
 
-  frame.addEventListener('touchstart', pointerDown, { passive: true });
-  frame.addEventListener('touchmove', pointerMove, { passive: true });
-  frame.addEventListener('touchend', pointerUp);
-  frame.addEventListener('mousedown', pointerDown);
-  window.addEventListener('mousemove', pointerMove);
-  window.addEventListener('mouseup', pointerUp);
-
-  // Клик по рамке (без свайпа) — открыть лайтбокс с текущим листом
-  var lightbox = document.getElementById('lightbox');
-  var lightboxImg = document.getElementById('lightboxImg');
-  var lightboxTitle = document.getElementById('lightboxTitle');
-  var lightboxType = document.getElementById('lightboxType');
-  var lightboxClose = document.getElementById('lightboxClose');
-  var lightboxBackdrop = document.getElementById('lightboxBackdrop');
-
-  frame.addEventListener('click', function () {
-    if (moved) return; // это был свайп, а не клик
-    var img = slides[current].querySelector('img');
-    lightboxImg.src = img.src;
-    lightboxTitle.textContent = 'Хрущёвка';
-    lightboxTitle.classList.remove('heavy');
-    lightboxType.textContent = '';
-    lightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
+  // ---- лайтбокс по клику (без свайпа) ----
+  frame.addEventListener('click', ()=>{
+    if(moved) return;
+    const activeImg = imgs[idx];
+    openLightbox(activeImg.src, activeImg.alt || '');
   });
-  lightboxClose.addEventListener('click', function () {
-    lightbox.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-  lightboxBackdrop.addEventListener('click', function () {
-    lightbox.classList.remove('open');
-    document.body.style.overflow = '';
-  });
+});
 
-  goTo(0);
-})();
-// ============ КОНЕЦ РАМКИ-СЛАЙДЕРА ЧЕРТЕЖЕЙ ============
+// ---- простой лайтбокс на весь экран ----
+function openLightbox(src, alt){
+  let lb = document.getElementById('simpleLightbox');
+  if(!lb){
+    lb = document.createElement('div');
+    lb.id = 'simpleLightbox';
+    lb.style.cssText = 'position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;background:rgba(12,10,8,.9);cursor:zoom-out;opacity:0;transition:opacity .25s ease;';
+    lb.innerHTML = '<img style="max-width:90vw;max-height:88vh;box-shadow:0 40px 100px rgba(0,0,0,.5);">';
+    lb.addEventListener('click', ()=>{ lb.style.opacity = '0'; setTimeout(()=> lb.style.display='none', 250); });
+    document.body.appendChild(lb);
+  }
+  lb.querySelector('img').src = src;
+  lb.querySelector('img').alt = alt;
+  lb.style.display = 'flex';
+  requestAnimationFrame(()=> lb.style.opacity = '1');
+}
 
-// ============ СЧЁТЧИК ЧАСОВ + СТАТУС "МАКС ОНЛАЙН/ОФЛАЙН" (из Supabase) ============
+// ---- живой счётчик часов + статус "Максик онлайн/офлайн" (Supabase) ----
 (function () {
   var SUPABASE_URL = 'https://xmnceaykceepgvbwqwgc.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_6ePKeIlHICRgC3PPAt34sQ_qZVTxa1r';
-
-  var POLL_INTERVAL_MS = 20 * 1000;       // как часто проверяем статус — раз в 20 сек
-  var ONLINE_THRESHOLD_SECONDS = 90;      // если last_seen свежее этого — считаем что макс открыт
-  var BASE_HOURS = 192;                  // нижняя граница — счётчик никогда не показывает меньше этого
+  var POLL_INTERVAL_MS = 20 * 1000;
+  var ONLINE_THRESHOLD_SECONDS = 90;
+  var BASE_HOURS = 192;
 
   var statusDot = document.getElementById('statusDot');
-  var hoursEl = document.querySelector('.spec-value-num');
-  var maxHoursShown = BASE_HOURS;         // всегда растёт, никогда не откатывается назад
-
-  function formatHours(h) {
-    return h.toLocaleString('ru-RU');
-  }
+  var hoursEl = document.getElementById('hoursValue');
+  var maxHoursShown = BASE_HOURS;
 
   function setStatus(online, secondsAgo) {
     if (!statusDot) return;
@@ -2325,31 +674,21 @@ initWorkSubslider({
   }
 
   function updateHoursCounter() {
-    if (SUPABASE_URL.indexOf('YOUR_PROJECT') !== -1) return; // ещё не настроено — не пытаемся стучаться никуда
-
     fetch(SUPABASE_URL + '/rest/v1/stats?id=eq.1&select=seconds,updated_at', {
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: 'Bearer ' + SUPABASE_ANON_KEY
-      }
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + SUPABASE_ANON_KEY }
     })
       .then(function (res) { return res.json(); })
       .then(function (rows) {
         if (!rows || !rows[0]) return;
         var row = rows[0];
-
         var hours = Math.floor(row.seconds / 3600);
-var totalHours = BASE_HOURS + hours;
-if (totalHours > maxHoursShown) {
-  maxHoursShown = totalHours;
-  if (hoursEl) hoursEl.textContent = formatHours(maxHoursShown);
-}
-        // если пришедшее значение меньше уже показанного — просто игнорируем его,
-        // счётчик не откатывается назад и не "моргает"
-
+        var totalHours = BASE_HOURS + hours;
+        if (totalHours > maxHoursShown) {
+          maxHoursShown = totalHours;
+          if (hoursEl) hoursEl.textContent = maxHoursShown.toLocaleString('ru-RU');
+        }
         if (row.updated_at) {
-          var lastSeenMs = new Date(row.updated_at).getTime();
-          var diffSec = Math.round((Date.now() - lastSeenMs) / 1000);
+          var diffSec = Math.round((Date.now() - new Date(row.updated_at).getTime()) / 1000);
           setStatus(diffSec <= ONLINE_THRESHOLD_SECONDS, diffSec);
         } else {
           setStatus(false, null);
@@ -2365,5 +704,6 @@ if (totalHours > maxHoursShown) {
   setInterval(updateHoursCounter, POLL_INTERVAL_MS);
 })();
 </script>
+
 </body>
 </html>
