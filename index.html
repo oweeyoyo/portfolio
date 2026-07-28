@@ -107,14 +107,20 @@
   .pc.active{ display:block; }
 
   .carousel{ position:relative; }
+  .viz-row{ display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+  @media(max-width:800px){ .viz-row{ grid-template-columns:1fr; } }
   .carousel-frame{ position:relative; width:100%; max-width:640px; aspect-ratio:3/4; border:1px solid var(--ink); overflow:hidden; background:repeating-linear-gradient(135deg, var(--line-soft) 0 2px, transparent 2px 14px); }
   .carousel-frame img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .35s ease; }
   .carousel-frame img.active{ opacity:1; }
   .placeholder-note{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; font-family:'JetBrains Mono'; font-size:11.5px; opacity:.55; }
   .c-controls{ display:flex; align-items:center; gap:16px; margin-top:18px; }
-  .c-btn{ width:34px; height:34px; border:1px solid var(--ink); display:flex; align-items:center; justify-content:center; font-size:16px; }
+  .c-btn{ width:34px; height:34px; border:1px solid var(--ink); display:flex; align-items:center; justify-content:center; font-size:16px; background:var(--paper); }
   .c-btn:hover{ background:var(--ink); color:var(--paper); }
-  .c-counter{ font-size:12.5px; opacity:.65; }
+  .c-btn-overlay{ position:absolute; top:50%; transform:translateY(-50%); z-index:6; border-radius:50%; opacity:.9; }
+  .c-btn-overlay.prev{ left:12px; }
+  .c-btn-overlay.next{ right:12px; }
+  .c-btn-overlay:hover{ opacity:1; }
+  .c-counter{ position:absolute; top:12px; right:12px; z-index:6; background:var(--paper); border:1px solid var(--ink); padding:4px 9px; font-size:11px; }
   .c-caption{ margin-top:18px; display:flex; justify-content:space-between; align-items:baseline; font-family:'JetBrains Mono'; font-size:12px; max-width:640px; }
   .c-caption .pname{ font-family:'Unbounded'; font-size:17px; }
   .c-caption .pmeta{ opacity:.6; }
@@ -242,74 +248,38 @@
 
       <!-- VISUALIZATION PANEL -->
       <div class="view-panel" data-view-panel="viz">
-        <div class="proj-tabs">
-          <button class="ptab active" data-proj="bp">01 · Белая полоса</button>
-          <button class="ptab" data-proj="pauza">02 · Пауза</button>
-          <button class="ptab" data-proj="k5">03 · Концепт 5</button>
-          <button class="ptab" data-proj="k6">04 · Концепт 6</button>
-          <button class="ptab" data-proj="k7">05 · Концепт 7</button>
-          <button class="ptab" data-proj="k8">06 · Концепт 8</button>
-        </div>
+        <div class="viz-row">
+          <div class="pc active">
+            <div class="carousel" data-carousel>
+              <div class="carousel-frame">
+                <img class="active" src="assets/work-09.jpg" alt="Белая полоса — фото 1">
+                <img src="assets/work-10.jpg" alt="Белая полоса — фото 2">
+                <img src="assets/work-06.jpg" alt="Белая полоса — фото 3">
+                <img src="assets/work-07.jpg" alt="Белая полоса — фото 4">
+                <img src="assets/work-detskaya.jpg" alt="Белая полоса — детская">
+                <img src="assets/work-08.jpg" alt="Белая полоса — санузел">
+                <button class="c-btn c-btn-overlay prev" data-dir="-1">‹</button>
+                <button class="c-btn c-btn-overlay next" data-dir="1">›</button>
+                <span class="c-counter mono"><span class="cur">01</span> / <span class="total">06</span></span>
+              </div>
+              <div class="c-caption"><span class="pname">Белая полоса</span><span class="pmeta">Жилой · 2025</span></div>
+            </div>
+          </div>
 
-        <div class="pc active" data-proj-panel="bp">
-          <div class="carousel" data-carousel data-caption="Белая полоса" data-meta="Жилой · 2025">
-            <div class="carousel-frame">
-              <img class="active" src="assets/work-09.jpg" alt="Белая полоса — фото 1">
-              <img src="assets/work-10.jpg" alt="Белая полоса — фото 2">
-              <img src="assets/work-06.jpg" alt="Белая полоса — фото 3">
-              <img src="assets/work-07.jpg" alt="Белая полоса — фото 4">
-              <img src="assets/work-detskaya.jpg" alt="Белая полоса — детская">
-              <img src="assets/work-08.jpg" alt="Белая полоса — санузел">
+          <div class="pc active">
+            <div class="carousel" data-carousel>
+              <div class="carousel-frame">
+                <img class="active" src="assets/work-pauza.jpg" alt="Пауза — фото 1">
+                <img src="assets/work-pauza-2.jpg" alt="Пауза — фото 2">
+                <img src="assets/work-pauza-3.jpg" alt="Пауза — фото 3">
+                <img src="assets/work-pauza-4.jpg" alt="Пауза — фото 4">
+                <img src="assets/work-pauza-5.jpg" alt="Пауза — фото 5">
+                <button class="c-btn c-btn-overlay prev" data-dir="-1">‹</button>
+                <button class="c-btn c-btn-overlay next" data-dir="1">›</button>
+                <span class="c-counter mono"><span class="cur">01</span> / <span class="total">05</span></span>
+              </div>
+              <div class="c-caption"><span class="pname">Пауза</span><span class="pmeta">Концепт</span></div>
             </div>
-            <div class="c-controls">
-              <button class="c-btn" data-dir="-1">‹</button>
-              <span class="c-counter mono"><span class="cur">01</span> / <span class="total">06</span></span>
-              <button class="c-btn" data-dir="1">›</button>
-            </div>
-            <div class="c-caption"><span class="pname">Белая полоса</span><span class="pmeta">Жилой · 2025</span></div>
-          </div>
-        </div>
-
-        <div class="pc" data-proj-panel="pauza">
-          <div class="carousel" data-carousel>
-            <div class="carousel-frame">
-              <img class="active" src="assets/work-pauza.jpg" alt="Пауза — фото 1">
-              <img src="assets/work-pauza-2.jpg" alt="Пауза — фото 2">
-              <img src="assets/work-pauza-3.jpg" alt="Пауза — фото 3">
-              <img src="assets/work-pauza-4.jpg" alt="Пауза — фото 4">
-              <img src="assets/work-pauza-5.jpg" alt="Пауза — фото 5">
-            </div>
-            <div class="c-controls">
-              <button class="c-btn" data-dir="-1">‹</button>
-              <span class="c-counter mono"><span class="cur">01</span> / <span class="total">05</span></span>
-              <button class="c-btn" data-dir="1">›</button>
-            </div>
-            <div class="c-caption"><span class="pname">Пауза</span><span class="pmeta">Концепт</span></div>
-          </div>
-        </div>
-
-        <div class="pc" data-proj-panel="k5">
-          <div class="carousel" data-carousel>
-            <div class="carousel-frame"><div class="placeholder-note">Нет фото в источнике —<br>вставь ссылку на assets/work-…jpg</div></div>
-            <div class="c-caption"><span class="pname">Концепт 5</span><span class="pmeta">Жилой · 2023</span></div>
-          </div>
-        </div>
-        <div class="pc" data-proj-panel="k6">
-          <div class="carousel" data-carousel>
-            <div class="carousel-frame"><div class="placeholder-note">Нет фото в источнике —<br>вставь ссылку на assets/work-…jpg</div></div>
-            <div class="c-caption"><span class="pname">Концепт 6</span><span class="pmeta">Коммерческий · 2023</span></div>
-          </div>
-        </div>
-        <div class="pc" data-proj-panel="k7">
-          <div class="carousel" data-carousel>
-            <div class="carousel-frame"><div class="placeholder-note">Нет фото в источнике —<br>вставь ссылку на assets/work-…jpg</div></div>
-            <div class="c-caption"><span class="pname">Концепт 7</span><span class="pmeta">Жилой · 2022</span></div>
-          </div>
-        </div>
-        <div class="pc" data-proj-panel="k8">
-          <div class="carousel" data-carousel>
-            <div class="carousel-frame"><div class="placeholder-note">Нет фото в источнике —<br>вставь ссылку на assets/work-…jpg</div></div>
-            <div class="c-caption"><span class="pname">Концепт 8</span><span class="pmeta">Жилой · 2022</span></div>
           </div>
         </div>
       </div>
@@ -567,14 +537,17 @@ document.querySelectorAll('[data-carousel]').forEach(car=>{
   if(imgs.length < 2) return;
   let idx = 0;
   const curEl = car.querySelector('.cur');
+  const prevBtn = car.querySelector('.c-btn-overlay.prev');
   function show(i){
     imgs[idx].classList.remove('active');
     idx = (i + imgs.length) % imgs.length;
     imgs[idx].classList.add('active');
     if(curEl) curEl.textContent = String(idx+1).padStart(2,'0');
+    if(prevBtn) prevBtn.style.visibility = idx === 0 ? 'hidden' : 'visible';
   }
+  if(prevBtn) prevBtn.style.visibility = 'hidden';
   car.querySelectorAll('.c-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=> show(idx + parseInt(btn.dataset.dir)));
+    btn.addEventListener('click', (e)=>{ e.stopPropagation(); show(idx + parseInt(btn.dataset.dir)); });
   });
 
   // ---- свайп/драг мышью или пальцем, перенесено с текущего сайта ----
