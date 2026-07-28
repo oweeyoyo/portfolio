@@ -44,7 +44,7 @@
   .cr-tl{ top:-8px; left:-8px; } .cr-tr{ top:-8px; right:-8px; }
   .cr-bl{ bottom:-8px; left:-8px; } .cr-br{ bottom:-8px; right:-8px; }
 
-  header{ position:sticky; top:14px; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:14px 24px; background:rgba(231,225,211,.86); backdrop-filter:blur(6px); border-bottom:1px solid var(--line-soft); }
+  header{ position:sticky; top:14px; z-index:50; display:flex; align-items:center; justify-content:flex-end; padding:14px 24px; background:rgba(231,225,211,.86); backdrop-filter:blur(6px); border-bottom:1px solid var(--line-soft); }
   header .brand{ font-family:'Unbounded'; font-weight:700; font-size:14px; letter-spacing:.03em; text-transform:uppercase; }
   header nav{display:flex; gap:26px;}
   header nav a{ font-family:'JetBrains Mono'; font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; opacity:.7; transition:opacity .2s; }
@@ -62,7 +62,7 @@
 
   /* ---------- hero ---------- */
   .hero{ padding:64px 24px 0; border-top:none; }
-  .hero-grid{ display:grid; grid-template-columns:1.4fr 1fr; gap:60px; align-items:end; padding-bottom:56px; }
+  .hero-grid{ display:block; padding-bottom:56px; }
   .eyebrow{ font-family:'JetBrains Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.1em; opacity:.65; margin-bottom:28px; display:flex; align-items:center; gap:10px; }
   .eyebrow::before{ content:""; width:26px; height:1px; background:var(--accent); }
   h1.name{ font-family:'Unbounded'; font-weight:800; font-size:clamp(48px, 8vw, 104px); line-height:.94; letter-spacing:-.01em; text-transform:uppercase; }
@@ -182,7 +182,6 @@
   <span class="crosshair cr-bl"></span><span class="crosshair cr-br"></span>
 
   <header>
-    <div class="brand">Виноградов Диёр</div>
     <nav>
       <a href="#about" data-sheet="Л.01">Обо мне</a>
       <a href="#works" data-sheet="Л.02">Концепты</a>
@@ -202,14 +201,6 @@
           <h1 class="name">Виноградов<br><em>Диёр</em></h1>
           <div class="name-en">Diyor Vinogradov — Interior Designer</div>
         </div>
-        <div class="hero-index">
-          <div class="row"><span>Л.01</span><span>О себе</span></div>
-          <div class="row"><span>Л.02</span><span>Концепт-проекты</span></div>
-          <div class="row"><span>Л.03</span><span>Реализованный объект</span></div>
-          <div class="row"><span>Л.04</span><span>Что входит в проект</span></div>
-          <div class="row"><span>Л.05</span><span>Стоимость</span></div>
-          <div class="row"><span>Л.06</span><span>Контакты</span></div>
-        </div>
       </div>
       <div class="titleblock">
         <div class="cell"><div class="val mono" id="hoursValue">2170</div><div class="lbl">часов наработано <span id="statusDot" class="status-dot" title="Проверка статуса..."></span></div></div>
@@ -228,22 +219,11 @@
         <div>
           <h2>Дизайн, который работает на Ваши сценарии жизни.</h2>
           <p>При проектировании я в первую очередь думаю о том, как пространством будут пользоваться каждый день — где удобно разместить розетки, как расставить свет по сценариям. Эстетика выстраивается уже на основе этой логики, а не отдельно от неё.</p>
-          <div class="tags">
-            <span class="tag">Датский стиль</span>
-            <span class="tag">Модерн</span>
-            <span class="tag">Баухаус</span>
-            <span class="tag">Кэжуал</span>
-            <span class="tag">3D-визуализация</span>
-          </div>
         </div>
         <div>
           <div class="subblock">
             <h3 class="mono">Техническая база</h3>
             <p>Работаю в 3ds Max и AutoCAD — делаю рабочие чертежи и визуализации, которые соответствуют финальному результату.</p>
-          </div>
-          <div class="subblock">
-            <h3 class="mono">Стилистические направления</h3>
-            <p>Ценю датский стиль, модерн и Баухаус — за функциональность и отсутствие лишнего декора.</p>
           </div>
         </div>
       </div>
@@ -578,7 +558,7 @@ document.querySelectorAll('.proj-tabs').forEach(tabGroup=>{
     tabGroup.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     const proj = btn.dataset.proj;
-    const panelGroup = tabGroup.nextElementSibling;
+    const panelGroup = tabGroup.closest('[data-view-panel]') || tabGroup.parentElement;
     panelGroup.querySelectorAll('.pc').forEach(pc=>{
       pc.classList.toggle('active', pc.dataset.projPanel === proj);
     });
