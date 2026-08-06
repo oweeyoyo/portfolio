@@ -713,10 +713,13 @@ function openLightbox(src, alt){
   setInterval(updateHoursCounter, POLL_INTERVAL_MS);
 })();
 
-// ---- форма заявки: отправка в Supabase (таблица "leads") ----
+// ---- форма заявки: отправка в Supabase + Telegram ----
 (function () {
   var SUPABASE_URL = 'https://xmnceaykceepgvbwqwgc.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_6ePKeIlHICRgC3PPAt34sQ_qZVTxa1r';
+
+  var TELEGRAM_BOT_TOKEN = '8932741244:AAEzh_6qVFQr9KsVOEc8PPaYFq3D4vcZ_Do';
+  var TELEGRAM_CHAT_ID = '-1003966645207';
 
   var form = document.getElementById('leadForm');
   if (!form) return;
@@ -728,6 +731,23 @@ function openLightbox(src, alt){
     statusEl.textContent = text;
     statusEl.classList.remove('ok', 'err');
     if (cls) statusEl.classList.add(cls);
+  }
+
+  function sendToTelegram(name, phone, tg) {
+    var text =
+      '🆕 Новая заявка с сайта\n' +
+      '👤 ФИО: ' + name + '\n' +
+      '📞 Телефон: ' + phone + '\n' +
+      '💬 Telegram: ' + tg;
+
+    return fetch('https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: text
+      })
+    });
   }
 
   form.addEventListener('submit', function (e) {
@@ -745,33 +765,36 @@ function openLightbox(src, alt){
     btn.disabled = true;
     setStatus('Отправляю…', '');
 
-    fetch(SUPABASE_URL + '/rest/v1/leads', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
-        Prefer: 'return=minimal'
-      },
-      body: JSON.stringify({
-        name: name,
-        phone: phone,
-        telegram: tg,
-        created_at: new Date().toISOString()
-      })
-    })
-      .then(function (res) {
-        if (!res.ok) throw new Error('bad status ' + res.status);
+    Promise.allSettled([
+      fetch(SUPABASE_URL + '/rest/v1/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
+          Prefer: 'return=minimal'
+        },
+        body: JSON.stringify({
+          name: name,
+          phone: phone,
+          telegram: tg,
+          created_at: new Date().toISOString()
+        })
+      }),
+      sendToTelegram(name, phone, tg)
+    ]).then(function (results) {
+      var supabaseOk = results[0].status === 'fulfilled' && results[0].value.ok;
+      var telegramOk = results[1].status === 'fulfilled' && results[1].value.ok;
+
+      if (supabaseOk || telegramOk) {
         setStatus('Заявка отправлена, скоро свяжусь ✓', 'ok');
         form.reset();
-      })
-      .catch(function (err) {
-        console.warn('Не удалось отправить заявку:', err);
+      } else {
         setStatus('Не получилось отправить — напишите в Telegram @oweeyoyo', 'err');
-      })
-      .finally(function () {
-        btn.disabled = false;
-      });
+      }
+    }).finally(function () {
+      btn.disabled = false;
+    });
   });
 })();
 </script>
