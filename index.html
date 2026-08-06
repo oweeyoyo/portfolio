@@ -168,6 +168,32 @@
   .price-foot{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-family:'JetBrains Mono'; font-size:12px; opacity:.6; }
   @media(max-width:760px){ .pricing-grid{grid-template-columns:1fr;} }
 
+  /* ---------- lead form ---------- */
+  .form-wrap{ max-width:640px; }
+  .form-intro{ opacity:.8; max-width:60ch; margin-bottom:40px; }
+  .field{ position:relative; margin-bottom:30px; }
+  .field label{ display:block; font-family:'JetBrains Mono'; font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; opacity:.6; margin-bottom:10px; }
+  .field input{
+    width:100%; background:transparent; border:none; border-bottom:1px solid var(--line-soft);
+    padding:10px 2px; font-family:'Manrope', sans-serif; font-size:18px; color:var(--ink);
+    outline:none; transition:border-color .2s;
+  }
+  .field input::placeholder{ color:var(--ink); opacity:.28; }
+  .field input:focus{ border-bottom-color:var(--accent); }
+  .field .field-note{ font-family:'JetBrains Mono'; font-size:10.5px; opacity:.45; margin-top:8px; }
+  .form-actions{ display:flex; align-items:center; gap:20px; margin-top:12px; flex-wrap:wrap; }
+  .submit-btn{
+    font-family:'JetBrains Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.08em;
+    background:var(--ink); color:var(--paper); padding:16px 34px; border:1px solid var(--ink);
+    transition:background .2s, color .2s;
+  }
+  .submit-btn:hover{ background:var(--accent); border-color:var(--accent); }
+  .submit-btn:disabled{ opacity:.5; cursor:default; }
+  .form-status{ font-family:'JetBrains Mono'; font-size:12px; }
+  .form-status.ok{ color:#2e7d32; }
+  .form-status.err{ color:var(--accent); }
+  .form-fineprint{ margin-top:26px; font-family:'JetBrains Mono'; font-size:10.5px; opacity:.45; max-width:60ch; }
+
   /* ---------- footer / title block ---------- */
   footer{ padding:70px 24px 40px; }
   .tblock{ border:1px solid var(--ink); display:grid; grid-template-columns:2fr 1fr 1fr 1fr; }
@@ -194,7 +220,8 @@
       <a href="#realized" data-sheet="Л.03">Реализованный</a>
       <a href="#services" data-sheet="Л.04">Что входит</a>
       <a href="#pricing" data-sheet="Л.05">Стоимость</a>
-      <a href="#contact" data-sheet="Л.06">Контакты</a>
+      <a href="#request" data-sheet="Л.06">Заявка</a>
+      <a href="#contact" data-sheet="Л.07">Контакты</a>
     </nav>
   </header>
 
@@ -465,17 +492,50 @@
     </div>
   </section>
 
+  <!-- REQUEST FORM -->
+  <section id="request" class="dark">
+    <div class="wrap">
+      <div class="sheet-label"><span class="num mono" style="color:var(--accent)">Л.06</span><span class="title">Оставить заявку</span><span class="rule"></span></div>
+      <div class="form-wrap">
+        <p class="form-intro">Оставьте контакты — я свяжусь с Вами, чтобы обсудить проект и ответить на вопросы.</p>
+
+        <form id="leadForm" novalidate>
+          <div class="field">
+            <label class="mono" for="leadName">ФИО</label>
+            <input type="text" id="leadName" name="name" placeholder="Иванов Иван Иванович" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label class="mono" for="leadPhone">Номер телефона</label>
+            <input type="tel" id="leadPhone" name="phone" placeholder="+998 90 123 45 67" autocomplete="tel" required>
+          </div>
+          <div class="field">
+            <label class="mono" for="leadTg">Telegram-юзернейм</label>
+            <input type="text" id="leadTg" name="telegram" placeholder="@username" autocomplete="off" required>
+            <div class="field-note">без ссылки, просто ник с «@»</div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="submit-btn mono" id="leadSubmitBtn">Отправить заявку</button>
+            <span class="form-status mono" id="leadStatus"></span>
+          </div>
+        </form>
+
+        <div class="form-fineprint">Отправляя форму, Вы соглашаетесь на обработку указанных данных для связи по проекту.</div>
+      </div>
+    </div>
+  </section>
+
   <!-- CONTACT / TITLE BLOCK -->
   <footer id="contact">
     <div class="wrap">
-      <div class="sheet-label"><span class="num mono">Л.06</span><span class="title">Контакты</span><span class="rule"></span></div>
+      <div class="sheet-label"><span class="num mono">Л.07</span><span class="title">Контакты</span><span class="rule"></span></div>
       <div class="tblock">
         <div><div class="k">Свяжитесь напрямую</div><a class="v" href="tel:+998937871717">+998 93 787 17 17</a></div>
         <div><div class="k">Почта</div><a class="v" href="mailto:diyorvinogradov77@gmail.com" style="font-size:13px;">diyorvinogradov77@gmail.com</a></div>
         <div><div class="k">Instagram</div><a class="v" href="https://www.instagram.com/oweeyoyo/" target="_blank">@oweeyoyo</a></div>
         <div><div class="k">Telegram</div><a class="v" href="https://t.me/oweeyoyo" target="_blank">@oweeyoyo</a></div>
       </div>
-      <div class="foot-note mono">Виноградов Диёр — D·V STUDIO / Ташкент — Лист 06 из 06</div>
+      <div class="foot-note mono">Виноградов Диёр — D·V STUDIO / Ташкент — Лист 07 из 07</div>
 
       <div class="legal">
         <span>© 2024–2026 Виноградов Диёр. Все права защищены.</span>
@@ -651,6 +711,68 @@ function openLightbox(src, alt){
 
   updateHoursCounter();
   setInterval(updateHoursCounter, POLL_INTERVAL_MS);
+})();
+
+// ---- форма заявки: отправка в Supabase (таблица "leads") ----
+(function () {
+  var SUPABASE_URL = 'https://xmnceaykceepgvbwqwgc.supabase.co';
+  var SUPABASE_ANON_KEY = 'sb_publishable_6ePKeIlHICRgC3PPAt34sQ_qZVTxa1r';
+
+  var form = document.getElementById('leadForm');
+  if (!form) return;
+
+  var btn = document.getElementById('leadSubmitBtn');
+  var statusEl = document.getElementById('leadStatus');
+
+  function setStatus(text, cls) {
+    statusEl.textContent = text;
+    statusEl.classList.remove('ok', 'err');
+    if (cls) statusEl.classList.add(cls);
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var name = document.getElementById('leadName').value.trim();
+    var phone = document.getElementById('leadPhone').value.trim();
+    var tg = document.getElementById('leadTg').value.trim();
+
+    if (!name || !phone || !tg) {
+      setStatus('Заполните все поля', 'err');
+      return;
+    }
+
+    btn.disabled = true;
+    setStatus('Отправляю…', '');
+
+    fetch(SUPABASE_URL + '/rest/v1/leads', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify({
+        name: name,
+        phone: phone,
+        telegram: tg,
+        created_at: new Date().toISOString()
+      })
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('bad status ' + res.status);
+        setStatus('Заявка отправлена, скоро свяжусь ✓', 'ok');
+        form.reset();
+      })
+      .catch(function (err) {
+        console.warn('Не удалось отправить заявку:', err);
+        setStatus('Не получилось отправить — напишите в Telegram @oweeyoyo', 'err');
+      })
+      .finally(function () {
+        btn.disabled = false;
+      });
+  });
 })();
 </script>
 
