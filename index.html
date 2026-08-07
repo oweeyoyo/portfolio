@@ -23,8 +23,8 @@
     --line-soft-2:rgba(243,238,226,.22);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{ background:var(--stone); color:var(--ink); font-family:'Manrope', sans-serif; font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; }
+  html{scroll-behavior:smooth; overflow-x:hidden; max-width:100%;}
+  body{ background:var(--stone); color:var(--ink); font-family:'Manrope', sans-serif; font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; overflow-x:hidden; max-width:100%; }
   ::selection{background:var(--accent); color:var(--paper);}
   img{display:block; max-width:100%;}
   a{color:inherit; text-decoration:none;}
@@ -52,7 +52,7 @@
   header nav a::before{ content: attr(data-sheet); color:var(--accent); margin-right:6px; }
   @media(max-width:900px){ header nav{display:none;} }
 
-  section{ position:relative; padding:100px 24px 80px; border-top:1px solid var(--line-soft); }
+  section{ position:relative; padding:100px 24px 80px; border-top:1px solid var(--line-soft); scroll-margin-top:90px; }
   section:first-of-type{border-top:none;}
   .sheet-label{ display:flex; align-items:baseline; gap:14px; margin-bottom:56px; }
   .sheet-label .num{ font-family:'Unbounded'; font-weight:800; font-size:13px; color:var(--accent); letter-spacing:.04em; }
@@ -74,7 +74,7 @@
   .hero-index .row:hover{ color:var(--accent); }
   .hero-index .row:last-child{ border-bottom:none; }
   .titleblock{ display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--ink); }
-  .titleblock .cell{ padding:22px 24px; border-right:1px solid var(--line-soft); }
+  .titleblock .cell{ padding:22px 24px; border-right:1px solid var(--line-soft); min-width:0; }
   .titleblock .cell:last-child{border-right:none;}
   .titleblock .val{ font-family:'Unbounded'; font-weight:700; font-size:34px; color:var(--accent); }
   .titleblock .lbl{ font-family:'JetBrains Mono'; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; opacity:.6; margin-top:6px; }
@@ -200,16 +200,38 @@
   .form-status.ok{ color:#2e7d32; }
   .form-status.err{ color:var(--accent); }
   .form-fineprint{ margin-top:26px; font-family:'JetBrains Mono'; font-size:10.5px; opacity:.45; max-width:60ch; }
+  .form-wrap.highlight{ animation:formPulse 1.8s ease-out 2; }
+  @keyframes formPulse{
+    0%{ box-shadow:0 0 0 0 rgba(179,58,46,.35); }
+    50%{ box-shadow:0 0 0 14px rgba(179,58,46,0); }
+    100%{ box-shadow:0 0 0 0 rgba(179,58,46,0); }
+  }
 
   /* ---------- footer / title block ---------- */
   footer{ padding:70px 24px 40px; }
   .tblock{ border:1px solid var(--ink); display:grid; grid-template-columns:2fr 1fr 1fr 1fr; }
-  .tblock > div{ padding:22px 24px; border-right:1px solid var(--line-soft); }
-  .tblock > div:last-child{ border-right:none; }
-  .tblock .k{ font-family:'JetBrains Mono'; font-size:10px; text-transform:uppercase; opacity:.55; letter-spacing:.08em; margin-bottom:8px; }
-  .tblock .v{ font-family:'Unbounded'; font-size:15px; font-weight:600; }
-  .tblock a.v:hover{ color:var(--accent); }
-  @media(max-width:800px){ .tblock{grid-template-columns:1fr 1fr;} .tblock>div{border-bottom:1px solid var(--line-soft);} }
+  .tblock .trow{ display:block; padding:22px 24px; border-right:1px solid var(--line-soft); min-width:0; }
+  .tblock .trow:last-child{ border-right:none; }
+  .tblock .k{ display:block; font-family:'JetBrains Mono'; font-size:10px; text-transform:uppercase; opacity:.55; letter-spacing:.08em; margin-bottom:8px; }
+  .tblock .v{ display:block; font-family:'Unbounded'; font-size:15px; font-weight:600; word-break:break-word; overflow-wrap:anywhere; transition:color .2s; }
+  .tblock .v.vsmall{ font-size:13px; }
+  .tblock .trow:hover .v{ color:var(--accent); }
+  @media(max-width:800px){ .tblock{grid-template-columns:1fr 1fr;} .tblock .trow{border-bottom:1px solid var(--line-soft);} }
+  @media(max-width:560px){
+    .tblock{ grid-template-columns:1fr; }
+    .tblock .trow{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      padding:20px 22px; border-right:none;
+    }
+    .tblock .trow:last-child{ border-bottom:none; }
+    .tblock .trow .k{ margin-bottom:0; flex-shrink:0; font-size:9.5px; opacity:.5; }
+    .tblock .trow .v{ text-align:right; font-size:14.5px; }
+    .tblock .trow .v.vsmall{ font-size:12px; }
+    .tblock .trow::after{
+      content:"→"; font-family:'JetBrains Mono'; font-size:14px; color:var(--accent);
+      flex-shrink:0; margin-left:4px;
+    }
+  }
   .foot-note{ margin-top:28px; font-family:'JetBrains Mono'; font-size:11px; opacity:.45; }
   .legal{ margin-top:18px; padding-top:18px; border-top:1px dashed var(--line-soft); display:flex; flex-direction:column; gap:6px; font-family:'JetBrains Mono'; font-size:10.5px; opacity:.4; max-width:70ch; }
 </style>
@@ -503,7 +525,7 @@
   <section id="request" class="dark">
     <div class="wrap">
       <div class="sheet-label"><span class="num mono" style="color:var(--accent)">Л.06</span><span class="title">Оставить заявку</span><span class="rule"></span></div>
-      <div class="form-wrap">
+      <div class="form-wrap" id="formWrap">
         <p class="form-intro">Оставьте контакты — я свяжусь с Вами, чтобы обсудить проект и ответить на вопросы.</p>
 
         <form id="leadForm" novalidate>
@@ -540,10 +562,10 @@
     <div class="wrap">
       <div class="sheet-label"><span class="num mono">Л.07</span><span class="title">Контакты</span><span class="rule"></span></div>
       <div class="tblock">
-        <div><div class="k">Свяжитесь напрямую</div><a class="v" href="tel:+998937871717">+998 93 787 17 17</a></div>
-        <div><div class="k">Почта</div><a class="v" href="mailto:diyorvinogradov77@gmail.com" style="font-size:13px;">diyorvinogradov77@gmail.com</a></div>
-        <div><div class="k">Instagram</div><a class="v" href="https://www.instagram.com/vinogradov_diyor/" target="_blank">@vinogradov_diyor</a></div>
-        <div><div class="k">Telegram</div><a class="v" href="https://t.me/oweeyoyo" target="_blank">@oweeyoyo</a></div>
+        <a class="trow" href="tel:+998937871717"><span class="k">Свяжитесь напрямую</span><span class="v">+998 93 787 17 17</span></a>
+        <a class="trow" href="mailto:diyorvinogradov77@gmail.com"><span class="k">Почта</span><span class="v vsmall">diyorvinogradov77@gmail.com</span></a>
+        <a class="trow" href="https://www.instagram.com/vinogradov_diyor/" target="_blank"><span class="k">Instagram</span><span class="v">@vinogradov_diyor</span></a>
+        <a class="trow" href="https://t.me/oweeyoyo" target="_blank"><span class="k">Telegram</span><span class="v">@oweeyoyo</span></a>
       </div>
       <div class="foot-note mono">Виноградов Диёр — D·V STUDIO / Ташкент — Лист 07 из 07</div>
 
@@ -820,6 +842,19 @@ function openLightbox(src, alt){
       btn.disabled = false;
     });
   });
+})();
+
+// ---- подсветка формы заявки при переходе с внешней ссылки (#request) ----
+(function () {
+  if (window.location.hash === '#request') {
+    var wrap = document.getElementById('formWrap');
+    if (wrap) {
+      setTimeout(function () {
+        wrap.classList.add('highlight');
+        setTimeout(function () { wrap.classList.remove('highlight'); }, 3600);
+      }, 500);
+    }
+  }
 })();
 </script>
 
