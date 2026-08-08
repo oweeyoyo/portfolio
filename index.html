@@ -93,22 +93,10 @@
   .tag{ font-family:'JetBrains Mono'; font-size:11.5px; border:1px solid var(--line-soft); padding:7px 13px; text-transform:uppercase; letter-spacing:.04em; }
   @media(max-width:760px){ .about-grid{grid-template-columns:1fr; gap:36px;} }
 
-  /* ---------- works: tabs ---------- */
-  .view-switch{ display:flex; gap:2px; margin-bottom:34px; border:1px solid var(--ink); width:fit-content; }
-  .vtab{ padding:11px 22px; font-family:'JetBrains Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.06em; opacity:.55; }
-  .vtab.active{ background:var(--ink); color:var(--paper); opacity:1; }
-  .view-panel[hidden]{ display:none; }
-
-  .proj-tabs{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:30px; }
-  .ptab{ padding:8px 14px; font-family:'JetBrains Mono'; font-size:11.5px; border:1px solid var(--line-soft); opacity:.6; }
-  .ptab.active{ border-color:var(--accent); color:var(--accent); opacity:1; }
-
-  .pc{ display:none; }
-  .pc.active{ display:block; }
-
-  .carousel{ position:relative; }
+  /* ---------- works ---------- */
   .viz-row{ display:grid; grid-template-columns:1fr 1fr; gap:28px; }
   @media(max-width:800px){ .viz-row{ grid-template-columns:1fr; } }
+  .carousel{ position:relative; }
   .carousel-frame{ position:relative; width:100%; max-width:640px; aspect-ratio:3/4; border:1px solid var(--ink); overflow:hidden; background:repeating-linear-gradient(135deg, var(--line-soft) 0 2px, transparent 2px 14px); }
   .carousel-frame img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .35s ease; }
   .carousel-frame img.active{ opacity:1; }
@@ -297,80 +285,49 @@
     <div class="wrap">
       <div class="sheet-label"><span class="num mono">Л.02</span><span class="title">Портфолио</span><span class="rule"></span></div>
 
-      <div class="view-switch">
-        <button class="vtab active" data-view="viz">Визуализация</button>
-        <button class="vtab" data-view="draw">Рабочие чертежи</button>
-      </div>
-
-      <!-- VISUALIZATION PANEL -->
-      <div class="view-panel" data-view-panel="viz">
-        <div class="viz-row">
-          <div class="pc active">
-            <div class="carousel" data-carousel>
-              <div class="carousel-frame">
-                <img class="active" src="assets/work-09.jpg" alt="Белая полоса — фото 1">
-                <img src="assets/work-10.jpg" alt="Белая полоса — фото 2">
-                <img src="assets/work-06.jpg" alt="Белая полоса — фото 3">
-                <img src="assets/work-07.jpg" alt="Белая полоса — фото 4">
-                <img src="assets/work-detskaya.jpg" alt="Белая полоса — детская">
-                <img src="assets/work-08.jpg" alt="Белая полоса — санузел">
-                <button class="c-btn c-btn-overlay prev" data-dir="-1">‹</button>
-                <button class="c-btn c-btn-overlay next" data-dir="1">›</button>
-                <span class="c-counter mono"><span class="cur">01</span> / <span class="total">06</span></span>
-              </div>
-              <div class="c-caption"><span class="pname">Белая полоса</span><span class="pmeta">Жилой · 2025</span></div>
-            </div>
+      <div class="viz-row">
+        <div class="carousel" data-carousel>
+          <div class="carousel-frame">
+            <img class="active" src="assets/work-09.jpg" alt="Белая полоса — фото 1">
+            <img src="assets/work-10.jpg" alt="Белая полоса — фото 2">
+            <img src="assets/work-06.jpg" alt="Белая полоса — фото 3">
+            <img src="assets/work-07.jpg" alt="Белая полоса — фото 4">
+            <img src="assets/work-detskaya.jpg" alt="Белая полоса — детская">
+            <img src="assets/work-08.jpg" alt="Белая полоса — санузел">
+            <button class="c-btn c-btn-overlay prev" data-dir="-1">‹</button>
+            <button class="c-btn c-btn-overlay next" data-dir="1">›</button>
+            <span class="c-counter mono"><span class="cur">01</span> / <span class="total">06</span></span>
           </div>
-
-          <div class="pc active">
-            <div class="carousel" data-carousel>
-              <div class="carousel-frame">
-                <img class="active" src="assets/work-pauza.jpg" alt="Пауза — фото 1">
-                <img src="assets/work-pauza-2.jpg" alt="Пауза — фото 2">
-                <img src="assets/work-pauza-3.jpg" alt="Пауза — фото 3">
-                <img src="assets/work-pauza-4.jpg" alt="Пауза — фото 4">
-                <img src="assets/work-pauza-5.jpg" alt="Пауза — фото 5">
-                <button class="c-btn c-btn-overlay prev" data-dir="-1">‹</button>
-                <button class="c-btn c-btn-overlay next" data-dir="1">›</button>
-                <span class="c-counter mono"><span class="cur">01</span> / <span class="total">05</span></span>
-              </div>
-              <div class="c-caption"><span class="pname">Пауза</span><span class="pmeta">Концепт</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- DRAWINGS PANEL -->
-      <div class="view-panel" data-view-panel="draw" hidden>
-        <div class="proj-tabs">
-          <button class="ptab active" data-proj="hr">Хрущёвка</button>
-          <button class="ptab" data-proj="p2">Проект 2</button>
-          <button class="ptab" data-proj="p3">Проект 3</button>
-          <button class="ptab" data-proj="p4">Проект 4</button>
-          <button class="ptab" data-proj="p5">Проект 5</button>
+          <div class="c-caption"><span class="pname">Белая полоса</span><span class="pmeta">Жилой · 2025</span></div>
         </div>
 
-        <div class="pc active" data-proj-panel="hr">
-          <div class="carousel" data-carousel>
-            <div class="carousel-frame">
-              <img class="active" src="assets/plan-01.jpg" alt="Хрущёвка — лист 1">
-              <img src="assets/plan-02.jpg" alt="Хрущёвка — лист 2">
-              <img src="assets/plan-03.jpg" alt="Хрущёвка — лист 3">
-              <img src="assets/plan-04.jpg" alt="Хрущёвка — лист 4">
-              <img src="assets/plan-05.jpg" alt="Хрущёвка — лист 5">
-            </div>
-            <div class="c-controls">
-              <button class="c-btn" data-dir="-1">‹</button>
-              <span class="c-counter mono"><span class="cur">01</span> / <span class="total">05</span></span>
-              <button class="c-btn" data-dir="1">›</button>
-            </div>
-            <div class="c-caption"><span class="pname">Хрущёвка</span><span class="pmeta">Рабочие чертежи</span></div>
+        <div class="carousel" data-carousel>
+          <div class="carousel-frame">
+            <img class="active" src="assets/work-pauza.jpg" alt="Пауза — фото 1">
+            <img src="assets/work-pauza-2.jpg" alt="Пауза — фото 2">
+            <img src="assets/work-pauza-3.jpg" alt="Пауза — фото 3">
+            <img src="assets/work-pauza-4.jpg" alt="Пауза — фото 4">
+            <img src="assets/work-pauza-5.jpg" alt="Пауза — фото 5">
+            <button class="c-btn c-btn-overlay prev" data-dir="-1">‹</button>
+            <button class="c-btn c-btn-overlay next" data-dir="1">›</button>
+            <span class="c-counter mono"><span class="cur">01</span> / <span class="total">05</span></span>
           </div>
+          <div class="c-caption"><span class="pname">Пауза</span><span class="pmeta">Концепт</span></div>
         </div>
-        <div class="pc" data-proj-panel="p2"><div class="carousel"><div class="carousel-frame"><div class="placeholder-note">Нет чертежей в источнике —<br>вставь ссылки на assets/plan-…jpg</div></div><div class="c-caption"><span class="pname">Проект 2</span></div></div></div>
-        <div class="pc" data-proj-panel="p3"><div class="carousel"><div class="carousel-frame"><div class="placeholder-note">Нет чертежей в источнике —<br>вставь ссылки на assets/plan-…jpg</div></div><div class="c-caption"><span class="pname">Проект 3</span></div></div></div>
-        <div class="pc" data-proj-panel="p4"><div class="carousel"><div class="carousel-frame"><div class="placeholder-note">Нет чертежей в источнике —<br>вставь ссылки на assets/plan-…jpg</div></div><div class="c-caption"><span class="pname">Проект 4</span></div></div></div>
-        <div class="pc" data-proj-panel="p5"><div class="carousel"><div class="carousel-frame"><div class="placeholder-note">Нет чертежей в источнике —<br>вставь ссылки на assets/plan-…jpg</div></div><div class="c-caption"><span class="pname">Проект 5</span></div></div></div>
+
+        <div class="carousel" data-carousel>
+          <div class="carousel-frame">
+            <img class="active" src="assets/kitchen-1.jpg" alt="Кухня — рендер 1">
+            <img src="assets/kitchen-2.jpg" alt="Кухня — рендер 2">
+            <img src="assets/kitchen-3.jpg" alt="Кухня — рендер 3">
+            <img src="assets/kitchen-4.jpg" alt="Кухня — рендер 4">
+            <img src="assets/kitchen-5-plan.png" alt="Кухня — чертёж">
+            <button class="c-btn c-btn-overlay prev" data-dir="-1">‹</button>
+            <button class="c-btn c-btn-overlay next" data-dir="1">›</button>
+            <span class="c-counter mono"><span class="cur">01</span> / <span class="total">05</span></span>
+          </div>
+          <div class="c-caption"><span class="pname">Кухня</span><span class="pmeta">Концепт</span></div>
+        </div>
       </div>
     </div>
   </section>
@@ -594,34 +551,6 @@ function toggleFaq(el){
     answer.style.maxHeight = answer.scrollHeight + 'px';
   }
 }
-
-
-// ---- view tabs (Визуализация / Рабочие чертежи) ----
-document.querySelectorAll('.vtab').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.vtab').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const view = btn.dataset.view;
-    document.querySelectorAll('.view-panel').forEach(p=>{
-      p.hidden = p.dataset.viewPanel !== view;
-    });
-  });
-});
-
-// ---- project tabs within each view ----
-document.querySelectorAll('.proj-tabs').forEach(tabGroup=>{
-  tabGroup.addEventListener('click', (e)=>{
-    const btn = e.target.closest('.ptab');
-    if(!btn) return;
-    tabGroup.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const proj = btn.dataset.proj;
-    const panelGroup = tabGroup.closest('[data-view-panel]') || tabGroup.parentElement;
-    panelGroup.querySelectorAll('.pc').forEach(pc=>{
-      pc.classList.toggle('active', pc.dataset.projPanel === proj);
-    });
-  });
-});
 
 // ---- photo carousels (click arrows) ----
 document.querySelectorAll('[data-carousel]').forEach(car=>{
