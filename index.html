@@ -253,7 +253,7 @@
         </div>
       </div>
       <div class="titleblock">
-        <div class="cell"><div class="val mono" id="hoursValue">2170</div><div class="lbl">часов наработано <span id="statusDot" class="status-dot" title="Проверка статуса..."></span></div></div>
+        <div class="cell"><div class="val mono" id="hoursValue">···</div><div class="lbl">часов наработано <span id="statusDot" class="status-dot" title="Проверка статуса..."></span></div></div>
         <div class="cell"><div class="val mono">15</div><div class="lbl">концепт-проектов</div></div>
         <div class="cell"><div class="val mono">1</div><div class="lbl">реализованный</div></div>
         <div class="cell"><div class="val mono">2</div><div class="lbl">года опыта</div></div>
@@ -653,7 +653,7 @@ function openLightbox(src, alt){
         var row = rows[0];
         var hours = Math.floor(row.seconds / 3600);
         var totalHours = BASE_HOURS + hours;
-        if (totalHours > maxHoursShown) {
+        if (totalHours >= maxHoursShown) {
           maxHoursShown = totalHours;
           if (hoursEl) hoursEl.textContent = maxHoursShown.toLocaleString('ru-RU');
         }
