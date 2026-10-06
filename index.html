@@ -1,791 +1,296 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Виноградов Диёр — Дизайнер интерьера</title>
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="manifest" href="/site.webmanifest">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Виноградов Диёр — 3D-визуализации интерьеров</title>
+<meta name="description" content="3D-визуализатор интерьеров в Ташкенте. Фотореалистичные рендеры для дизайнеров и студий. Интерьерная визуализация от $6/м².">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Inter:wght@400;500;600&family=Onest:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --stone:#E7E1D3;
-    --paper:#F3EEE2;
-    --ink:#1C1A15;
-    --graphite:#242219;
-    --accent:#B33A2E;
-    --line:#a89a7c;
-    --line-soft:rgba(28,26,21,.16);
-    --line-soft-2:rgba(243,238,226,.22);
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth; overflow-x:hidden; max-width:100%;}
-  body{ background:var(--stone); color:var(--ink); font-family:'Manrope', sans-serif; font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; overflow-x:hidden; max-width:100%; }
-  ::selection{background:var(--accent); color:var(--paper);}
-  img{display:block; max-width:100%;}
-  a{color:inherit; text-decoration:none;}
-  button{font-family:inherit; background:none; border:none; cursor:pointer; color:inherit;}
-  ul{padding-left:20px;}
-  li{margin-bottom:6px;}
+:root{--blue:#0024cc;--ink:#0c0c0f;--chalk:#faf4f8;--lemon:#e6adcf;
+--d:'Unbounded','Arial Black',system-ui,sans-serif;--b:'Inter',system-ui,-apple-system,'Segoe UI',Arial,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--ink);font:400 18px/1.55 var(--b);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:4px solid var(--ink);outline-offset:3px;box-shadow:0 0 0 7px var(--lemon)}
+ul{list-style:none}
+.wrap{max-width:1280px;margin:0 auto;padding:0 28px;position:relative}
+h2,h3{font-family:var(--d);font-weight:900;line-height:1;letter-spacing:-.03em}
+h2{font-size:clamp(34px,7vw,92px);margin-bottom:40px}
+section{padding:110px 0;position:relative}
 
-  .mono{font-family:'JetBrains Mono', monospace; letter-spacing:.02em;}
-  .disp{font-family:'Unbounded', sans-serif;}
+/* nav */
+nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:50;background:var(--ink);color:var(--chalk);border-radius:999px;padding:8px 10px 8px 22px;display:flex;gap:22px;align-items:center;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);white-space:nowrap}
+nav b{font-family:var(--d);font-weight:900;font-size:13px}
+nav a{text-decoration:none;opacity:.7}nav a:hover{opacity:1}
+nav .cta{background:var(--lemon);color:var(--ink);opacity:1;font-weight:600;padding:9px 18px;border-radius:999px}
 
-  /* ---------- drafting frame ---------- */
-  .sheet{ position:relative; margin:14px; border:1.5px solid var(--ink); }
-  .crosshair{position:absolute; width:16px; height:16px; pointer-events:none;}
-  .crosshair::before, .crosshair::after{ content:""; position:absolute; background:var(--ink); }
-  .crosshair::before{ width:16px; height:1.5px; top:7px; left:0; }
-  .crosshair::after{ width:1.5px; height:16px; top:0; left:7px; }
-  .cr-tl{ top:-8px; left:-8px; } .cr-tr{ top:-8px; right:-8px; }
-  .cr-bl{ bottom:-8px; left:-8px; } .cr-br{ bottom:-8px; right:-8px; }
+/* hero */
+.hero{background:var(--blue);color:var(--chalk);padding:130px 0 0;min-height:100vh;overflow:hidden}
+.hero h1{font-family:var(--d);font-weight:900;font-size:clamp(40px,10.6vw,176px);line-height:.9;letter-spacing:-.05em;position:relative;z-index:3}
+.hero h1 span{display:block}
+.hero h1 span+span{margin-left:12vw}
+.intro{display:flex;justify-content:space-between;gap:40px;align-items:flex-end;margin-top:44px;position:relative;z-index:3;flex-wrap:wrap}
+.intro p{font-size:21px;max-width:25em}
+.btn{display:inline-block;background:var(--lemon);color:var(--ink);font:600 17px var(--b);text-decoration:none;padding:18px 32px;border-radius:999px;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink)}
+.sticker{position:absolute;left:6%;bottom:150px;width:150px;height:150px;z-index:4}
+.sticker svg{width:100%;height:100%;animation:spin 14s linear infinite}
+.sticker text{font:700 13.5px var(--d);fill:var(--ink);letter-spacing:.07em}
+@keyframes spin{to{transform:rotate(360deg)}}
+.marq{background:var(--lemon);color:var(--ink);transform:rotate(-2.2deg) scale(1.05);margin:70px 0 -10px;padding:16px 0;border-block:3px solid var(--ink);overflow:hidden;white-space:nowrap;position:relative;z-index:5}
+.marq div{display:inline-flex;animation:run 22s linear infinite}
+.marq span{font:900 26px var(--d);padding-right:34px;letter-spacing:-.02em}
+@keyframes run{to{transform:translateX(-50%)}}
 
-  header{ position:sticky; top:14px; z-index:50; display:flex; align-items:center; justify-content:flex-end; padding:14px 24px; background:rgba(231,225,211,.86); backdrop-filter:blur(6px); border-bottom:1px solid var(--line-soft); }
-  header .brand{ font-family:'Unbounded'; font-weight:700; font-size:14px; letter-spacing:.03em; text-transform:uppercase; }
-  header nav{display:flex; gap:26px;}
-  header nav a{ font-family:'JetBrains Mono'; font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; opacity:.7; transition:opacity .2s; }
-  header nav a:hover{opacity:1;}
-  header nav a::before{ content: attr(data-sheet); color:var(--accent); margin-right:6px; }
-  @media(max-width:900px){ header nav{display:none;} }
+/* stats */
+.stats{background:var(--chalk);padding:90px 0 70px}
+.stats .wrap{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:20px}
+.stat{border-top:6px solid var(--ink);padding-top:14px}
+.stat b{display:block;font:900 clamp(52px,9vw,128px)/.95 var(--d);letter-spacing:-.06em}
+.stat:nth-child(1) b{color:var(--blue)}.stat:nth-child(2) b{color:var(--ink)}
+.stat span{font-weight:600}
 
-  section{ position:relative; padding:100px 24px 80px; border-top:1px solid var(--line-soft); scroll-margin-top:90px; }
-  section:first-of-type{border-top:none;}
-  .sheet-label{ display:flex; align-items:baseline; gap:14px; margin-bottom:56px; }
-  .sheet-label .num{ font-family:'Unbounded'; font-weight:800; font-size:13px; color:var(--accent); letter-spacing:.04em; }
-  .sheet-label .title{ font-family:'JetBrains Mono'; font-size:11.5px; text-transform:uppercase; letter-spacing:.12em; opacity:.6; }
-  .sheet-label .rule{ flex:1; height:1px; background:var(--line-soft); }
-  .wrap{ max-width:1180px; margin:0 auto; }
+/* about */
+.about{background:var(--lemon)}
+.about .big{font:900 clamp(26px,4.6vw,62px)/1.08 var(--d);letter-spacing:-.04em;max-width:17em;margin-bottom:56px}
+.about .big em{font-style:normal;background:var(--ink);color:var(--lemon);padding:0 .18em;border-radius:.2em}
+.chips{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:44px}
+.chips li{font:700 19px var(--d);letter-spacing:-.03em;border:3px solid var(--ink);border-radius:999px;padding:14px 26px;background:var(--chalk)}
+.chips li:nth-child(1){transform:rotate(-2deg)}.chips li:nth-child(2){transform:rotate(1.6deg);background:var(--blue);color:var(--chalk)}.chips li:nth-child(3){transform:rotate(-1deg)}
+.about p.t{max-width:36em;font-size:20px}
 
-  /* ---------- hero ---------- */
-  .hero{ padding:64px 24px 0; border-top:none; }
-  .hero-grid{ display:block; padding-bottom:56px; }
-  .eyebrow{ font-family:'JetBrains Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.1em; opacity:.65; margin-bottom:28px; display:flex; align-items:center; gap:10px; }
-  .eyebrow::before{ content:""; width:26px; height:1px; background:var(--accent); }
-  h1.name{ font-family:'Unbounded'; font-weight:800; font-size:clamp(34px, 12vw, 104px); line-height:.94; letter-spacing:-.01em; text-transform:uppercase; overflow-wrap:break-word; }
-  h1.name em{ font-style:normal; color:var(--accent); }
-  .name-en{ font-family:'JetBrains Mono'; font-size:13px; opacity:.55; margin-top:18px; letter-spacing:.05em; }
-  .hero-index{ font-family:'JetBrains Mono'; font-size:13px; border-left:1px solid var(--line-soft); padding-left:24px; }
-  .hero-index .row{ display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px dashed var(--line-soft); }
-  .hero-index .row span:first-child{ opacity:.55; }
-  .hero-index .row:hover{ color:var(--accent); }
-  .hero-index .row:last-child{ border-bottom:none; }
-  .titleblock{ display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--ink); }
-  .titleblock .cell{ padding:22px 24px; border-right:1px solid var(--line-soft); min-width:0; }
-  .titleblock .cell:last-child{border-right:none;}
-  .titleblock .val{ font-family:'Unbounded'; font-weight:700; font-size:34px; color:var(--accent); }
-  .titleblock .lbl{ font-family:'JetBrains Mono'; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; opacity:.6; margin-top:6px; }
-  .status-dot{ display:inline-block; width:7px; height:7px; border-radius:50%; background:#C7C7CC; margin-left:6px; vertical-align:middle; }
-  .status-dot.online{ background:#34C759; box-shadow:0 0 0 2px rgba(52,199,89,.18); }
-  .status-dot.offline{ background:#FFCC00; box-shadow:0 0 0 2px rgba(255,204,0,.18); }
-  @media(max-width:760px){ .hero-grid{grid-template-columns:1fr;} .titleblock{grid-template-columns:1fr 1fr;} .titleblock .cell:nth-child(2){border-right:none;} }
+/* works */
+.works{background:var(--ink);color:var(--chalk);padding-bottom:70px}
+.strip{display:flex;gap:26px;overflow-x:auto;scroll-snap-type:x mandatory;padding:20px 28px 50px;align-items:flex-start;scrollbar-color:var(--lemon) #222}
+.strip figure{flex:0 0 min(74vw,460px);scroll-snap-align:center}
+.strip figure:nth-child(even){margin-top:70px}
+.strip img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:#1d1d24;transition:transform .35s}
+.strip figure:nth-child(4n+1) img{border-radius:999px 999px 0 0}
+.strip figure:nth-child(4n+2) img{border-radius:22px;aspect-ratio:1}
+.strip figure:nth-child(4n+3) img{border-radius:0 0 999px 999px}
+.strip figure:nth-child(4n) img{border-radius:50%;aspect-ratio:1}
+.strip figure:hover img{transform:rotate(-2.5deg) scale(1.03)}
+.strip figcaption{font:700 15px var(--d);margin-top:16px;letter-spacing:-.02em}
+.strip figcaption small{display:block;font:400 14px var(--b);color:#9a9aa5;letter-spacing:0}
 
-  /* ---------- about ---------- */
-  .about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:70px; }
-  .about-grid h2{ font-family:'Unbounded'; font-weight:600; font-size:30px; line-height:1.28; margin-bottom:26px; }
-  .about-grid p{ opacity:.85; max-width:46ch; }
-  .subblock{ margin-top:38px; }
-  .subblock h3{ font-family:'JetBrains Mono'; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:10px; }
-  .tags{ display:flex; flex-wrap:wrap; gap:10px; margin-top:36px; }
-  .tag{ font-family:'JetBrains Mono'; font-size:11.5px; border:1px solid var(--line-soft); padding:7px 13px; text-transform:uppercase; letter-spacing:.04em; }
-  @media(max-width:760px){ .about-grid{grid-template-columns:1fr; gap:36px;} }
+/* price */
+.price{background:var(--blue);color:var(--chalk)}
+.bigprice{font:900 clamp(110px,28vw,400px)/.82 var(--d);letter-spacing:-.07em;color:var(--lemon);margin:10px 0 36px -.04em;position:relative}
+.bigprice i{font:700 .12em var(--d);font-style:normal;letter-spacing:-.02em;vertical-align:top;margin-right:.3em;position:relative;top:.9em}
+.bigprice u{text-decoration:none;font-size:.28em;letter-spacing:-.04em}
+.tag{display:inline-block;background:var(--lemon);color:var(--ink);font:700 15px var(--d);padding:12px 20px;border-radius:999px;transform:rotate(-3deg);margin-bottom:70px;letter-spacing:-.02em}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.card{color:var(--ink);background:var(--chalk);border:3px solid var(--ink);border-radius:26px;padding:36px;box-shadow:8px 8px 0 var(--ink)}
+.card{font-family:'Onest',var(--b);font-weight:600;font-size:20px;letter-spacing:-.01em}
+.card h3{font-family:'Onest',var(--b);font-weight:800;font-size:34px;letter-spacing:-.03em;margin-bottom:22px}
+.card li{padding:11px 0 11px 34px;border-top:2px solid var(--ink);position:relative}
+.card li:first-child{border-top:0}
+.card li::before{content:"+";position:absolute;left:0;top:7px;font:900 22px var(--d);color:var(--blue)}
+.card.alt{background:var(--lemon);transform:rotate(1deg)}
+.fine{font-size:14px;font-weight:500;margin-top:20px}
 
-  /* ---------- works ---------- */
-  .viz-row{ display:grid; grid-template-columns:1fr 1fr; gap:28px; }
-  @media(max-width:800px){ .viz-row{ grid-template-columns:1fr; } }
-  .carousel{ position:relative; }
-  .carousel-frame{ position:relative; width:100%; max-width:640px; aspect-ratio:3/4; border:1px solid var(--ink); overflow:hidden; background:repeating-linear-gradient(135deg, var(--line-soft) 0 2px, transparent 2px 14px); }
-  .carousel-frame img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .35s ease; }
-  .carousel-frame img.active{ opacity:1; }
-  .placeholder-note{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; font-family:'JetBrains Mono'; font-size:11.5px; opacity:.55; }
-  .c-controls{ display:flex; align-items:center; gap:16px; margin-top:18px; }
-  .c-btn{ width:34px; height:34px; border:1px solid var(--ink); display:flex; align-items:center; justify-content:center; font-size:16px; background:var(--paper); }
-  .c-btn:hover{ background:var(--ink); color:var(--paper); }
-  .c-btn-overlay{ position:absolute; top:50%; transform:translateY(-50%); z-index:6; border-radius:50%; opacity:.9; }
-  .c-btn-overlay.prev{ left:12px; }
-  .c-btn-overlay.next{ right:12px; }
-  .c-btn-overlay:hover{ opacity:1; }
-  .c-counter{ position:absolute; top:12px; right:12px; z-index:6; background:var(--paper); border:1px solid var(--ink); padding:4px 9px; font-size:11px; }
-  .c-caption{ margin-top:18px; display:flex; justify-content:space-between; align-items:baseline; font-family:'JetBrains Mono'; font-size:12px; max-width:640px; }
-  .c-caption .pname{ font-family:'Unbounded'; font-size:17px; }
-  .c-caption .pmeta{ opacity:.6; }
+/* process */
+.process{background:var(--chalk)}
+.start{font:700 clamp(18px,2.2vw,26px)/1.3 var(--d);letter-spacing:-.03em;max-width:28em;margin-bottom:70px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;align-items:start}
+.step{border:3px solid var(--ink);border-radius:30px;padding:34px 30px;position:relative;overflow:hidden;min-height:340px}
+.step:nth-child(1){background:var(--blue);color:var(--chalk)}
+.step:nth-child(2){background:var(--lemon);margin-top:50px}
+.step:nth-child(3){background:var(--ink);color:var(--chalk);margin-top:100px}
+.step b{position:absolute;right:-8px;top:-34px;font:900 190px/1 var(--d);opacity:.17;letter-spacing:-.08em}
+.step h3{font-size:25px;margin-bottom:16px;position:relative}
+.step p{margin-bottom:12px;position:relative}
+.step .px{font-size:14px;border-top:2px solid currentColor;padding-top:12px;margin-top:20px;opacity:.85}
 
-  /* ---------- realized case study ---------- */
-  .case-top{ margin-bottom:40px; max-width:70ch; }
-  .case-top .kicker{ font-family:'JetBrains Mono'; font-size:11px; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:14px; }
-  .case-top h3{ font-family:'Unbounded'; font-size:26px; font-weight:600; margin-bottom:6px; }
-  .case-top .subline{ opacity:.6; font-family:'JetBrains Mono'; font-size:12.5px; margin-bottom:22px; }
-  .case-top p{ opacity:.85; margin-bottom:14px; }
+/* tz */
+.tz{background:var(--blue);color:var(--chalk)}
+.tz .warn{display:inline-block;background:var(--ink);font:700 20px/1.2 var(--d);padding:16px 24px;border-radius:18px;transform:rotate(-2deg);margin-bottom:56px;letter-spacing:-.03em}
+.rows div{border-top:3px solid var(--chalk);padding:22px 12px;display:flex;justify-content:space-between;gap:30px;transition:background .2s,color .2s}
+.rows div:last-child{border-bottom:3px solid var(--chalk)}
+.rows div:hover{background:var(--lemon);color:var(--ink)}
+.rows dt{font:700 clamp(18px,2.6vw,32px)/1.1 var(--d);letter-spacing:-.03em}
+.rows dd{max-width:20em;text-align:right;align-self:center}
 
-  /* ---------- services (dark inverted sheet) ---------- */
-  .dark{ background:var(--graphite); color:var(--paper); }
-  .dark .sheet-label .rule{ background:var(--line-soft-2); }
-  .dark .sheet-label .title{ opacity:.55; }
-  .svc-intro{ max-width:60ch; opacity:.8; margin-bottom:46px; }
-  .services-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-soft-2); border:1px solid var(--line-soft-2); }
-  .svc{ background:var(--graphite); padding:32px 26px; }
-  .svc .idx{ font-family:'JetBrains Mono'; font-size:12px; color:var(--accent); }
-  .svc h4{ font-family:'Unbounded'; font-size:17px; font-weight:600; margin:14px 0 10px; }
-  .svc p{ font-size:14px; opacity:.72; margin-bottom:6px; }
-  .svc .sub{ font-size:12.5px; opacity:.55; margin-top:8px; }
-  .svc .note{ margin-top:14px; font-family:'JetBrains Mono'; font-size:10.5px; color:var(--accent); text-transform:uppercase; letter-spacing:.05em; }
-  @media(max-width:900px){ .services-grid{grid-template-columns:1fr;} }
+/* form */
+.req{background:var(--lemon)}
+.req .wrap{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.req p.l{font-size:20px;max-width:22em}
+form{display:grid;gap:20px;background:var(--chalk);border:3px solid var(--ink);border-radius:28px;padding:36px;box-shadow:10px 10px 0 var(--ink);transform:rotate(1deg)}
+label{display:grid;gap:6px;font-weight:600;font-size:15px}
+label span{font-weight:400;font-size:13px;color:#555}
+input{font:400 18px var(--b);padding:15px 18px;border:3px solid var(--ink);border-radius:14px;background:#fff;color:var(--ink)}
+input:focus{outline:none;background:var(--lemon)}
+form .btn{background:var(--blue);color:var(--chalk);justify-self:start}
+form .f{font-size:13px;color:#555}
 
-  /* ---------- FAQ ---------- */
-  .faq-item{ border-bottom:1px solid var(--line-soft); }
-  .faq-q{ display:flex; justify-content:space-between; align-items:center; width:100%; text-align:left; padding:22px 0; cursor:pointer; font-family:'Unbounded'; font-weight:600; font-size:16px; }
-  .faq-q .plus{ font-family:'JetBrains Mono'; color:var(--accent); font-size:18px; transition:transform .25s; flex-shrink:0; margin-left:20px; }
-  .faq-item.open .plus{ transform:rotate(45deg); }
-  .faq-a{ max-height:0; overflow:hidden; transition:max-height .35s ease; font-size:14.5px; opacity:.85; }
-  .faq-a-in{ padding-bottom:26px; max-width:72ch; }
-  .faq-a-in h5{ font-family:'JetBrains Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--accent); margin:18px 0 8px; }
-  .faq-a-in h5:first-child{ margin-top:0; }
-  .faq-a-in strong{ font-weight:700; }
+/* footer */
+footer{background:var(--ink);color:var(--chalk);padding:90px 0 40px}
+footer .links a{display:block;font:900 clamp(26px,5.4vw,72px)/1.12 var(--d);letter-spacing:-.04em;text-decoration:none;padding:6px 0;border-top:2px solid #2b2b33;word-break:break-word}
+footer .links a span{font:500 14px var(--b);letter-spacing:0;color:#9a9aa5;display:block;margin-bottom:2px}
+footer .links a:hover{color:var(--lemon)}
+footer small{display:block;color:#8a8a94;font-size:13px;line-height:1.7;margin-top:50px}
 
-  /* ---------- pricing ---------- */
-  .pricing-grid{ display:grid; grid-template-columns:1fr 1fr; gap:2px; background:var(--ink); border:1px solid var(--ink); margin-bottom:24px; }
-  .plan{ background:var(--paper); padding:40px 34px; }
-  .plan.hi{ background:var(--ink); color:var(--paper); }
-  .plan .pname{ font-family:'JetBrains Mono'; font-size:11px; text-transform:uppercase; letter-spacing:.1em; opacity:.6; }
-  .plan .price{ font-family:'Unbounded'; font-weight:800; font-size:44px; margin:14px 0 18px; }
-  .plan .price span{ font-size:16px; opacity:.55; font-family:'JetBrains Mono'; }
-  .plan p{ opacity:.8; max-width:40ch; font-size:14.5px; }
-  .price-foot{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-family:'JetBrains Mono'; font-size:12px; opacity:.6; }
-  @media(max-width:760px){ .pricing-grid{grid-template-columns:1fr;} }
-
-  /* ---------- lead form ---------- */
-  .form-wrap{ max-width:640px; }
-  .form-intro{ opacity:.8; max-width:60ch; margin-bottom:40px; }
-  .field{ position:relative; margin-bottom:30px; }
-  .field label{ display:block; font-family:'JetBrains Mono'; font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:#FFFFFF; opacity:.75; margin-bottom:10px; }
-  .field input{
-    width:100%; background:transparent; border:none; border-bottom:1px solid var(--line-soft);
-    padding:10px 2px; font-family:'Manrope', sans-serif; font-size:18px; color: #FFFFFF;
-    outline:none; transition:border-color .2s;
-  }
-  .field input::placeholder{ color: #FFFFFF; opacity:.28; }
-  .field input:focus{ border-bottom-color:var(--accent); }
-  .phone-input-row{ display:flex; align-items:flex-end; border-bottom:1px solid var(--line-soft); transition:border-color .2s; }
-  .phone-input-row:focus-within{ border-bottom-color:var(--accent); }
-  .phone-prefix{
-    font-family:'Manrope', sans-serif; font-size:18px; color:#FFFFFF; opacity:.85;
-    padding:10px 4px 10px 2px; user-select:none; flex-shrink:0;
-  }
-  .phone-input-row input{ border-bottom:none; padding-left:0; }
-  .field .field-note{ font-family:'JetBrains Mono'; font-size:10.5px; color:#FFFFFF; opacity:.55; margin-top:8px; }
-  .form-actions{ display:flex; align-items:center; gap:20px; margin-top:12px; flex-wrap:wrap; }
-  .submit-btn{
-    font-family:'JetBrains Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.08em;
-    background:var(--ink); color:var(--paper); padding:16px 34px; border:1px solid var(--ink);
-    transition:background .2s, color .2s;
-  }
-  .submit-btn:hover{ background:var(--accent); border-color:var(--accent); }
-  .submit-btn:disabled{ opacity:.5; cursor:default; }
-  .form-status{ font-family:'JetBrains Mono'; font-size:12px; }
-  .form-status.ok{ color:#2e7d32; }
-  .form-status.err{ color:var(--accent); }
-  .form-fineprint{ margin-top:26px; font-family:'JetBrains Mono'; font-size:10.5px; opacity:.45; max-width:60ch; }
-  .form-wrap.highlight{ animation:formPulse 1.8s ease-out 2; }
-  @keyframes formPulse{
-    0%{ box-shadow:0 0 0 0 rgba(179,58,46,.35); }
-    50%{ box-shadow:0 0 0 14px rgba(179,58,46,0); }
-    100%{ box-shadow:0 0 0 0 rgba(179,58,46,0); }
-  }
-
-  /* ---------- footer / title block ---------- */
-  footer{ padding:70px 24px 40px; }
-  .tblock{ border:1px solid var(--ink); display:grid; grid-template-columns:2fr 1fr 1fr 1fr; }
-  .tblock .trow{ display:block; padding:22px 24px; border-right:1px solid var(--line-soft); min-width:0; }
-  .tblock .trow:last-child{ border-right:none; }
-  .tblock .k{ display:block; font-family:'JetBrains Mono'; font-size:10px; text-transform:uppercase; opacity:.55; letter-spacing:.08em; margin-bottom:8px; }
-  .tblock .v{ display:block; font-family:'Unbounded'; font-size:15px; font-weight:600; word-break:break-word; overflow-wrap:anywhere; transition:color .2s; }
-  .tblock .v.vsmall{ font-size:13px; }
-  .tblock .trow:hover .v{ color:var(--accent); }
-  @media(max-width:800px){ .tblock{grid-template-columns:1fr 1fr;} .tblock .trow{border-bottom:1px solid var(--line-soft);} }
-  @media(max-width:560px){
-    .tblock{ grid-template-columns:1fr; }
-    .tblock .trow{
-      display:flex; align-items:center; justify-content:space-between; gap:16px;
-      padding:20px 22px; border-right:none;
-    }
-    .tblock .trow:last-child{ border-bottom:none; }
-    .tblock .trow .k{ margin-bottom:0; flex-shrink:0; font-size:9.5px; opacity:.5; }
-    .tblock .trow .v{ text-align:right; font-size:14.5px; }
-    .tblock .trow .v.vsmall{ font-size:12px; }
-    .tblock .trow::after{
-      content:"→"; font-family:'JetBrains Mono'; font-size:14px; color:var(--accent);
-      flex-shrink:0; margin-left:4px;
-    }
-  }
-  .foot-note{ margin-top:28px; font-family:'JetBrains Mono'; font-size:11px; opacity:.45; }
-  .legal{ margin-top:18px; padding-top:18px; border-top:1px dashed var(--line-soft); display:flex; flex-direction:column; gap:6px; font-family:'JetBrains Mono'; font-size:10.5px; opacity:.4; max-width:70ch; }
+@media(max-width:860px){
+ section{padding:76px 0}
+ nav{gap:14px;font-size:13px}nav a.h{display:none}
+ .sticker{width:104px;height:104px;bottom:200px;left:4%}
+ .stats .wrap,.cols,.steps,.req .wrap{grid-template-columns:1fr}
+ .step:nth-child(n){margin-top:0}
+ .rows div{flex-direction:column;gap:6px}.rows dd{text-align:left}
+ .card.alt,form{transform:none}
+ .strip figure:nth-child(even){margin-top:30px}
+}
+@media(prefers-reduced-motion:reduce){.sticker svg,.marq div{animation:none}html{scroll-behavior:auto}.btn,.strip img{transition:none}}
 </style>
 </head>
 <body>
 
-<div class="sheet">
-  <span class="crosshair cr-tl"></span><span class="crosshair cr-tr"></span>
-  <span class="crosshair cr-bl"></span><span class="crosshair cr-br"></span>
+<nav aria-label="Основное меню">
+ <b>D·V</b><a class="h" href="#works">Работы</a><a class="h" href="#pricing">Цена</a><a class="h" href="#process">Этапы</a><a class="cta" href="#request">Заявка</a>
+</nav>
 
-  <header>
-    <nav>
-      <a href="#about" data-sheet="Л.01">Обо мне</a>
-      <a href="#works" data-sheet="Л.02">Концепты</a>
-      <a href="#realized" data-sheet="Л.03">Реализованный</a>
-      <a href="#services" data-sheet="Л.04">Что входит</a>
-      <a href="#pricing" data-sheet="Л.05">Стоимость</a>
-      <a href="#request" data-sheet="Л.06">Заявка</a>
-      <a href="#contact" data-sheet="Л.07">Контакты</a>
-    </nav>
-  </header>
+<header class="hero" id="top">
+ <div class="wrap">
+  <h1><span>Виноградов</span><span>Диёр</span></h1>
+  <div class="intro">
+   <p>3D-визуализатор из Ташкента. Превращаю концепции дизайнеров в фотореалистичные образы.</p>
+   <a class="btn" href="#request">Обсудить проект</a>
+  </div>
+ </div>
+ <div class="sticker" aria-hidden="true"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="73" fill="#e6adcf" stroke="#0c0c0f" stroke-width="3"/><path id="c" d="M75,75 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0" fill="none"/><text><textPath href="#c">3D · RENDER · CORONA · 3DS MAX ·</textPath></text><circle cx="75" cy="75" r="9" fill="#0c0c0f"/></svg></div>
+ <div class="marq" aria-hidden="true"><div>
+  <span>Фотореализм ✦ Свет ✦ Материалы ✦ Фактуры ✦ Атмосфера ✦ </span><span>Фотореализм ✦ Свет ✦ Материалы ✦ Фактуры ✦ Атмосфера ✦ </span>
+  <span>Фотореализм ✦ Свет ✦ Материалы ✦ Фактуры ✦ Атмосфера ✦ </span><span>Фотореализм ✦ Свет ✦ Материалы ✦ Фактуры ✦ Атмосфера ✦ </span>
+ </div></div>
+</header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="wrap">
-      <div class="eyebrow mono">Дизайнер интерьера · Ташкент</div>
-      <div class="hero-grid">
-        <div>
-          <h1 class="name">Виноградов<br><em>Диёр</em></h1>
-          <div class="name-en">Diyor Vinogradov — Interior Designer</div>
-        </div>
-      </div>
-      <div class="titleblock">
-        <div class="cell"><div class="val mono" id="hoursValue">···</div><div class="lbl">часов наработано <span id="statusDot" class="status-dot" title="Проверка статуса..."></span></div></div>
-        <div class="cell"><div class="val mono">15</div><div class="lbl">концепт-проектов</div></div>
-        <div class="cell"><div class="val mono">1</div><div class="lbl">реализованный</div></div>
-        <div class="cell"><div class="val mono">2</div><div class="lbl">года опыта</div></div>
-      </div>
-    </div>
-  </section>
+<section class="stats" aria-label="Цифры"><div class="wrap">
+ <div class="stat"><b id="hours" data-to="2527">2527</b><span>часов наработано</span></div>
+ <div class="stat"><b data-to="5">5</b><span>концепт-проектов</span></div>
+ <div class="stat"><b data-to="3">3</b><span>года опыта</span></div>
+</div></section>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="wrap">
-      <div class="sheet-label"><span class="num mono">Л.01</span><span class="title">Обо мне</span><span class="rule"></span></div>
-      <div class="about-grid">
-        <div>
-          <h2>Дизайн, который работает на Ваши сценарии жизни.</h2>
-          <p>При проектировании я в первую очередь думаю о том, как пространством будут пользоваться каждый день — где удобно разместить розетки, как расставить свет по сценариям. Эстетика выстраивается уже на основе этой логики, а не отдельно от неё.</p>
-        </div>
-        <div>
-          <div class="subblock">
-            <h3 class="mono">Техническая база</h3>
-            <p>Работаю в 3ds Max и AutoCAD — делаю рабочие чертежи и визуализации, которые соответствуют финальному результату.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="about" id="about"><div class="wrap">
+ <p class="big">Показываю интерьер так, чтобы его <em>захотели построить.</em></p>
+ <ul class="chips">
+  <li>презентовать проекты клиентам</li>
+  <li>прорабатывать детали до реализации</li>
+  <li>визуализировать сложные решения</li>
+ </ul>
+ <p class="t">Работаю в 3ds Max с Corona Renderer и AutoCAD. У меня есть опыт реального ремонта — штукатурка, плитка, — поэтому я понимаю, как материалы и стыки выглядят и ведут себя в жизни, а не только на экране.</p>
+</div></section>
 
-  <!-- WORKS -->
-  <section id="works">
-    <div class="wrap">
-      <div class="sheet-label"><span class="num mono">Л.02</span><span class="title">Портфолио</span><span class="rule"></span></div>
+<section class="works" id="works">
+ <div class="wrap"><h2>Работы</h2></div>
+ <div class="strip" tabindex="0" aria-label="Галерея работ">
+  <figure><img loading="lazy" src="assets/work-09.jpg" alt="Белая полоса, гостиная"><figcaption>Белая полоса<small>жилой · 2025</small></figcaption></figure>
+  <figure><img loading="lazy" src="assets/work-pauza.jpg" alt="Пауза"><figcaption>Пауза<small>концепт</small></figcaption></figure>
+  <figure><img loading="lazy" src="assets/kitchen-1.jpg" alt="Кухня, рендер"><figcaption>Кухня<small>концепт</small></figcaption></figure>
+  <figure><img loading="lazy" src="assets/work-10.jpg" alt="Белая полоса, интерьер"><figcaption>Белая полоса<small>жилой · 2025</small></figcaption></figure>
+  <figure><img loading="lazy" src="assets/work-pauza-3.jpg" alt="Пауза, вид 3"><figcaption>Пауза<small>концепт</small></figcaption></figure>
+  <figure><img loading="lazy" src="assets/kitchen-2.jpg" alt="Кухня, вид 2"><figcaption>Кухня<small>концепт</small></figcaption></figure>
+ </div>
+</section>
 
-      <div class="viz-row">
-        <div class="carousel" data-carousel>
-          <div class="carousel-frame">
-            <img class="active" src="assets/work-09.jpg" alt="Белая полоса — фото 1">
-            <img src="assets/work-10.jpg" alt="Белая полоса — фото 2">
-            <img src="assets/work-06.jpg" alt="Белая полоса — фото 3">
-            <img src="assets/work-07.jpg" alt="Белая полоса — фото 4">
-            <img src="assets/work-detskaya.jpg" alt="Белая полоса — детская">
-            <img src="assets/work-08.jpg" alt="Белая полоса — санузел">
-            <button class="c-btn c-btn-overlay prev" data-dir="-1">‹</button>
-            <button class="c-btn c-btn-overlay next" data-dir="1">›</button>
-            <span class="c-counter mono"><span class="cur">01</span> / <span class="total">06</span></span>
-          </div>
-          <div class="c-caption"><span class="pname">Белая полоса</span><span class="pmeta">Жилой · 2025</span></div>
-        </div>
+<section class="price" id="pricing"><div class="wrap">
+ <h2>Стоимость</h2>
+ <div class="bigprice"><i>от</i>$6<u>/м²</u></div>
+ <p class="tag">интерьерная визуализация · уточняется после ознакомления с проектом</p>
+ <div class="cols">
+  <div class="card">
+   <h3>В стоимость входит</h3>
+   <ul>
+    <li>качественные превью</li>
+    <li>2 круга правок (1 от дизайнера, 1 от заказчика)</li>
+    <li>pro-модели</li>
+    <li>моделирование несложных объектов (не считая корпусной мебели)</li>
+    <li>самостоятельный подбор декора</li>
+    <li>художественные ракурсы</li>
+   </ul>
+  </div>
+  <div class="card alt">
+   <h3>Дополнительно</h3>
+   <ul>
+    <li>сценарии освещения — рассчитываются индивидуально</li>
+    <li>дополнительный круг правок — рассчитывается индивидуально</li>
+    <li>моделирование сложных объектов — рассчитывается индивидуально</li>
+   </ul>
+   <p class="fine">Цены на сайте справочные. Итоговая стоимость фиксируется в договоре.</p>
+  </div>
+ </div>
+</div></section>
 
-        <div class="carousel" data-carousel>
-          <div class="carousel-frame">
-            <img class="active" src="assets/work-pauza.jpg" alt="Пауза — фото 1">
-            <img src="assets/work-pauza-2.jpg" alt="Пауза — фото 2">
-            <img src="assets/work-pauza-3.jpg" alt="Пауза — фото 3">
-            <img src="assets/work-pauza-4.jpg" alt="Пауза — фото 4">
-            <img src="assets/work-pauza-5.jpg" alt="Пауза — фото 5">
-            <button class="c-btn c-btn-overlay prev" data-dir="-1">‹</button>
-            <button class="c-btn c-btn-overlay next" data-dir="1">›</button>
-            <span class="c-counter mono"><span class="cur">01</span> / <span class="total">05</span></span>
-          </div>
-          <div class="c-caption"><span class="pname">Пауза</span><span class="pmeta">Концепт</span></div>
-        </div>
+<section class="process" id="process"><div class="wrap">
+ <h2>Этапы работы</h2>
+ <p class="start">Работа начинается после согласования технического задания, подписания договора и предоплаты 50% от полной стоимости.</p>
+ <div class="steps">
+  <div class="step"><b>1</b><h3>Черновики</h3>
+   <p>Вы получаете черновики и вносите корректировки — 1 круг правок: доводим изображение до желаемого результата, уточняем детали.</p>
+   <p class="px">1200 px по широкой стороне. Сроки считаются индивидуально.</p></div>
+  <div class="step"><b>2</b><h3>Визуализации для заказчика</h3>
+   <p>Изображения для показа заказчику. Далее вы вносите 2 круг правок — до 30% от исходного ТЗ.</p>
+   <p class="px">1200 px по широкой стороне. Каждый круг правок оформляется единым документом.</p></div>
+  <div class="step"><b>3</b><h3>Финалы</h3>
+   <p>После согласования всех правок делаю финальные визуализации. Правки после финальных рендеров оплачиваются отдельно.</p>
+   <p class="px">2000 px по широкой стороне. Окончательный расчёт — перед отправкой финалов.</p></div>
+ </div>
+</div></section>
 
-        <div class="carousel" data-carousel>
-          <div class="carousel-frame">
-            <img class="active" src="assets/kitchen-1.jpg" alt="Кухня — рендер 1">
-            <img src="assets/kitchen-2.jpg" alt="Кухня — рендер 2">
-            <img src="assets/kitchen-3.jpg" alt="Кухня — рендер 3">
-            <img src="assets/kitchen-4.jpg" alt="Кухня — рендер 4">
-            <img src="assets/kitchen-5-plan.png" alt="Кухня — чертёж">
-            <button class="c-btn c-btn-overlay prev" data-dir="-1">‹</button>
-            <button class="c-btn c-btn-overlay next" data-dir="1">›</button>
-            <span class="c-counter mono"><span class="cur">01</span> / <span class="total">05</span></span>
-          </div>
-          <div class="c-caption"><span class="pname">Кухня</span><span class="pmeta">Концепт</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="tz" id="tz"><div class="wrap">
+ <h2>Что нужно для старта</h2>
+ <p class="warn">Работаю только с полным техническим заданием</p>
+ <dl class="rows">
+  <div><dt>Планы в формате DWG, PDF</dt><dd>обмерный план, план расстановки мебели, план пола, потолка, освещения</dd></div>
+  <div><dt>Развёртки</dt><dd>DWG, PDF с размерами</dd></div>
+  <div><dt>Коллажи</dt><dd>для понимания настроения и цветовой гаммы интерьера</dd></div>
+  <div><dt>Ссылки на отделочные материалы</dt><dd></dd></div>
+  <div><dt>Ссылки на мебель, светильники и прочее</dt><dd></dd></div>
+  <div><dt>Фото и видео объекта</dt><dd>при наличии</dd></div>
+ </dl>
+</div></section>
 
-  <!-- REALIZED -->
-  <section id="realized">
-    <div class="wrap">
-      <div class="sheet-label"><span class="num mono">Л.03</span><span class="title">Реализованный проект</span><span class="rule"></span></div>
+<section class="req" id="request"><div class="wrap">
+ <div>
+  <h2>Оставить заявку</h2>
+  <p class="l">Оставьте контакты — я свяжусь с вами, чтобы обсудить проект и ответить на вопросы.</p>
+ </div>
+ <form name="request" method="POST" action="/?sent" data-netlify="true">
+  <input type="hidden" name="form-name" value="request">
+  <label>ФИО<input name="name" required autocomplete="name"></label>
+  <label>Номер телефона<input name="phone" type="tel" value="+998" required autocomplete="tel"></label>
+  <label>Telegram<span>ник с «@», можно оставить пустым</span><input name="telegram" placeholder="@username"></label>
+  <button class="btn" type="submit">Отправить заявку</button>
+  <p class="f">Отправляя форму, вы соглашаетесь на обработку указанных данных для связи по проекту.</p>
+ </form>
+</div></section>
 
-      <div class="case-top">
-        <div class="kicker mono">История первого объекта</div>
-        <h3>Кабинет директора</h3>
-        <div class="subline mono">30 м² · реализовано полностью</div>
-        <p>Это мой первый реализованный объект — не концепт на бумаге, а пространство, в котором теперь реально работают люди. И честно говоря, почти всё на этом проекте шло не по плану: сроки срывались, часть решений приходилось пересматривать буквально на месте, а заказчик менял решения уже на этапе реализации.</p>
-        <p>С точки зрения дизайна это тоже был мой первый настоящий опыт — сейчас я вижу моменты, которые сделал бы иначе. После этого проекта у меня даже были мысли больше не заниматься дизайном интерьера — слишком много всего навалилось одновременно. Но спустя паузу я понял: не всё получается с первого раза, и это нормально. Я вернулся — уже с желанием идти дальше.</p>
-        <p>Именно поэтому этот проект для меня особенный: он научил меня большему, чем любой концепт до этого — работать с реальными ограничениями, реальными людьми и реальными сроками. Дальше будет больше проектов — но этот кабинет навсегда останется той точкой, с которой всё началось.</p>
-      </div>
-
-      <div class="carousel" data-carousel>
-        <div class="carousel-frame">
-          <img class="active" src="assets/realized-02.jpg" alt="С этого всё началось">
-          <img src="assets/realized-03.jpg" alt="Подготовка стен">
-          <img src="assets/realized-04.jpg" alt="Отделка стен и укладка пола">
-          <img src="assets/realized-05.jpg" alt="Монтаж мраморной панели">
-          <img src="assets/realized-06.jpg" alt="Визуализация">
-          <img src="assets/realized-07.jpg" alt="Визуализация, вид 2">
-          <img src="assets/realized-01.jpg" alt="Планировка кабинета">
-          <img src="assets/realized-08.jpg" alt="Готовый результат">
-        </div>
-        <div class="c-controls">
-          <button class="c-btn" data-dir="-1">‹</button>
-          <span class="c-counter mono"><span class="cur">01</span> / <span class="total">08</span></span>
-          <button class="c-btn" data-dir="1">›</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SERVICES -->
-  <section id="services" class="dark">
-    <div class="wrap">
-      <div class="sheet-label"><span class="num mono" style="color:var(--accent)">Л.04</span><span class="title">Что входит — полный дизайн-проект</span><span class="rule"></span></div>
-      <p class="svc-intro">В стоимость входит не просто визуал, а рабочий комплект документов: от планировки и инженерии до финального рендера каждого помещения.</p>
-      <div class="services-grid">
-        <div class="svc">
-          <div class="idx">01</div>
-          <h4>Планировочное решение</h4>
-          <p>Зонирование пространства и расстановка мебели под ваши сценарии жизни.</p>
-        </div>
-        <div class="svc">
-          <div class="idx">02</div>
-          <h4>Инженерные сети</h4>
-          <p>Электрика — розетки, выключатели и сценарии освещения по каждой комнате.</p>
-          <p class="sub">Сантехника — точки подключения приборов, стояков и мокрых зон.</p>
-          <p class="sub">Тёплый пол — схема разводки и зоны обогрева с учётом мебели.</p>
-        </div>
-        <div class="svc">
-          <div class="idx">03</div>
-          <h4>3D-визуализация</h4>
-          <p>Фотореалистичный рендер каждого помещения в согласованном стиле.</p>
-        </div>
-        <div class="svc">
-          <div class="idx">04</div>
-          <h4>Готовая ведомость</h4>
-          <p>Excel-таблица с артикулами, ссылками на магазины и точными объёмами материалов — идёте по списку, а не считаете вручную.</p>
-          <div class="note">Часть пакета «Оптимальный»</div>
-        </div>
-        <div class="svc">
-          <div class="idx">05</div>
-          <h4>Рабочие чертежи</h4>
-          <p>Комплект для строителей: где сносить и строить стены, где ставить розетки с точной высотой от пола, куда выводить трубы.</p>
-        </div>
-        <div class="svc">
-          <div class="idx">06</div>
-          <h4>Фиксация цены</h4>
-          <p>Цена закрепляется в договоре ещё до старта работ — без доплат за «отдельные» разделы.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section id="faq">
-    <div class="wrap">
-      <div class="sheet-label"><span class="num mono">FAQ</span><span class="title">Состав проекта и подбор материалов — простыми словами</span><span class="rule"></span></div>
-      <p style="opacity:.75; max-width:70ch; margin-bottom:34px;">Дизайн-проект — это чёткая и понятная инструкция для ремонта. Как схема для сборки LEGO. Вы получаете картинки, показывающие, как будет выглядеть ваша квартира, и комплект чертежей, по которым строители построят всё ровно и без лишних вопросов.</p>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)"><span>1. Что именно вы получаете на руки</span><span class="plus mono">+</span></button>
-        <div class="faq-a"><div class="faq-a-in">
-          <p>Весь проект делится на три понятные части:</p>
-          <ul>
-            <li><strong>Планировка</strong> — понятное зонирование и расстановка мебели. Сделаем так, чтобы вам было удобно ходить, ничего не мешало, а двери и шкафы свободно открывались.</li>
-            <li><strong>3D-картинки (визуализация)</strong> — реалистичные фото вашей будущей квартиры. Вы заранее увидите цвет стен, материалы, свет и общую атмосферу ещё до начала ремонта.</li>
-            <li><strong>Чертежи для строителей</strong> — где сносить и где строить новые стены; где ставить розетки с указанием точной высоты от пола; куда выводить трубы под раковину, стиралку и душ; как правильно уложить паркет, плитку и тёплый пол.</li>
-          </ul>
-        </div></div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)"><span>2. А где мне потом всё это покупать?</span><span class="plus mono">+</span></button>
-        <div class="faq-a"><div class="faq-a-in">
-          <p>Главный страх любого клиента — увидеть на 3D-картинке красивый диван или плитку, а потом не найти их в магазинах. Вам не придётся искать несуществующие вещи. Все проекты я собираю по реальным стандартам:</p>
-          <ul>
-            <li><strong>Диваны, кровати, кресла</strong> — заложены стандартные формы и габариты. Купите готовый вариант в любом мебельном салоне или отдайте картинку с размерами местным мастерам.</li>
-            <li><strong>Шкафы и кухни</strong> — в 95% случаев их делают на заказ под ваши стены. В чертежах даю точные размеры — просто отдаёте лист мебельщикам.</li>
-            <li><strong>Плитка и керамогранит</strong> — заложены стандартные заводские размеры (например, 60×60 или 60×120 см). Можно выбрать любой бренд, главное — совпадение размера.</li>
-            <li><strong>Краска для стен</strong> — указывается конкретный международный код цвета (NCS или RAL). Приходите в любой магазин и называете код.</li>
-          </ul>
-          <p><strong>Главный плюс:</strong> вы получаете полную свободу и не привязаны к конкретным дорогим брендам.</p>
-        </div></div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)"><span>3. В чём разница между «Базовым» и «Оптимальным»?</span><span class="plus mono">+</span></button>
-        <div class="faq-a"><div class="faq-a-in">
-          <p>Оба пакета включают полный комплект: планировку, 3D-визуализацию и рабочие чертежи. Разница — в том, что происходит дальше, когда вы уже готовы идти в магазин.</p>
-          <ul>
-            <li><strong>Базовый ($20/м²)</strong> — чертежи и картинки, объёмы материалов считаете сами: сколько банок краски, коробок плитки, метров трека для света. Нормально, если у вас уже есть строители, которые умеют это прикинуть.</li>
-            <li><strong>Оптимальный ($35/м²)</strong> — то же самое, плюс готовая ведомость покупок в Excel: конкретные позиции с артикулами, ссылками на магазины и точными объёмами по каждой комнате.</li>
-          </ul>
-          <p>Это не поход по магазинам за вас — вы или ваши строители покупаете и заказываете сами.</p>
-        </div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRICING -->
-  <section id="pricing">
-    <div class="wrap">
-      <div class="sheet-label"><span class="num mono">Л.05</span><span class="title">Стоимость проекта</span><span class="rule"></span></div>
-      <div class="pricing-grid">
-        <div class="plan">
-          <div class="pname mono">Базовый</div>
-          <div class="price">$20<span>/м²</span></div>
-          <p>Полный комплект чертежей и 3D-визуализации. Материалы, мебель и мастеров вы подбираете и покупаете самостоятельно.</p>
-        </div>
-        <div class="plan hi">
-          <div class="pname mono">Оптимальный</div>
-          <div class="price">$35<span>/м²</span></div>
-          <p>Всё из «Базового» + готовая ведомость покупок с артикулами, ссылками и точными объёмами материалов.</p>
-        </div>
-      </div>
-      <div class="price-foot">
-        <span>Цена фиксируется в договоре ещё до старта работ</span>
-        <span>Подробный состав каждого пакета — в разделе FAQ</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- REQUEST FORM -->
-  <section id="request" class="dark">
-    <div class="wrap">
-      <div class="sheet-label"><span class="num mono" style="color:var(--accent)">Л.06</span><span class="title">Оставить заявку</span><span class="rule"></span></div>
-      <div class="form-wrap" id="formWrap">
-        <p class="form-intro">Оставьте контакты — я свяжусь с Вами, чтобы обсудить проект и ответить на вопросы.</p>
-
-        <form id="leadForm" novalidate>
-          <div class="field">
-            <label class="mono" for="leadName">ФИО</label>
-            <input type="text" id="leadName" name="name" placeholder="Иванов Иван Иванович" autocomplete="name" required>
-          </div>
-          <div class="field">
-            <label class="mono" for="leadPhone">Номер телефона</label>
-            <div class="phone-input-row">
-              <span class="phone-prefix mono">+998</span>
-              <input type="tel" id="leadPhone" name="phone" placeholder="90 123 45 67" autocomplete="tel" inputmode="numeric" maxlength="9" required>
-            </div>
-          </div>
-          <div class="field">
-            <label class="mono" for="leadTg">Telegram-юзернейм (необязательно)</label>
-            <input type="text" id="leadTg" name="telegram" placeholder="@username" autocomplete="off">
-            <div class="field-note">без ссылки, просто ник с «@» — можно оставить пустым</div>
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" class="submit-btn mono" id="leadSubmitBtn">Отправить заявку</button>
-            <span class="form-status mono" id="leadStatus"></span>
-          </div>
-        </form>
-
-        <div class="form-fineprint">Отправляя форму, Вы соглашаетесь на обработку указанных данных для связи по проекту.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT / TITLE BLOCK -->
-  <footer id="contact">
-    <div class="wrap">
-      <div class="sheet-label"><span class="num mono">Л.07</span><span class="title">Контакты</span><span class="rule"></span></div>
-      <div class="tblock">
-        <a class="trow" href="tel:+998937871717"><span class="k">Свяжитесь напрямую</span><span class="v">+998 93 787 17 17</span></a>
-        <a class="trow" href="mailto:diyorvinogradov77@gmail.com"><span class="k">Почта</span><span class="v vsmall">diyorvinogradov77@gmail.com</span></a>
-        <a class="trow" href="https://www.instagram.com/vinogradov_diyor/" target="_blank"><span class="k">Instagram</span><span class="v">@vinogradov_diyor</span></a>
-        <a class="trow" href="https://t.me/oweeyoyo" target="_blank"><span class="k">Telegram</span><span class="v">@oweeyoyo</span></a>
-      </div>
-      <div class="foot-note mono">Виноградов Диёр — D·V STUDIO / Ташкент — Лист 07 из 07</div>
-
-      <div class="legal">
-        <span>© 2024–2026 Виноградов Диёр. Все права защищены.</span>
-        <span>Самозанятый · Республика Узбекистан</span>
-        <span>Цены на сайте носят справочный характер и не являются публичной офертой. Итоговая стоимость фиксируется в договоре.</span>
-      </div>
-    </div>
-  </footer>
-
-</div>
+<footer id="contact"><div class="wrap">
+ <div class="links">
+  <a href="tel:+998937871717"><span>Телефон</span>+998 93 787 17 17</a>
+  <a href="https://t.me/oweeyoyo"><span>Telegram</span>@oweeyoyo</a>
+  <a href="https://www.instagram.com/vinogradov_diyor/"><span>Instagram</span>@vinogradov_diyor</a>
+  <a href="mailto:diyorvinogradov77@gmail.com"><span>Почта</span>diyorvinogradov77@gmail.com</a>
+ </div>
+ <small>Виноградов Диёр — D·V STUDIO, Ташкент.<br>© 2024–2026 Виноградов Диёр. Все права защищены. Самозанятый · Республика Узбекистан.<br>Цены на сайте носят справочный характер и не являются публичной офертой. Итоговая стоимость фиксируется в договоре.</small>
+</div></footer>
 
 <script>
-// ---- FAQ accordion ----
-function toggleFaq(el){
-  const item = el.parentElement;
-  const answer = item.querySelector('.faq-a');
-  const isOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(i=>{
-    i.classList.remove('open');
-    i.querySelector('.faq-a').style.maxHeight = null;
-  });
-  if(!isOpen){
-    item.classList.add('open');
-    answer.style.maxHeight = answer.scrollHeight + 'px';
-  }
-}
-
-// ---- photo carousels (click arrows) ----
-document.querySelectorAll('[data-carousel]').forEach(car=>{
-  const imgs = [...car.querySelectorAll('.carousel-frame img')];
-  if(imgs.length < 2) return;
-  let idx = 0;
-  const curEl = car.querySelector('.cur');
-  const prevBtn = car.querySelector('.c-btn-overlay.prev');
-  function show(i){
-    imgs[idx].classList.remove('active');
-    idx = (i + imgs.length) % imgs.length;
-    imgs[idx].classList.add('active');
-    if(curEl) curEl.textContent = String(idx+1).padStart(2,'0');
-    if(prevBtn) prevBtn.style.visibility = idx === 0 ? 'hidden' : 'visible';
-  }
-  if(prevBtn) prevBtn.style.visibility = 'hidden';
-  car.querySelectorAll('.c-btn').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{ e.stopPropagation(); show(idx + parseInt(btn.dataset.dir)); });
-  });
-
-  // ---- свайп/драг мышью или пальцем ----
-  const frame = car.querySelector('.carousel-frame');
-  let startX = 0, dragging = false, moved = false;
-  function down(e){ dragging = true; moved = false; startX = (e.touches ? e.touches[0].clientX : e.clientX); }
-  function move(e){
-    if(!dragging) return;
-    const x = (e.touches ? e.touches[0].clientX : e.clientX);
-    if(Math.abs(x - startX) > 6) moved = true;
-  }
-  function up(e){
-    if(!dragging) return;
-    dragging = false;
-    if(!moved) return;
-    const x = (e.changedTouches ? e.changedTouches[0].clientX : e.clientX);
-    const delta = x - startX;
-    const threshold = frame.clientWidth * 0.15;
-    if(delta < -threshold) show(idx + 1);
-    else if(delta > threshold) show(idx - 1);
-  }
-  frame.addEventListener('touchstart', down, {passive:true});
-  frame.addEventListener('touchmove', move, {passive:true});
-  frame.addEventListener('touchend', up);
-  frame.addEventListener('mousedown', down);
-  window.addEventListener('mousemove', move);
-  window.addEventListener('mouseup', up);
-
-  // ---- лайтбокс по клику (без свайпа) ----
-  frame.addEventListener('click', ()=>{
-    if(moved) return;
-    const activeImg = imgs[idx];
-    openLightbox(activeImg.src, activeImg.alt || '');
-  });
-});
-
-// ---- простой лайтбокс на весь экран ----
-function openLightbox(src, alt){
-  let lb = document.getElementById('simpleLightbox');
-  if(!lb){
-    lb = document.createElement('div');
-    lb.id = 'simpleLightbox';
-    lb.style.cssText = 'position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;background:rgba(12,10,8,.9);cursor:zoom-out;opacity:0;transition:opacity .25s ease;';
-    lb.innerHTML = '<img style="max-width:90vw;max-height:88vh;box-shadow:0 40px 100px rgba(0,0,0,.5);">';
-    lb.addEventListener('click', ()=>{ lb.style.opacity = '0'; setTimeout(()=> lb.style.display='none', 250); });
-    document.body.appendChild(lb);
-  }
-  lb.querySelector('img').src = src;
-  lb.querySelector('img').alt = alt;
-  lb.style.display = 'flex';
-  requestAnimationFrame(()=> lb.style.opacity = '1');
-}
-
-// ---- живой счётчик часов + статус "Максик онлайн/офлайн" (Supabase) ----
-(function () {
-  var SUPABASE_URL = 'https://xmnceaykceepgvbwqwgc.supabase.co';
-  var SUPABASE_ANON_KEY = 'sb_publishable_6ePKeIlHICRgC3PPAt34sQ_qZVTxa1r';
-  var POLL_INTERVAL_MS = 20 * 1000;
-  var ONLINE_THRESHOLD_SECONDS = 90;
-  var BASE_HOURS = 192;
-
-  var statusDot = document.getElementById('statusDot');
-  var hoursEl = document.getElementById('hoursValue');
-  var maxHoursShown = BASE_HOURS;
-
-  function setStatus(online, secondsAgo) {
-    if (!statusDot) return;
-    statusDot.classList.remove('online', 'offline');
-    statusDot.classList.add(online ? 'online' : 'offline');
-    statusDot.title = online
-      ? ('Максик открыт, часы считаются (обновлено ' + secondsAgo + ' сек назад)')
-      : ('Максик сейчас закрыт' + (secondsAgo != null ? (' (последний раз был ' + secondsAgo + ' сек назад)') : ''));
-  }
-
-  function updateHoursCounter() {
-    fetch(SUPABASE_URL + '/rest/v1/stats?id=eq.1&select=seconds,updated_at', {
-      headers: { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + SUPABASE_ANON_KEY }
-    })
-      .then(function (res) { return res.json(); })
-      .then(function (rows) {
-        if (!rows || !rows[0]) return;
-        var row = rows[0];
-        var hours = Math.floor(row.seconds / 3600);
-        var totalHours = BASE_HOURS + hours;
-        if (totalHours >= maxHoursShown) {
-          maxHoursShown = totalHours;
-          if (hoursEl) hoursEl.textContent = maxHoursShown.toLocaleString('ru-RU');
-        }
-        if (row.updated_at) {
-          var diffSec = Math.round((Date.now() - new Date(row.updated_at).getTime()) / 1000);
-          setStatus(diffSec <= ONLINE_THRESHOLD_SECONDS, diffSec);
-        } else {
-          setStatus(false, null);
-        }
-      })
-      .catch(function (err) {
-        console.warn('Не удалось обновить счётчик часов:', err);
-        setStatus(false, null);
-      });
-  }
-
-  updateHoursCounter();
-  setInterval(updateHoursCounter, POLL_INTERVAL_MS);
-})();
-
-// ---- форма заявки: отправка в Supabase + Telegram ----
-(function () {
-  var SUPABASE_URL = 'https://xmnceaykceepgvbwqwgc.supabase.co';
-  var SUPABASE_ANON_KEY = 'sb_publishable_6ePKeIlHICRgC3PPAt34sQ_qZVTxa1r';
-
-  var TELEGRAM_BOT_TOKEN = '8932741244:AAEzh_6qVFQr9KsVOEc8PPaYFq3D4vcZ_Do';
-  var TELEGRAM_CHAT_ID = '-1003966645207';
-
-  var form = document.getElementById('leadForm');
-  if (!form) return;
-
-  var btn = document.getElementById('leadSubmitBtn');
-  var statusEl = document.getElementById('leadStatus');
-  var phoneInput = document.getElementById('leadPhone');
-
-  // ---- номер: только цифры, максимум 9 символов после +998 ----
-  if (phoneInput) {
-    phoneInput.addEventListener('input', function () {
-      phoneInput.value = phoneInput.value.replace(/\D/g, '').slice(0, 9);
-    });
-  }
-
-  function setStatus(text, cls) {
-    statusEl.textContent = text;
-    statusEl.classList.remove('ok', 'err');
-    if (cls) statusEl.classList.add(cls);
-  }
-
-  function sendToTelegram(name, phone, tg) {
-    var text =
-      '🆕 Новая заявка с сайта\n' +
-      '👤 ФИО: ' + name + '\n' +
-      '📞 Телефон: ' + phone + '\n' +
-      '💬 Telegram: ' + tg;
-
-    return fetch('https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text: text
-      })
-    });
-  }
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    var name = document.getElementById('leadName').value.trim();
-    var phoneDigits = document.getElementById('leadPhone').value.trim();
-    var tg = document.getElementById('leadTg').value.trim();
-
-    // Обязательны только имя и телефон (минимум 9 цифр после +998)
-    if (!name || phoneDigits.length < 9) {
-      setStatus('Заполните имя и телефон полностью', 'err');
-      return;
-    }
-
-    var phone = '+998' + phoneDigits;
-
-    // Если Telegram не заполнили, подставляем заглушку
-    var tgValue = tg ? tg : 'Не указан';
-
-    btn.disabled = true;
-    setStatus('Отправляю…', '');
-
-    Promise.allSettled([
-      fetch(SUPABASE_URL + '/rest/v1/leads', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
-          Prefer: 'return=minimal'
-        },
-        body: JSON.stringify({
-          name: name,
-          phone: phone,
-          telegram: tgValue,
-          created_at: new Date().toISOString()
-        })
-      }),
-      sendToTelegram(name, phone, tgValue)
-    ]).then(function (results) {
-      var supabaseOk = results[0].status === 'fulfilled' && results[0].value.ok;
-      var telegramOk = results[1].status === 'fulfilled' && results[1].value.ok;
-
-      if (supabaseOk || telegramOk) {
-        setStatus('Заявка отправлена, скоро свяжусь ✓', 'ok');
-        form.reset();
-      } else {
-        setStatus('Не получилось отправить — напишите в Telegram @oweeyoyo', 'err');
-      }
-    }).finally(function () {
-      btn.disabled = false;
-    });
-  });
-})();
-
-// ---- подсветка формы заявки при переходе с внешней ссылки (#request) ----
-(function () {
-  if (window.location.hash === '#request') {
-    var wrap = document.getElementById('formWrap');
-    if (wrap) {
-      setTimeout(function () {
-        wrap.classList.add('highlight');
-        setTimeout(function () { wrap.classList.remove('highlight'); }, 3600);
-      }, 500);
-    }
-  }
+/* Счётчик часов. Сюда вставь свой старый Supabase-код:
+   когда получишь число часов, вызови setHours(число). Пока стоит 2527. */
+function setHours(n){var e=document.getElementById('hours');e.dataset.to=n;e.textContent=n}
+/* Единственная анимация загрузки: цифры набираются от 0 */
+(function(){
+ if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+ document.querySelectorAll('.stat b').forEach(function(el){
+  var to=+el.dataset.to,t0=null;el.textContent='0';
+  function f(t){t0=t0||t;var p=Math.min((t-t0)/1100,1);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f);else el.textContent=el.dataset.to}
+  requestAnimationFrame(f);
+ });
 })();
 </script>
-
 </body>
 </html>
