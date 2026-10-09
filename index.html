@@ -34,11 +34,6 @@ section{padding:110px 0;position:relative}
 .rv{opacity:0;transform:translateY(46px);transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.2,1)}
 .rv.in{opacity:1;transform:none}
 
-nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:50;background:var(--ink);color:var(--paper);border-radius:999px;padding:8px 10px 8px 22px;display:flex;gap:22px;align-items:center;font:500 13px var(--m);text-transform:uppercase;letter-spacing:.06em;box-shadow:0 0 0 2px var(--acid),0 10px 30px rgba(0,0,0,.35);white-space:nowrap}
-nav b{font:400 16px var(--d)}
-nav a{text-decoration:none;opacity:.7}nav a:hover{opacity:1;color:var(--acid)}
-nav .cta{background:var(--acid);color:var(--ink);opacity:1;padding:10px 18px;border-radius:999px}
-nav .cta:hover{background:var(--hot);color:var(--paper)}
 
 .hero{background:var(--acid);padding:130px 0 0;min-height:100vh;overflow:hidden}
 .hero h1{font:400 min(calc((100vw - 56px)/9.421),calc(1224px/9.421))/.88 var(--d);text-transform:uppercase;position:relative;z-index:3}
@@ -151,7 +146,6 @@ footer small{display:block;color:#8a8a94;font:500 12px/1.8 var(--m);margin-top:5
 
 @media(max-width:860px){
  section{padding:76px 0}
- nav{gap:14px}nav a.h{display:none}
  .sticker{width:96px;height:96px;top:96px}
  .stats .wrap,.cols,.req .wrap{grid-template-columns:1fr}
  .step{position:relative;top:0!important}
@@ -163,7 +157,6 @@ footer small{display:block;color:#8a8a94;font:500 12px/1.8 var(--m);margin-top:5
 /* ===== VICE CITY 1986 ===== */
 :root{--cyan:#26e6ff;--night:#14052b}
 #cur{background:var(--cyan)}
-nav{box-shadow:0 0 0 2px var(--cyan),0 0 26px rgba(38,230,255,.55)}
 .marq.t2{background:var(--cyan);color:var(--ink);text-shadow:none}
 .stats{background:var(--night);color:var(--paper)}
 .stat{border-top-color:var(--acid)}
@@ -184,13 +177,30 @@ nav{box-shadow:0 0 0 2px var(--cyan),0 0 26px rgba(38,230,255,.55)}
 footer{background:#0b0216}
 footer .links a{border-top-color:#3a1a5e}
 footer .links a:hover{color:var(--cyan)}
+
+/* ===== меню слева ===== */
+.burger{position:fixed;top:14px;left:14px;z-index:60;background:var(--ink);color:var(--paper);font:400 18px var(--d);border:2px solid var(--cyan);border-radius:999px;padding:12px 22px;cursor:pointer;box-shadow:0 0 22px rgba(38,230,255,.45);transition:background .2s,color .2s}
+.burger:hover{background:var(--acid);color:var(--ink)}
+nav{position:fixed;top:0;left:0;bottom:0;width:min(calc(100vw - 56px),max(25vw,320px));z-index:55;background:var(--ink);color:var(--paper);padding:96px 32px 32px;display:flex;flex-direction:column;counter-reset:m;overflow-y:auto;translate:-105% 0;visibility:hidden;transition:translate .45s cubic-bezier(.7,0,.2,1),visibility 0s .45s;box-shadow:0 0 0 2px var(--cyan),0 0 60px rgba(38,230,255,.35)}
+nav.open{translate:0 0;visibility:visible;transition-delay:0s}
+nav a{font:400 clamp(26px,2.6vw,40px)/1.1 var(--d);text-transform:uppercase;text-decoration:none;padding:16px 0;border-bottom:2px solid #2b2b33;display:flex;justify-content:space-between;align-items:baseline;transition:color .2s,padding .25s}
+nav a::after{counter-increment:m;content:counter(m,decimal-leading-zero);font:500 13px var(--m);color:var(--cyan)}
+nav a:hover{color:var(--acid);padding-left:12px}
+nav .cta{margin-top:28px;background:var(--acid);color:var(--ink);border-radius:999px;border:0;padding:18px 26px;justify-content:center;gap:12px}
+nav .cta::after{content:"↗";color:var(--ink);font:400 22px var(--d)}
+nav .cta:hover{background:var(--cyan);color:var(--ink);padding-left:26px}
+#scrim{position:fixed;inset:0;background:rgba(11,2,22,.6);opacity:0;pointer-events:none;z-index:54;transition:opacity .35s}
+#scrim.on{opacity:1;pointer-events:auto}
+@media(prefers-reduced-motion:reduce){nav,#scrim{transition:none}}
 </style>
 </head>
 <body>
 <div id="cur" aria-hidden="true"></div>
-<nav aria-label="Основное меню">
- <b>D·V</b><a class="h" href="#works">Работы</a><a class="h" href="#pricing">Цена</a><a class="h" href="#process">Этапы</a><a class="cta" href="#request">Заявка</a>
+<button class="burger" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Меню">D·V</button>
+<nav id="menu" aria-label="Основное меню">
+ <a href="#about">Обо мне</a><a href="#works">Работы</a><a href="#pricing">Цена</a><a href="#process">Этапы</a><a href="#tz">Для старта</a><a class="cta" href="#request">Заявка</a>
 </nav>
+<div id="scrim"></div>
 
 <header class="hero" id="top">
  <div class="wrap">
@@ -433,6 +443,16 @@ function setHours(n){var e=document.getElementById('hours');e.dataset.to=n;e.tex
  });
  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
  document.querySelectorAll('section h2,.card,.chips li,.rows div,.stat').forEach(function(el){el.classList.add('rv');io.observe(el)});
+})();
+
+/* меню слева */
+(function(){
+ var b=document.getElementById('menuBtn'),n=document.getElementById('menu'),sc=document.getElementById('scrim');
+ function set(o){n.classList.toggle('open',o);sc.classList.toggle('on',o);b.setAttribute('aria-expanded',o);b.textContent=o?'✕':'D·V'}
+ b.addEventListener('click',function(){set(!n.classList.contains('open'))});
+ sc.addEventListener('click',function(){set(false)});
+ n.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){set(false)})});
+ addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});
 })();
 </script>
 </body>
